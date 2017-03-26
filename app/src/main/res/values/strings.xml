@@ -1,0 +1,23 @@
+<resources>
+    <string name="app_name">MyCitysShopsUser</string>
+
+    <string name="title_activity_navigation">NavigationActivity</string>
+    <!--NAVIGATION-->
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <!--MENU-->
+    <string name="action_settings">Settings</string>
+    <!--SHARED-->
+    <string name="my_city_id_shared">my_city_id</string>
+    <string name="id_city">id_city</string>
+
+    <string name="error_fill_place">Error al cargar los datos. Cierre la aplicación y vuelva a intentarlo.</string>
+    <!--BUTTON FOLOW-->
+    <string name="follow_button">SEGUIR</string>
+    <string name="following_button">SIGUIENDO</string>
+
+    <string name="google_maps_key">AIzaSyCJvouldRxod-_4soNKzBYOTs8tLr9bxyg</string>
+
+
+
+</resources>
