@@ -13,33 +13,6 @@ import retrofit2.http.POST;
 
 public interface APIService {
 
-/*
-    @FormUrlEncoded
-    @POST("account/updateAccount.php")
-    Call<ResultPlace> updateAccount(@Field("id_user_foreign") int id_user, @Field("id_account") int id_account, @Field("encode") String encode,
-                                    @Field("url_logo") String url_logo, @Field("name_logo") String name_logo, @Field("name_before") String name_before,
-                                    @Field("description") String description, @Field("phone") String phone, @Field("email") String email,
-                                    @Field("latitud") String latitud, @Field("longitud") String longitud, @Field("adrress") String adrress, @Field("date_init") String date_init);
-    //OFFER
-    @FormUrlEncoded
-    @POST("offer/insertOffer.php")
-    Call<ResultPlace> insertOffer(@Field("id_user_foreign") int id_user, @Field("title") String title, @Field("offer") String offer,
-                                  @Field("date_init") String date_init, @Field("date_end") String date_end);
-
-    @FormUrlEncoded
-    @POST("offer/updateOffer.php")
-    Call<ResultPlace> updateOffer(@Field("id_offer") int id_offer, @Field("id_user_foreign") int id_user, @Field("title") String title, @Field("offer") String offer,
-                                  @Field("date_edit") String date_edit);
-
-    @FormUrlEncoded
-    @POST("offer/deleteOffer.php")
-    Call<ResultPlace> deleteOffer(@Field("id_offer") int id_offer, @Field("id_user_foreign") int id_user, @Field("date_edit") String date_edit);
-
-    //NOTIFICATION
-    @FormUrlEncoded
-    @POST("fcm/sendNotification.php")
-    Call<ResultPlace> sendNotification(@Field("id_user_foreign") int id_user, @Field("title") String title, @Field("message") String message, @Field("date_init") String date_init);
-*/
     //SPLASH PLACE
     @FormUrlEncoded
     @POST("splash/validateDatePlace.php")
@@ -68,8 +41,13 @@ public interface APIService {
     //FOLLOW
     @FormUrlEncoded
     @POST("follow/follow.php")
-    Call<ResponseWS> follow(@Field("id_shop") int id_shop, @Field("id_city") int id_city,
+    Call<ResponseWS> followOrUnFollow(@Field("id_shop") int id_shop, @Field("id_city") int id_city,
                             @Field("date_update") String date_update,
-                            @Field("is_follow") int is_follow);
+                            @Field("is_follow") boolean is_follow, @Field("id_token") int id_token);
 
+    //TOKEN
+    @FormUrlEncoded
+    @POST("fcm/setToken.php")
+    Call<ResponseWS> setToken(@Field("id") int id, @Field("token") String token, @Field("id_city") int id_city,
+                              @Field("is_insert") boolean is_insert);
 }

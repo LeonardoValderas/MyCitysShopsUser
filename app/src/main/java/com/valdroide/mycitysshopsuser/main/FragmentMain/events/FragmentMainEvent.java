@@ -1,5 +1,6 @@
 package com.valdroide.mycitysshopsuser.main.FragmentMain.events;
 
+import com.valdroide.mycitysshopsuser.entities.shop.DateUserCity;
 import com.valdroide.mycitysshopsuser.entities.shop.Offer;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
 
@@ -10,16 +11,16 @@ public class FragmentMainEvent {
     public static final int GETLISTSHOPS = 0;
     public static final int GETLISTOFFER = 1;
     public static final int ERROR = 2;
-    public static final int FOLLOW = 3;
-    public static final int UNFOLLOW = 4;
-    public static final int WITHOUTCHANGE = 5;
-    public static final int CALLSHOPS = 6;
-    public static final int GETDATETABLE = 7;
+    public static final int FOLLOWORUNFOLLOW = 3;
+    public static final int WITHOUTCHANGE = 4;
+    public static final int CALLSHOPS = 5;
+    public static final int GETDATEUSERCITY = 6;
+    public static final int ISUPDATE = 7;
 
     private List<Shop> shopsList;
     private List<Offer> offers;
     private Shop shop;
-    //private List<DateTable> dateTables;
+    private DateUserCity dateUserCity;
     private String error;
 
     public int getType() {
@@ -60,5 +61,13 @@ public class FragmentMainEvent {
 
     public void setOffers(List<Offer> offers) {
         this.offers = offers;
+    }
+
+    public DateUserCity getDateUserCity() {
+        return dateUserCity;
+    }
+
+    public void setDateUserCity(DateUserCity dateUserCity) {
+        this.dateUserCity = dateUserCity;
     }
 }

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,6 +18,7 @@ import android.widget.FrameLayout;
 import com.valdroide.mycitysshopsuser.MyCitysShopsUserApp;
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.entities.category.SubCategory;
+import com.valdroide.mycitysshopsuser.entities.shop.DateUserCity;
 import com.valdroide.mycitysshopsuser.entities.shop.Offer;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.FragmentMainPresenter;
@@ -26,10 +28,8 @@ import com.valdroide.mycitysshopsuser.main.FragmentMain.dialogs.DialogOffer;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.ui.adapters.FragmentMainAdapter;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.ui.adapters.OnItemClickListener;
 import com.valdroide.mycitysshopsuser.main.navigation.ui.NavigationActivity;
-import com.valdroide.mycitysshopsuser.main.offer.ui.OfferActivity;
 import com.valdroide.mycitysshopsuser.utils.Utils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -53,36 +53,58 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     FragmentMainPresenter presenter;
 
     MyCitysShopsUserApp app;
-    private List<Shop> shopsList;
-    private static String title = "";
+    //  private List<Shop> shopsList;
+    //private static String title = "";
     private static SubCategory subCategoryExtra;
     private ProgressDialog pDialog;
     private int position = 0;
     private Shop shopDialog;
+    private static boolean isMyShop = false;
     //private AdRequest adRequest;
+    private DateUserCity dateUserCity;
 
     public FragmentMain() {
     }
 
-    public static FragmentMain newInstance(SubCategory subCategory) {
+    public static FragmentMain newInstance(SubCategory subCategory, boolean isMyShops) {
         FragmentMain fragmentAction = new FragmentMain();
-        subCategoryExtra = subCategory;
-        title = subCategoryExtra.getSUBCATEGORY();
+        try {
+            Utils.writelogFile(fragmentAction.getActivity(), "Se instacia FragmentMain(FragmentMain)");
+            if (!isMyShops) {
+                Utils.writelogFile(fragmentAction.getActivity(), "isMyShops = false (FragmentMain)");
+                subCategoryExtra = subCategory;
+            }
+            isMyShop = isMyShops;
+        } catch (Exception e) {
+            fragmentAction.setError(e.getMessage());
+            Utils.writelogFile(fragmentAction.getActivity(), "catch error " + e.getMessage() + "(FragmentMain)");
+        }
         return fragmentAction;
     }
 
     @Override
     public void onActivityCreated(Bundle state) {
         super.onActivityCreated(state);
+        Utils.writelogFile(getActivity(), "Se inicia Injection(FragmentMain)");
         setupInjection();
+        Utils.writelogFile(getActivity(), "Se inicia presenter Oncreate(FragmentMain)");
         presenter.onCreate();
+        Utils.writelogFile(getActivity(), "Se inicia dialog Oncreate(FragmentMain)");
         initDialog();
-        if (subCategoryExtra != null) {
-            pDialog.show();
-            presenter.getListShops(subCategoryExtra);
+        if (isMyShop) {
+            Utils.writelogFile(getActivity(), "isMyShop true y getMyFavoriteShops(FragmentMain)");
+            presenter.getMyFavoriteShops(getActivity());
+        } else {
+            Utils.writelogFile(getActivity(), "isMyShop false(FragmentMain)");
+            if (subCategoryExtra != null) {
+                Utils.writelogFile(getActivity(), "dialog show y getListShops(FragmentMain)");
+                pDialog.show();
+                presenter.getListShops(getActivity(), subCategoryExtra);
+            }
         }
+
         initRecyclerViewAdapter();
-        initSwipeRefreshLayout();
+        //  initSwipeRefreshLayout();
         // BannerAd();
 
     }
@@ -91,7 +113,10 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_main, container, false);
+        Utils.writelogFile(getActivity(), "Se inicia ButterKnife(FragmentMain)");
         ButterKnife.bind(this, view);
+        initSwipeRefreshLayout();
+        Utils.writelogFile(getActivity(), "return view(FragmentMain)");
         return view;
     }
 
@@ -102,9 +127,16 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     }
 
     public void initRecyclerViewAdapter() {
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(adapter);
+        Utils.writelogFile(getActivity(), "initRecyclerViewAdapter(FragmentMain)");
+        try {
+            recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+            recyclerView.setHasFixedSize(true);
+            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+            recyclerView.setAdapter(adapter);
+        } catch (Exception e) {
+            setError(e.getMessage());
+            Utils.writelogFile(getActivity(), "initRecyclerViewAdapter catch error " + e.getMessage() + "(FragmentMain)");
+        }
     }
 
     private void setupInjection() {
@@ -113,19 +145,35 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     }
 
     public void verifySwipeRefresh() {
-        if (mSwipeRefreshLayout.isRefreshing()) {
-            mSwipeRefreshLayout.setRefreshing(false);
+        Utils.writelogFile(getActivity(), "verifySwipeRefresh(FragmentMain)");
+        try {
+            if (mSwipeRefreshLayout.isRefreshing()) {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        } catch (Exception e) {
+            setError(e.getMessage());
+            Utils.writelogFile(getActivity(), "verifySwipeRefresh catch error " + e.getMessage() + "(FragmentMain)");
         }
     }
 
     private void initSwipeRefreshLayout() {
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                presenter.getDateTable();
-                // presenter.refreshLayout(getActivity(), date, cat, sub, clo, cont);
-            }
-        });
+        Utils.writelogFile(getActivity(), "initSwipeRefreshLayout(FragmentMain)");
+        try {
+            mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                @Override
+                public void onRefresh() {
+                    if (isMyShop)
+                        verifySwipeRefresh();
+                    else {
+                        presenter.getDateUserCity(getActivity());
+                        presenter.refreshLayout(getActivity(), dateUserCity);
+                    }
+                }
+            });
+        } catch (Exception e) {
+            setError(e.getMessage());
+            Utils.writelogFile(getActivity(), "initSwipeRefreshLayout catch error " + e.getMessage() + "(FragmentMain)");
+        }
     }
 
 //    public void BannerAd() {
@@ -146,16 +194,17 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
 
     @Override
     public void setListShops(List<Shop> shops) {
-        this.shopsList = shops;
+        // this.shopsList = shops;
+        Utils.writelogFile(getActivity(), "setListShops " + shops.size() + "(FragmentMain)");
         if (pDialog.isShowing())
             pDialog.dismiss();
         adapter.setShop(shops);
         verifySwipeRefresh();
     }
 
-
     @Override
     public void setError(String mgs) {
+        Utils.writelogFile(getActivity(), "setError " + mgs + "(FragmentMain)");
         if (pDialog.isShowing())
             pDialog.dismiss();
         Utils.showSnackBar(conteiner, mgs);
@@ -164,60 +213,79 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
 
     @Override
     public void withoutChange() {
+        Utils.writelogFile(getActivity(), "withoutChange(FragmentMain)");
         verifySwipeRefresh();
     }
 
     @Override
     public void callShops() {
-        if (subCategoryExtra != null)
-            presenter.getListShops(subCategoryExtra);
-        else
+        Utils.writelogFile(getActivity(), "callShops(FragmentMain)");
+        if (subCategoryExtra != null) {
+            Utils.writelogFile(getActivity(), "subCategoryExtra != null y getListShops(FragmentMain)");
+            presenter.getListShops(getActivity(), subCategoryExtra);
+        } else {
+            Utils.writelogFile(getActivity(), "subCategoryExtra == null y Intent Navigation(FragmentMain)");
             startActivity(new Intent(getActivity(), NavigationActivity.class));
+        }
     }
 
     @Override
-    public void followSuccess(Shop shop) {
+    public void setDateUserCity(DateUserCity dateUserCity) {
+        Utils.writelogFile(getActivity(), "setDateUserCity(FragmentMain)");
+        this.dateUserCity = dateUserCity;
+    }
+
+    @Override
+    public void isUpdate() {
+        Utils.writelogFile(getActivity(), "isUpdate(FragmentMain)");
+        adapter.setUpdateShop(position);
+    }
+
+//    @Override
+//    public void followSuccess(Shop shop) {
+//        Utils.writelogFile(getActivity(), "followSuccess(FragmentMain)");
+//        adapter.setUpdateShop(position, shop);
+//        if (pDialog.isShowing())
+//            pDialog.dismiss();
+//    }
+
+    @Override
+    public void followUnFollowSuccess(Shop shop) {
+        Utils.writelogFile(getActivity(), "followSuccessUnFollow(FragmentMain)");
         adapter.setUpdateShop(position, shop);
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
 
     @Override
-    public void unFollowSuccess(Shop shop) {
-        adapter.setUpdateShop(position, shop);
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-    }
-
-    @Override
-    public void onClickFollow(int position, Shop shop) {
+    public void onClickFollowOrUnFollow(int position, Shop shop, boolean isFollow) {
+        Utils.writelogFile(getActivity(), "onClickFollow(FragmentMain)");
         pDialog.show();
         this.position = position;
-        presenter.onClickFollow(getActivity(), shop);
+        presenter.onClickFollowOrUnFollow(getActivity(), shop, isFollow);
     }
 
-    @Override
-    public void onClickUnFollow(int position, Shop shop) {
-        pDialog.show();
-        this.position = position;
-        presenter.onClickUnFollow(getActivity(), shop);
-    }
+//    @Override
+//    public void onClickUnFollow(int position, Shop shop) {
+//        Utils.writelogFile(getActivity(), "onClickUnFollow(FragmentMain)");
+//        pDialog.show();
+//        this.position = position;
+//        presenter.onClickUnFollow(getActivity(), shop);
+//    }
 
     @Override
-    public void onClickOffer(Shop shop) {
+    public void onClickOffer(int position, Shop shop) {
+        Utils.writelogFile(getActivity(), "onClickUnFollow y getListOffer y setUpdateOffer(FragmentMain)");
         pDialog.show();
         shopDialog = shop;
-        presenter.getListOffer(shop.getID_SHOP_KEY());
-
-
-//        Intent intent = new Intent(getActivity(), OfferActivity.class);
-//        intent.putExtra("id_shop", shop.getID_SHOP_KEY());
-//        intent.putExtra("url", shop.getURL_LOGO());
-//        startActivity(intent);
+        this.position = position;
+        presenter.getListOffer(getActivity(), shop.getID_SHOP_KEY());
+        presenter.setUpdateOffer(getActivity(), position, shop);
     }
 
     @Override
     public void setListOffer(List<Offer> offers) {
+        Utils.writelogFile(getActivity(), "setListOffer y DialogOffer(FragmentMain)");
         if (pDialog.isShowing())
             pDialog.dismiss();
         new DialogOffer(getActivity(), offers, shopDialog);
@@ -225,16 +293,13 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
 
     @Override
     public void onClickMap(Shop shop) {
-//        FragmentManager fm = getFragmentManager();
-//        DialogMap m = new DialogMap();
-//        m.show(fm,"s" );
-
-
+        Utils.writelogFile(getActivity(), "onClickMap y DialogMap(FragmentMain)");
         new DialogMap(getActivity(), this, shop);
     }
 
     @Override
     public void onClickContact(Shop shop) {
+        Utils.writelogFile(getActivity(), "onClickContact y DialogNotification(FragmentMain)");
         new DialogContact(getActivity(), shop);
     }
 
@@ -247,41 +312,20 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
 //    }
 
 //    @Override
-//    public void setDateTable(List<DateTable> dateTable) {
-//        for (int i = 0; i < dateTable.size(); i++) {
-//            switch (dateTable.get(i).getTABLENAME()) {
-//                case Utils.TABLE:
-//                    date = dateTable.get(i).getDATE();
-//                    break;
-//                case Utils.CATEGORY:
-//                    cat = dateTable.get(i).getDATE();
-//                    break;
-//                case Utils.SUBCATEGORY:
-//                    sub = dateTable.get(i).getDATE();
-//                    break;
-//                case Utils.CLOTHES:
-//                    clo = dateTable.get(i).getDATE();
-//                    break;
-//                case Utils.CONTACT:
-//                    cont = dateTable.get(i).getDATE();
-//                    break;
-//            }
-//        }
-//    }
-
-//    @Override
 //    public void onClick(View view, int position) {
 //        new DialogOffer(getActivity(), shopsList.get(position), title);
 //    }
 
     @Override
     public void onDestroyView() {
+        Utils.writelogFile(getActivity(), "onDestroyView(FragmentMain)");
         super.onDestroyView();
         ButterKnife.unbind(this);
     }
 
     @Override
     public void onDestroy() {
+        Utils.writelogFile(getActivity(), "onDestroy(FragmentMain)");
         if (pDialog.isShowing())
             pDialog.dismiss();
         presenter.onDestroy();

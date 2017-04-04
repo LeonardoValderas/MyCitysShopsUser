@@ -1,23 +1,29 @@
 <resources>
-    <string name="app_name">MyCitysShopsUser</string>
+    <string name="app_name">Las Tiendas de Mi Ciudad</string>
 
     <string name="title_activity_navigation">NavigationActivity</string>
     <!--NAVIGATION-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <!--MENU-->
-    <string name="action_settings">Settings</string>
+    <string name="action_my_shops">Mis Locales</string>
+    <string name="action_change_city">Cambiar de Ciudad</string>
+    <string name="action_support">Soporte</string>
     <!--SHARED-->
     <string name="my_city_id_shared">my_city_id</string>
     <string name="id_city">id_city</string>
-
     <string name="error_fill_place">Error al cargar los datos. Cierre la aplicación y vuelva a intentarlo.</string>
-    <!--BUTTON FOLOW-->
-    <string name="follow_button">SEGUIR</string>
-    <string name="following_button">SIGUIENDO</string>
-
     <string name="google_maps_key">AIzaSyCJvouldRxod-_4soNKzBYOTs8tLr9bxyg</string>
-
-
-
+    <string name="log_file_name">LogMyCity.txt</string>
+    <string name="log_date">log_date</string>
+    <string name="log_date_shared">date_log_file</string>
+    <string name="error_file_log">Problemas para generar el archivo Log</string>
+    <string name="email_success">Email enviado correctamente. Soporte se comunicará con usted.</string>
+    <string name="hint_support">Ingrese un comentario y su email</string>
+    <string name="support_title">EMAIL SOPORTE</string>
+    <string name="FCM_PREF">fcm_shared_preference</string>
+    <string name="FCM_TOKEN">fcm_token_shared</string>
+    <string name="FCM_OLD_TOKEN">fcm_old_token_shared</string>
+    <string name="FCM_IS_NEW">fcm_is_new_token_shared</string>
+    <string name="notification_error">Problemas para mostrar la notificación.</string>
 </resources>

@@ -17,4 +17,7 @@
     <dimen name="activity_detail_backdrop_min_height">100dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="margin_header_map">8dp</dimen>
+    <dimen name="height_dialog_image">180dp</dimen>
+    <dimen name="botton_shop_name_dialog">20dp</dimen>
+    <dimen name="top_contact_dialog">16dp</dimen>
 </resources>

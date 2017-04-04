@@ -18,9 +18,11 @@ public class Offer extends BaseModel {
 
     @Column
     @SerializedName("id_shop")
-  //  @ForeignKey(references = {@ForeignKeyReference(columnName = "id_shop_foreign", columnType = Integer.class, foreignKeyColumnName = "ID_SHOP_KEY")}, tableClass = Shop.class, saveForeignKeyModel = false, onDelete = ForeignKeyAction.CASCADE, onUpdate = ForeignKeyAction.CASCADE)
     public int ID_SHOP_FOREIGN;
 
+    @Column
+    @SerializedName("id_city")
+    public int ID_CITY_FOREIGN;
     @Column
     @SerializedName("title")
     public String TITLE;
@@ -28,8 +30,16 @@ public class Offer extends BaseModel {
     @Column
     @SerializedName("offer")
     public String OFFER;
+    @Column
+    @SerializedName("url_image")
+    public String URL_IMAGE;
 
-
+    @Column
+    @SerializedName("is_active")
+    public int IS_ACTIVE;
+    @Column
+    @SerializedName("date_unique")
+    public String DATE_UNIQUE;
 
     public Offer() {
     }
@@ -66,4 +76,35 @@ public class Offer extends BaseModel {
         this.ID_SHOP_FOREIGN = ID_SHOP_FOREIGN;
     }
 
+    public int getID_CITY_FOREIGN() {
+        return ID_CITY_FOREIGN;
+    }
+
+    public void setID_CITY_FOREIGN(int ID_CITY_FOREIGN) {
+        this.ID_CITY_FOREIGN = ID_CITY_FOREIGN;
+    }
+
+    public String getURL_IMAGE() {
+        return URL_IMAGE;
+    }
+
+    public void setURL_IMAGE(String URL_IMAGE) {
+        this.URL_IMAGE = URL_IMAGE;
+    }
+
+    public int getIS_ACTIVE() {
+        return IS_ACTIVE;
+    }
+
+    public void setIS_ACTIVE(int IS_ACTIVE) {
+        this.IS_ACTIVE = IS_ACTIVE;
+    }
+
+    public String getDATE_UNIQUE() {
+        return DATE_UNIQUE;
+    }
+
+    public void setDATE_UNIQUE(String DATE_UNIQUE) {
+        this.DATE_UNIQUE = DATE_UNIQUE;
+    }
 }

@@ -1,7 +1,10 @@
 package com.valdroide.mycitysshopsuser.main.splash;
 
 import android.content.Context;
+import android.content.Intent;
+import android.widget.Toast;
 
+import com.valdroide.mycitysshopsuser.entities.shop.Token;
 import com.valdroide.mycitysshopsuser.lib.base.EventBus;
 import com.valdroide.mycitysshopsuser.main.splash.events.SplashActivityEvent;
 import com.valdroide.mycitysshopsuser.main.splash.ui.SplashActivityView;
@@ -32,13 +35,23 @@ public class SplashActivityPresenterImpl implements SplashActivityPresenter {
     }
 
     @Override
-    public void validateDatePlace(Context context) {
-        interactor.validateDatePlace(context);
+    public void validateDatePlace(Context context, Intent intent) {
+        interactor.validateDatePlace(context, intent);
     }
 
     @Override
-    public void validateDateShop(Context context) {
-        interactor.validateDateShop(context);
+    public void validateDateShop(Context context, Intent intent) {
+        interactor.validateDateShop(context, intent);
+    }
+
+    @Override
+    public void sendEmail(Context context, String comment) {
+        interactor.sendEmail(context, comment);
+    }
+
+    @Override
+    public void getToken(Context context) {
+        interactor.getToken(context);
     }
 
     @Override
@@ -51,6 +64,9 @@ public class SplashActivityPresenterImpl implements SplashActivityPresenter {
                     break;
                 case SplashActivityEvent.GOTOPLACE:
                     view.goToPlace();
+                    break;
+                case SplashActivityEvent.TOKENSUCCESS:
+                    view.tokenSuccess();
                     break;
                 case SplashActivityEvent.ERROR:
                     view.setError(event.getError());

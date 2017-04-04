@@ -1,5 +1,7 @@
 package com.valdroide.mycitysshopsuser.main.navigation;
 
+import android.content.Context;
+
 import com.valdroide.mycitysshopsuser.lib.base.EventBus;
 import com.valdroide.mycitysshopsuser.main.navigation.events.NavigationActivityEvent;
 import com.valdroide.mycitysshopsuser.main.navigation.ui.NavigationActivityView;
@@ -30,8 +32,18 @@ public class NavigationActivityPresenterImpl implements NavigationActivityPresen
     }
 
     @Override
-    public void getCategoriesAndSubCategories() {
-        interactor.getCategoriesAndSubCategories();
+    public void getCategoriesAndSubCategories(Context context) {
+        interactor.getCategoriesAndSubCategories(context);
+    }
+
+    @Override
+    public void changePlace(Context context) {
+        interactor.changePlace(context);
+    }
+
+    @Override
+    public void getUrlShop(Context context, int id_shop) {
+        interactor.getUrlShop(context, id_shop);
     }
 
 
@@ -42,6 +54,12 @@ public class NavigationActivityPresenterImpl implements NavigationActivityPresen
             switch (event.getType()) {
                 case NavigationActivityEvent.GETCATEGORIESANDSUBCATEGORIES:
                     view.setListCategoriesAndSubCategories(event.getCategories(), event.getSubCategories());
+                    break;
+                case NavigationActivityEvent.CHANGEPLACE:
+                    view.goToPlace();
+                    break;
+                case NavigationActivityEvent.GETURL:
+                    view.setUrlShowDialog(event.getUrl());
                     break;
                 case NavigationActivityEvent.ERROR:
                     view.setError(event.getError());

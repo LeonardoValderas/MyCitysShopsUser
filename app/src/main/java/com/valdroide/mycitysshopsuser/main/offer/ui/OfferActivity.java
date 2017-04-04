@@ -26,7 +26,7 @@ import butterknife.ButterKnife;
 
 public class OfferActivity extends AppCompatActivity implements OfferActivityView {
 
-//    @Bind(R.id.recyclerView)
+    //    @Bind(R.id.recyclerView)
 //    RecyclerView recyclerView;
     @Inject
     OfferActivityPresenter presenter;
@@ -52,24 +52,43 @@ public class OfferActivity extends AppCompatActivity implements OfferActivityVie
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_offer);
-        ButterKnife.bind(this);
-        setupInjection();
-        presenter.onCreate();
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle("PROMOS");
-     //   tvOverview.setText("Leo");
-        initDialog();
-      //  initRecyclerViewAdapter();
 
-        id_shop = getIntent().getIntExtra("id_shop", 0);
-        url = getIntent().getStringExtra("url");
+
+        Utils.writelogFile(this, "Se inicia ButterKnife(Splash)");
+
+
+        ButterKnife.bind(this);
+        Utils.writelogFile(this, "Se inicia Injection(Offer)");
+        setupInjection();
+        Utils.writelogFile(this, "Se inicia presenter Oncreate(Offer)");
+        presenter.onCreate();
+        Utils.writelogFile(this, "Se inicia toolbar Oncreate(Offer)");
+        initToolBar();
+        Utils.writelogFile(this, "Se initDialog(Offer)");
+        initDialog();
+        try {
+            Utils.writelogFile(this, "getIntExtra id_shop y getStringExtra url(Offer)");
+            id_shop = getIntent().getIntExtra("id_shop", 0);
+            url = getIntent().getStringExtra("url");
+        } catch (Exception e) {
+            setError(e.getMessage());
+            Utils.writelogFile(this, " catch error " + e.getMessage() + "(Offer)");
+        }
         setImageViewShop(url);
+        Utils.writelogFile(this, "dialog show(Offer)");
         pDialog.show();
+        Utils.writelogFile(this, " presenter.getListOffer(Offer)");
         presenter.getListOffer(id_shop);
     }
 
+    public void initToolBar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle("PROMOS");
+    }
+
     public void setImageViewShop(String url) {
+        Utils.writelogFile(this, "Se picasso (Offer)");
         Utils.setPicasso(this, url, R.mipmap.ic_launcher, imageViewShop);
     }
 
@@ -92,18 +111,21 @@ public class OfferActivity extends AppCompatActivity implements OfferActivityVie
 
     @Override
     public void setListOffer(List<Offer> offers) {
-  //      adapter.setOffer(offers);
+        Utils.writelogFile(this, "setListOffer " + offers.size() + " (Offer)");
+        //      adapter.setOffer(offers);
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
 
     @Override
     public void setError(String mgs) {
+        Utils.writelogFile(this, "setError " + mgs + " (Offer)");
         Utils.showSnackBar(container, mgs);
     }
 
     @Override
     protected void onDestroy() {
+        Utils.writelogFile(this, "onDestroy(Offer)");
         presenter.onDestroy();
         pDialog.dismiss();
         super.onDestroy();

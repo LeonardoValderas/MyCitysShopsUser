@@ -4,4 +4,5 @@ public interface SplashActivityView {
     void goToPlace();
     void goToNav();
     void setError(String msg);
+    void tokenSuccess();
 }

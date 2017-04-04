@@ -31,8 +31,8 @@ public class FragmentNavigationManager implements NavigationManager {
     }
 
     @Override
-    public void showFragmentAction(SubCategory subCategory) {
-        showFragment(FragmentMain.newInstance(subCategory), false);
+    public void showFragmentAction(SubCategory subCategory, boolean isMyShops) {
+        showFragment(FragmentMain.newInstance(subCategory, isMyShops), false);
     }
 
     private void showFragment(Fragment fragment, boolean allowStateLoss) {

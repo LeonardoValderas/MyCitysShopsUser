@@ -14,27 +14,35 @@ public class Shop extends BaseModel {
     @PrimaryKey
     @SerializedName("id")
     public int ID_SHOP_KEY;
+
     @Column
     @SerializedName("shop")
     public String SHOP;
+
     @Column
     @SerializedName("id_account")
     public int ID_ACCOUNT_FOREIGN;
+
     @Column
     @SerializedName("user")
     public String USER;
+
     @Column
     @SerializedName("pass")
     public String PASS;
+
     @Column
     @SerializedName("id_city")
     public int ID_CITY_FOREIGN;
+
     @Column
     @SerializedName("id_cat_sub")
     public int ID_CAT_SUB_FOREIGN;
+
     @Column
     @SerializedName("is_active")
     public int ISACTIVE;
+
     @Column
     @SerializedName("url_logo")
     public String URL_LOGO;
@@ -74,6 +82,45 @@ public class Shop extends BaseModel {
     @Column
     @SerializedName("is_follow")
     public int IS_FOLLOW;
+
+    @Column
+    @SerializedName("working_hours")
+    public String WORKING_HOURS;
+
+    @Column
+    @SerializedName("web")
+    public String WEB;
+
+    @Column
+    @SerializedName("whatsapp")
+    public String WHATSAAP;
+
+    @Column
+    @SerializedName("facebook")
+    public String FACEBOOK;
+
+    @Column
+    @SerializedName("instagram")
+    public String INSTAGRAM;
+
+    @Column
+    @SerializedName("twitter")
+    public String TWITTER;
+
+    @Column
+    @SerializedName("snapchat")
+    public String SNAPCHAT;
+
+    @Column
+    @SerializedName("date_unique")
+    public String DATE_UNIQUE;
+
+    @Column(defaultValue = "0")
+    public int IS_SHOP_UPDATE;
+    @Column(defaultValue = "0")
+    public int IS_OFFER_UPDATE;
+    public Shop() {
+    }
 
     public int getID_SHOP_KEY() {
         return ID_SHOP_KEY;
@@ -217,5 +264,85 @@ public class Shop extends BaseModel {
 
     public void setIS_FOLLOW(int IS_FOLLOW) {
         this.IS_FOLLOW = IS_FOLLOW;
+    }
+
+    public String getWORKING_HOURS() {
+        return WORKING_HOURS;
+    }
+
+    public void setWORKING_HOURS(String WORKING_HOURS) {
+        this.WORKING_HOURS = WORKING_HOURS;
+    }
+
+    public String getWEB() {
+        return WEB;
+    }
+
+    public void setWEB(String WEB) {
+        this.WEB = WEB;
+    }
+
+    public String getWHATSAAP() {
+        return WHATSAAP;
+    }
+
+    public void setWHATSAAP(String WHATSAAP) {
+        this.WHATSAAP = WHATSAAP;
+    }
+
+    public String getFACEBOOK() {
+        return FACEBOOK;
+    }
+
+    public void setFACEBOOK(String FACEBOOK) {
+        this.FACEBOOK = FACEBOOK;
+    }
+
+    public String getINSTAGRAM() {
+        return INSTAGRAM;
+    }
+
+    public void setINSTAGRAM(String INSTAGRAM) {
+        this.INSTAGRAM = INSTAGRAM;
+    }
+
+    public String getTWITTER() {
+        return TWITTER;
+    }
+
+    public void setTWITTER(String TWITTER) {
+        this.TWITTER = TWITTER;
+    }
+
+    public String getSNAPCHAT() {
+        return SNAPCHAT;
+    }
+
+    public void setSNAPCHAT(String SNAPCHAT) {
+        this.SNAPCHAT = SNAPCHAT;
+    }
+
+    public String getDATE_UNIQUE() {
+        return DATE_UNIQUE;
+    }
+
+    public void setDATE_UNIQUE(String DATE_UNIQUE) {
+        this.DATE_UNIQUE = DATE_UNIQUE;
+    }
+
+    public int getIS_SHOP_UPDATE() {
+        return IS_SHOP_UPDATE;
+    }
+
+    public void setIS_SHOP_UPDATE(int IS_SHOP_UPDATE) {
+        this.IS_SHOP_UPDATE = IS_SHOP_UPDATE;
+    }
+
+    public int getIS_OFFER_UPDATE() {
+        return IS_OFFER_UPDATE;
+    }
+
+    public void setIS_OFFER_UPDATE(int IS_OFFER_UPDATE) {
+        this.IS_OFFER_UPDATE = IS_OFFER_UPDATE;
     }
 }

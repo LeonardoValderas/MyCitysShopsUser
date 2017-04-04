@@ -11,6 +11,8 @@ import android.widget.TextView;
 
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.entities.shop.Offer;
+import com.valdroide.mycitysshopsuser.utils.Utils;
+
 import java.util.List;
 
 import butterknife.Bind;
@@ -41,7 +43,7 @@ public class DialogOfferAdapter extends RecyclerView.Adapter<DialogOfferAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Offer offer = offerList.get(position);
-        //  Utils.setPicasso(context, shop.getURL_LOGO(), R.mipmap.ic_launcher, holder.imageViewShop);
+        Utils.setPicasso(context, offer.getURL_IMAGE(), R.mipmap.ic_launcher, holder.imageViewOffer);
         holder.textViewTitle.setText(offer.getTITLE());
         holder.textViewOffer.setText(offer.getOFFER());
    //     holder.setOnItemClickListener(onItemClickListener, position, shop);

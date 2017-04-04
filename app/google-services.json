@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "689351523774",
+    "firebase_url": "https://myduser-e5c83.firebaseio.com",
+    "project_id": "myduser-e5c83",
+    "storage_bucket": "myduser-e5c83.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:689351523774:android:efb85bfb3a108e2d",
+        "android_client_info": {
+          "package_name": "com.valdroide.mycitysshopsuser"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "689351523774-e5qv2bt5kr8n9ueeoim58sd7dp01gs1v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBe6xtX8ISg5Ii_9ErQ3VXguENAhOaYMAo"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

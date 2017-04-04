@@ -33,18 +33,18 @@ public class PlaceActivityPresenterImpl implements PlaceActivityPresenter {
     }
 
     @Override
-    public void getCountries() {
-        interactor.getCountries();
+    public void getCountries(Context context) {
+        interactor.getCountries(context);
     }
 
     @Override
-    public void getStateForCountry(int id_country) {
-        interactor.getStateForCountry(id_country);
+    public void getStateForCountry(Context context, int id_country) {
+        interactor.getStateForCountry(context, id_country);
     }
 
     @Override
-    public void getCitiesForState(int id_state) {
-        interactor.getCitiesForState(id_state);
+    public void getCitiesForState(Context context, int id_state) {
+        interactor.getCitiesForState(context, id_state);
     }
 
     @Override

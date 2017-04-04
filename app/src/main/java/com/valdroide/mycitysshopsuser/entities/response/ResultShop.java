@@ -8,6 +8,7 @@ import com.valdroide.mycitysshopsuser.entities.category.SubCategory;
 import com.valdroide.mycitysshopsuser.entities.shop.DateUserCity;
 import com.valdroide.mycitysshopsuser.entities.shop.Offer;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
+import com.valdroide.mycitysshopsuser.entities.shop.Support;
 
 import java.util.List;
 
@@ -33,7 +34,9 @@ public class ResultShop {
     @SerializedName("offer")
     @Expose
     List<Offer> offers;
-
+    @SerializedName("support")
+    @Expose
+    Support support;
 
     public ResponseWS getResponseWS() {
         return responseWS;
@@ -89,5 +92,13 @@ public class ResultShop {
 
     public void setCatSubCities(List<CatSubCity> catSubCities) {
         this.catSubCities = catSubCities;
+    }
+
+    public Support getSupport() {
+        return support;
+    }
+
+    public void setSupport(Support support) {
+        this.support = support;
     }
 }

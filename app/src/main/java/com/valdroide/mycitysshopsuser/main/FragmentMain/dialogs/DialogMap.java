@@ -31,8 +31,8 @@ public class DialogMap implements OnMapReadyCallback {
     ImageView imageViewShop;
     @Bind(R.id.buttonCerrar)
     ImageView buttonCerrar;
-    @Bind(R.id.textViewName)
-    TextView textViewName;
+//    @Bind(R.id.textViewName)
+//    TextView textViewName;
     private Context context;
     public AlertDialog alertDialog;
     private SupportMapFragment mapFragment;
@@ -48,66 +48,82 @@ public class DialogMap implements OnMapReadyCallback {
         this.context = context;
         this.fragment = fragment;
         this.shop = shop;
-
+        Utils.writelogFile(context, "DialogMap y AlertDialog(Map)");
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        Utils.writelogFile(context, "LayoutInflater(Map)");
         LayoutInflater inflater = (LayoutInflater) context
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
+        Utils.writelogFile(context, "inflater(Map)");
         View layout = inflater.inflate(R.layout.dialog_map, null);
+        Utils.writelogFile(context, "builder.setView(layout)(Map)");
         builder.setView(layout);
+        Utils.writelogFile(context, "Se inicia ButterKnife(Map)");
         ButterKnife.bind(this, layout);
-
-        Utils.setPicasso(context, shop.getURL_LOGO(), R.mipmap.ic_launcher, imageViewShop);
-
-        textViewName.setText(shop.getSHOP());
-        if (shop.getLATITUD() != null && shop.getLONGITUD() != null) {
-            latitudExtra = Double.valueOf(shop.getLATITUD());
-            longitudExtra = Double.valueOf(shop.getLONGITUD());
-        }
-        if (mapFragment == null) {
-            mapFragment = (SupportMapFragment) fragment.getActivity().getSupportFragmentManager()
-                    .findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
-        }
-
-        buttonCerrar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                deleteFragmentId();
-                alertDialog.dismiss();
+        try {
+            Utils.writelogFile(context, "fill componentes(Map)");
+            Utils.setPicasso(context, shop.getURL_LOGO(), R.mipmap.ic_launcher, imageViewShop);
+           // textViewName.setText(shop.getSHOP());
+            if (shop.getLATITUD() != null && shop.getLONGITUD() != null) {
+                latitudExtra = Double.valueOf(shop.getLATITUD());
+                longitudExtra = Double.valueOf(shop.getLONGITUD());
             }
-        });
+            if (mapFragment == null) {
+                mapFragment = (SupportMapFragment) fragment.getActivity().getSupportFragmentManager()
+                        .findFragmentById(R.id.map);
+                mapFragment.getMapAsync(this);
+            }
 
-        alertDialog = builder.create();
-        alertDialog.show();
+            buttonCerrar.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    deleteFragmentId();
+                    alertDialog.dismiss();
+                }
+            });
+
+            alertDialog = builder.create();
+            alertDialog.show();
+        } catch (Exception e) {
+            Utils.writelogFile(context, " catch error " + e.getMessage() + "(Map)");
+        }
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
-        mapa = googleMap;
-        touchScreem = new Handler();
-        touchScreem.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mapa.getUiSettings().setAllGesturesEnabled(true);
-            }
-        }, 3000);
-        mapa.getUiSettings().setAllGesturesEnabled(false);
-        CameraPosition cameraPosition = new CameraPosition.Builder()
-                .target(new LatLng(latitudExtra, longitudExtra)).zoom(15).build();
-        CameraUpdate cu = CameraUpdateFactory
-                .newCameraPosition(cameraPosition);
-        mapa.animateCamera(cu);
-        mapa.addMarker(new MarkerOptions().position(
-                new LatLng(latitudExtra, longitudExtra)).title(shop.getSHOP()));
+        Utils.writelogFile(context, "onMapReady(Map)");
+        try {
+            mapa = googleMap;
+            touchScreem = new Handler();
+            touchScreem.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mapa.getUiSettings().setAllGesturesEnabled(true);
+                }
+            }, 3000);
+            mapa.getUiSettings().setAllGesturesEnabled(false);
+            CameraPosition cameraPosition = new CameraPosition.Builder()
+                    .target(new LatLng(latitudExtra, longitudExtra)).zoom(15).build();
+            CameraUpdate cu = CameraUpdateFactory
+                    .newCameraPosition(cameraPosition);
+            mapa.animateCamera(cu);
+            mapa.addMarker(new MarkerOptions().position(
+                    new LatLng(latitudExtra, longitudExtra)).title(shop.getSHOP()));
+        } catch (Exception e) {
+            Utils.writelogFile(context, " catch error " + e.getMessage() + "(Map)");
+        }
     }
 
-    public void deleteFragmentId(){
-        fragmentTransaction = fragment.getActivity().getSupportFragmentManager()
-                .beginTransaction();
+    public void deleteFragmentId() {
+        Utils.writelogFile(context, "deleteFragmentId(Map)");
+        try {
+            fragmentTransaction = fragment.getActivity().getSupportFragmentManager()
+                    .beginTransaction();
 
-        fragmentTransaction.remove( fragment.getActivity().getSupportFragmentManager()
-                .findFragmentById(R.id.map));
-        fragmentTransaction.commit();
+            fragmentTransaction.remove(fragment.getActivity().getSupportFragmentManager()
+                    .findFragmentById(R.id.map));
+            fragmentTransaction.commit();
+        } catch (Exception e) {
+            Utils.writelogFile(context, " catch error " + e.getMessage() + "(Map)");
+        }
     }
 }

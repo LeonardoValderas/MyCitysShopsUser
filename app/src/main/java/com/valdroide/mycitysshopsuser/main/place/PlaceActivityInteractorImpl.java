@@ -13,18 +13,18 @@ public class PlaceActivityInteractorImpl implements PlaceActivityInteractor {
     }
 
     @Override
-    public void getCountries() {
-        repository.getCountries();
+    public void getCountries(Context context) {
+        repository.getCountries(context);
     }
 
     @Override
-    public void getStateForCountry(int id_country) {
-        repository.getStateForCountry(id_country);
+    public void getStateForCountry(Context context, int id_country) {
+        repository.getStateForCountry(context, id_country);
     }
 
     @Override
-    public void getCitiesForState(int id_state) {
-        repository.getCitiesForState(id_state);
+    public void getCitiesForState(Context context, int id_state) {
+        repository.getCitiesForState(context, id_state);
     }
 
     @Override

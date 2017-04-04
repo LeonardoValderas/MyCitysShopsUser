@@ -1,6 +1,8 @@
 package com.valdroide.mycitysshopsuser.main.navigation;
 
 
+import android.content.Context;
+
 public class NavigationActivityInteractorImpl implements NavigationActivityInteractor {
     private NavigationActivityRepository repository;
 
@@ -9,8 +11,18 @@ public class NavigationActivityInteractorImpl implements NavigationActivityInter
     }
 
     @Override
-    public void getCategoriesAndSubCategories() {
-        repository.getCategoriesAndSubCategories();
+    public void getCategoriesAndSubCategories(Context context) {
+        repository.getCategoriesAndSubCategories(context);
+    }
+
+    @Override
+    public void changePlace(Context context) {
+        repository.changePlace(context);
+    }
+
+    @Override
+    public void getUrlShop(Context context, int id_shop) {
+        repository.getUrlShop(context, id_shop);
     }
 
 }

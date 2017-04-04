@@ -13,6 +13,7 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -45,9 +46,12 @@ dependencies {
     compile 'com.squareup.retrofit2:retrofit:2.1.0'
     compile 'com.squareup.okhttp3:okhttp:3.4.1'
     compile 'com.squareup.retrofit2:converter-gson:2.1.0'
-    compile 'com.theartofdev.edmodo:android-image-cropper:2.3.+'
+//    compile 'com.theartofdev.edmodo:android-image-cropper:2.3.+'
     compile 'com.facebook.stetho:stetho:1.4.2'
     testCompile 'junit:junit:4.12'
     compile 'com.google.android.gms:play-services:9.6.1'
+    compile 'com.google.firebase:firebase-messaging:9.6.1'
+    compile "me.leolin:ShortcutBadger:1.1.13@aar"
+//    compile 'com.github.arturogutierrez:badges:1.0.5@aar'
 }
-//apply plugin: 'com.google.gms.google-services'
+apply plugin: 'com.google.gms.google-services'

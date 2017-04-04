@@ -1,6 +1,7 @@
 package com.valdroide.mycitysshopsuser.main.place;
 
 import android.content.Context;
+
 import com.raizlabs.android.dbflow.sql.language.Condition;
 import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
@@ -21,7 +22,7 @@ public class PlaceActivityRepositoryImpl implements PlaceActivityRepository {
     private List<Country> countries;
     private List<State> states;
     private List<City> cities;
-    private APIService service;
+    private APIService service;// no se usaaaaaaa
 
     public PlaceActivityRepositoryImpl(EventBus eventBus, APIService service) {
         this.eventBus = eventBus;
@@ -29,56 +30,79 @@ public class PlaceActivityRepositoryImpl implements PlaceActivityRepository {
     }
 
     @Override
-    public void getCountries() {
+    public void getCountries(Context context) {
+        Utils.writelogFile(context, "getCountries(Place, Repository)");
         try {
             countries = SQLite.select().from(Country.class).where().orderBy(new NameAlias("COUNTRY"), true).queryList();
-            if (countries != null)
+            if (countries != null) {
+                Utils.writelogFile(context, " countries != null(Place, Repository)");
                 post(PlaceActivityEvent.GETCOUNTRIES, countries);
-            else
+            } else {
+                Utils.writelogFile(context, " Base de datos error " + Utils.ERROR_DATA_BASE + "(Place, Repository)");
                 post(PlaceActivityEvent.ERROR, Utils.ERROR_DATA_BASE);
+            }
         } catch (Exception e) {
+            Utils.writelogFile(context, " catch error " + e.getMessage() + "(Place, Repository)");
             post(PlaceActivityEvent.ERROR, e.getMessage());
         }
     }
 
     @Override
-    public void getStateForCountry(int id_country) {
+    public void getStateForCountry(Context context, int id_country) {
+        Utils.writelogFile(context, "getStateForCountry(Place, Repository)");
         ConditionGroup conditionGroup = ConditionGroup.clause();
         conditionGroup.and(Condition.column(new NameAlias("ID_COUNTRY_FOREIGN")).is(id_country));
         try {
             states = SQLite.select().from(State.class).where(conditionGroup).orderBy(new NameAlias("STATE"), true).queryList();
 
-            if (states != null)
+            if (states != null) {
+                Utils.writelogFile(context, " states != null(Place, Repository)");
                 post(PlaceActivityEvent.GETSTATES, states, true);
-            else
+            } else {
+                Utils.writelogFile(context, " Base de datos error " + Utils.ERROR_DATA_BASE + "(Place, Repository)");
                 post(PlaceActivityEvent.ERROR, Utils.ERROR_DATA_BASE);
+            }
         } catch (Exception e) {
+            Utils.writelogFile(context, " catch error " + e.getMessage() + "(Place, Repository)");
             post(PlaceActivityEvent.ERROR, e.getMessage());
         }
     }
 
     @Override
-    public void getCitiesForState(int id_state) {
+    public void getCitiesForState(Context context, int id_state) {
+        Utils.writelogFile(context, "getCitiesForState(Place, Repository)");
         ConditionGroup conditionGroup = ConditionGroup.clause();
         conditionGroup.and(Condition.column(new NameAlias("ID_STATE_FOREIGN")).is(id_state));
         try {
             cities = SQLite.select().from(City.class).where(conditionGroup).orderBy(new NameAlias("CITY"), true).queryList();
-            if (cities != null)
+            if (cities != null) {
+                Utils.writelogFile(context, " cities != null(Place, Repository)");
                 post(PlaceActivityEvent.GETCITIES, 0, cities);
-            else
+            } else {
+                Utils.writelogFile(context, " Base de datos error " + Utils.ERROR_DATA_BASE + "(Place, Repository)");
                 post(PlaceActivityEvent.ERROR, Utils.ERROR_DATA_BASE);
+            }
         } catch (Exception e) {
+            Utils.writelogFile(context, " catch error " + e.getMessage() + "(Place, Repository)");
             post(PlaceActivityEvent.ERROR, e.getMessage());
         }
     }
 
     @Override
     public void savePlace(Context context, final MyPlace place) {
+        Utils.writelogFile(context, "savePlace(Place, Repository)");
         try {
-            place.save();
-            Utils.setIdCity(context, place.getID_CITY_FOREIGN());
-            post(PlaceActivityEvent.SAVE, place);
+            if (place != null) {
+                Utils.writelogFile(context, "place != null y save place(Place, Repository)");
+                place.save();
+                Utils.setIdCity(context, place.getID_CITY_FOREIGN());
+                post(PlaceActivityEvent.SAVE, place);
+            } else {
+                Utils.writelogFile(context, " Base de datos error " + Utils.ERROR_DATA_BASE + "(Place, Repository)");
+                post(PlaceActivityEvent.ERROR, Utils.ERROR_DATA_BASE);
+            }
         } catch (Exception e) {
+            Utils.writelogFile(context, " catch error " + e.getMessage() + "(Place, Repository)");
             post(PlaceActivityEvent.ERROR, e.getMessage());
         }
     }

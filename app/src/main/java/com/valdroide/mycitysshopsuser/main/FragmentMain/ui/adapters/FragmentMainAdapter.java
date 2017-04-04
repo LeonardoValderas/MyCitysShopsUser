@@ -1,9 +1,5 @@
 package com.valdroide.mycitysshopsuser.main.FragmentMain.ui.adapters;
 
-import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
-import android.icu.text.CompactDecimalFormat;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -11,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -48,18 +43,22 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Shop shop = shopsList.get(position);
-        holder.imageViewOfferNew.setVisibility(View.INVISIBLE); // ver si podemos individualizar los cambios de offer
+       // holder.imageViewOfferNew.setVisibility(View.INVISIBLE); // ver si podemos individualizar los cambios de offer
         Utils.setPicasso(fragment.getActivity(), shop.getURL_LOGO(), R.mipmap.ic_launcher, holder.imageViewShop);
 
         holder.textViewDescription.setText("Esta es una descripcion del local. Esta es una descripcion del local." +
                 "Esta es una descripcion del local. Esta es una descripcion del local." +
-                "Esta es una descripcion del local. Esta es una descripcion del local.");
+                "Esta es una descripcion del local. Esta es una descripcion del local.\n" + shop.getWORKING_HOURS());
         if (shop.getIS_FOLLOW() == 1)
             holder.imageViewFollow.setColorFilter(ContextCompat.getColor(fragment.getActivity(), R.color.colorFollowing));
         else
             holder.imageViewFollow.setColorFilter(ContextCompat.getColor(fragment.getActivity(), R.color.colorFollow));
 
-        //if(shop.getFOLLOW() != null)
+        if (shop.getIS_OFFER_UPDATE()== 1)
+            holder.imageViewOfferNew.setVisibility(View.VISIBLE);
+        else
+            holder.imageViewOfferNew.setVisibility(View.INVISIBLE);
+
         holder.textViewFollow.setText(String.valueOf(shop.getFOLLOW()));
         holder.setOnItemClickListener(onItemClickListener, position, shop);
     }
@@ -70,13 +69,18 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
     }
 
     public void setShop(List<Shop> shops) {
-        this.shopsList = shops;
+        shopsList = shops;
         notifyDataSetChanged();
     }
 
     public void setUpdateShop(int position, Shop shop) {
-        this.shopsList.remove(position);
-        this.shopsList.add(position, shop);
+        shopsList.remove(shop);
+        shopsList.add(position, shop);
+        notifyDataSetChanged();
+    }
+
+    public void setUpdateShop(int position) {
+        shopsList.get(position).setIS_OFFER_UPDATE(0);
         notifyDataSetChanged();
     }
 
@@ -86,7 +90,7 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
         @Bind(R.id.textViewDescription)
         TextView textViewDescription;
         @Bind(R.id.linearConteiner)
-        ConstraintLayout linearConteiner;
+        LinearLayout linearConteiner;
         @Bind(R.id.imageViewFollow)
         ImageView imageViewFollow;
         @Bind(R.id.textViewFollow)
@@ -107,26 +111,20 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
 
         public void setOnItemClickListener(final OnItemClickListener listener, final int position, final Shop shop) {
 
-//            linearConteiner.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    listener.onClick(v, position);
-//                }
-//            });
             imageViewFollow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (shop.getIS_FOLLOW() == 0)
-                        listener.onClickFollow(position, shop);
+                        listener.onClickFollowOrUnFollow(position, shop, true);
                     else
-                        listener.onClickUnFollow(position, shop);
+                        listener.onClickFollowOrUnFollow(position, shop, false);
 
                 }
             });
             imageViewOffer.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onClickOffer(shop);
+                    listener.onClickOffer(position, shop);
                 }
             });
             imageViewMap.setOnClickListener(new View.OnClickListener() {

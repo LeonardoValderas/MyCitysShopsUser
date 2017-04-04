@@ -29,6 +29,10 @@ import com.valdroide.mycitysshopsuser.main.splash.di.DaggerSplashActivityCompone
 import com.valdroide.mycitysshopsuser.main.splash.di.SplashActivityComponent;
 import com.valdroide.mycitysshopsuser.main.splash.di.SplashActivityModule;
 import com.valdroide.mycitysshopsuser.main.splash.ui.SplashActivityView;
+import com.valdroide.mycitysshopsuser.main.support.di.DaggerSupportActivityComponent;
+import com.valdroide.mycitysshopsuser.main.support.di.SupportActivityComponent;
+import com.valdroide.mycitysshopsuser.main.support.di.SupportActivityModule;
+import com.valdroide.mycitysshopsuser.main.support.ui.SupportActivityView;
 
 public class MyCitysShopsUserApp extends Application {
     private LibsModule libsModule;
@@ -60,6 +64,15 @@ public class MyCitysShopsUserApp extends Application {
     private void initModules() {
         libsModule = new LibsModule();
         myCitysShopsUserAppModule = new MyCitysShopsUserAppModule(this);
+    }
+
+    public SupportActivityComponent getSupportActivityComponent(SupportActivityView view, Activity activity) {
+        return DaggerSupportActivityComponent
+                .builder()
+                .myCitysShopsUserAppModule(myCitysShopsUserAppModule)
+                .libsModule(new LibsModule(activity))
+                .supportActivityModule(new SupportActivityModule(view, activity))
+                .build();
     }
 
     public NavigationActivityComponent getNavigationActivityComponent(Activity activity, Context context, NavigationActivityView view) {

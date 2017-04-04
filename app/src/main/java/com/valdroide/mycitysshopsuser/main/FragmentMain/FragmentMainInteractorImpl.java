@@ -3,6 +3,7 @@ package com.valdroide.mycitysshopsuser.main.FragmentMain;
 import android.content.Context;
 
 import com.valdroide.mycitysshopsuser.entities.category.SubCategory;
+import com.valdroide.mycitysshopsuser.entities.shop.DateUserCity;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
 
 public class FragmentMainInteractorImpl implements FragmentMainInteractor {
@@ -14,32 +15,42 @@ public class FragmentMainInteractorImpl implements FragmentMainInteractor {
     }
 
     @Override
-    public void getListShops(SubCategory subCategory) {
-        repository.getListShops(subCategory);
+    public void getListShops(Context context, SubCategory subCategory) {
+        repository.getListShops(context, subCategory);
     }
 
     @Override
-    public void getListOffer(int id_shop) {
-        repository.getListOffer(id_shop);
+    public void getListOffer(Context context, int id_shop) {
+        repository.getListOffer(context, id_shop);
     }
 
     @Override
-    public void getDateTable() {
-        repository.getDateTable();
+    public void getDateUserCity(Context context) {
+        repository.getDateUserCity(context);
     }
 
     @Override
-    public void refreshLayout(Context context, String date, String category, String subcategory, String clothes, String contact) {
-        repository.refreshLayout(context, date, category, subcategory, clothes, contact);
+    public void refreshLayout(Context context, DateUserCity dateUserCity) {
+        repository.refreshLayout(context, dateUserCity);
     }
 
     @Override
-    public void onClickFollow(Context context, Shop shop) {
-        repository.onClickFollow(context, shop);
+    public void getMyFavoriteShops(Context context) {
+        repository.getMyFavoriteShops(context);
     }
 
     @Override
-    public void onClickUnFollow(Context context, Shop shop) {
-        repository.onClickUnFollow(context, shop);
+    public void setUpdateOffer(Context context, int position, Shop shop) {
+        repository.setUpdateOffer(context, position, shop);
     }
+
+    @Override
+    public void onClickFollowOrUnFollow(Context context, Shop shop, boolean isFollow) {
+        repository.onClickFollowOrUnFollow(context, shop, isFollow);
+    }
+
+//    @Override
+//    public void onClickUnFollow(Context context, Shop shop) {
+//        repository.onClickUnFollow(context, shop);
+//    }
 }

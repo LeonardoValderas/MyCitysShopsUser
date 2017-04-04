@@ -16,6 +16,9 @@ public class ShopFollow extends BaseModel {
     public int ID_SHOP_FOREIGN;
     @Column
     public int IS_SHOP_FOLLOW;
+    @Column
+    public int ID_CITY;
+
     public ShopFollow() {
     }
 
@@ -41,5 +44,13 @@ public class ShopFollow extends BaseModel {
 
     public void setIS_SHOP_FOLLOW(int IS_SHOP_FOLLOW) {
         this.IS_SHOP_FOLLOW = IS_SHOP_FOLLOW;
+    }
+
+    public int getID_CITY() {
+        return ID_CITY;
+    }
+
+    public void setID_CITY(int ID_CITY) {
+        this.ID_CITY = ID_CITY;
     }
 }

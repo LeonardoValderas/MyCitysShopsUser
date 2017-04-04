@@ -16,8 +16,11 @@ import com.squareup.picasso.Picasso;
 import com.valdroide.mycitysshopsuser.R;
 
 import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStreamWriter;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -25,20 +28,42 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
+
+import javax.activation.CommandMap;
+import javax.activation.DataHandler;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import javax.activation.MailcapCommandMap;
+import javax.mail.BodyPart;
+import javax.mail.Message;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 
 public class Utils {
 
     public static String URL_IMAGE = "http://10.0.2.2:8080/my_citys_shops_adm/account/image_account/";
     //public static String URL_IMAGE = "http://myd.esy.es/myd/clothes/image_clothes/";
 
-    public static String ERROR_DATA_BASE = "Error al guardar los datos.";
+    public static String ERROR_DATA_BASE = "Error en la base de datos.";
     public static String ERROR_INTERNET = "Verificar su conexión de Internet.";
     public static String ERROR_OFFER_VALIDATE = "Problemas al validar sus Promos.";
 
     //FECHAS
-    public static String getFechaInit() {
+    public static String getFechaLogFile() {
         Date dateOficial = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        return sdf.format(dateOficial);
+    }
+
+    public static String getFechaOficialSeparate() {
+        Date dateOficial = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(dateOficial);
     }
 
@@ -261,24 +286,209 @@ public class Utils {
         editor.commit();
     }
 
-/*
-    public static void setIdUser(Context context, int id) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.user_id_shared), Context.MODE_PRIVATE);
+    public static boolean validateLogFile(Context context) {
+        try {
+            if (getDateLogFile(context).equals("") || !getFechaLogFile().equals(getDateLogFile(context)))
+                return createLogFile(context);
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
+    public static boolean createLogFile(Context context) {
+        try {
+            File logFile = new File(context.getFilesDir() + "/" + context.getString(R.string.log_file_name));
+            if (logFile.createNewFile()) {
+                writelogFile(context, "Se crea archivo log correctamente");
+                setDateLogFile(context, getFechaLogFile());
+                return true;
+            } else {
+                logFile.delete();
+                logFile.createNewFile();
+                setDateLogFile(context, getFechaLogFile());
+                return true;
+            }
+        } catch (Exception e) {
+            writelogFile(context, e.getMessage());
+            return false;
+        }
+    }
+
+    public static void writelogFile(Context context, String msg) {
+        FileOutputStream fileOutputStream = null;
+        OutputStreamWriter write = null;
+        try {
+            fileOutputStream = new FileOutputStream(new File(context.getFilesDir() + "/" +
+                    context.getResources().getString(R.string.log_file_name)), true);
+            write = new OutputStreamWriter(fileOutputStream);
+            write.append(msg + " " + Utils.getFechaOficialSeparate() + "\n");
+
+            write.close();
+            fileOutputStream.flush();
+            fileOutputStream.close();
+
+        } catch (Exception e) {
+
+        } finally {
+            if (fileOutputStream != null)
+                fileOutputStream = null;
+            if (write != null)
+                write = null;
+        }
+    }
+
+    public static void setDateLogFile(Context context, String date) {
+        writelogFile(context, "Se actualiza date Log SharePreferences");
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.log_date_shared), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(context.getString(R.string.id_user), id);
+        editor.putString(context.getString(R.string.log_date), date);
+        editor.commit();
+        writelogFile(context, "Se actualiza date Log SharePreferences Correctamente");
+    }
+
+    public static String getDateLogFile(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.log_date_shared), Context.MODE_PRIVATE);
+        return sharedPreferences.getString(context.getString(R.string.log_date), "");
+    }
+
+    ////EMAIL SENDER
+
+    public static CommandMap createMailcapCommandMap() {
+        try {
+            MailcapCommandMap mc = (MailcapCommandMap) CommandMap.getDefaultCommandMap();
+            mc.addMailcap("text/html;; x-java-content-handler=com.sun.mail.handlers.text_html");
+            mc.addMailcap("text/xml;; x-java-content-handler=com.sun.mail.handlers.text_xml");
+            mc.addMailcap("text/plain;; x-java-content-handler=com.sun.mail.handlers.text_plain");
+            mc.addMailcap("multipart/*;; x-java-content-handler=com.sun.mail.handlers.multipart_mixed");
+            mc.addMailcap("message/rfc822;; x-java-content-handler=com.sun.mail.handlers.message_rfc822");
+            CommandMap.setDefaultCommandMap(mc);
+            return mc;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static Session createPropertiesAndSession(final String from, final String password) {
+        try {
+            Properties properties = System.getProperties();
+            properties.put("mail.smtp.port", "465");
+            properties.put("mail.smtp.host", "smtp.gmail.com");
+            properties.put("mail.smtp.socketFactory.port", "465");
+            properties.put("mail.smtp.socketFactory.class",
+                    "javax.net.ssl.SSLSocketFactory");
+            properties.put("mail.smtp.auth", "true");
+            properties.put("mail.smtp.port", "465");
+            return createSession(properties, from, password);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static Session createSession(Properties properties, final String from, final String password) {
+        try {
+            return Session.getDefaultInstance(properties,
+                    new javax.mail.Authenticator() {
+                        protected PasswordAuthentication getPasswordAuthentication() {
+                            return new PasswordAuthentication(from, password);
+                        }
+                    });
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static MimeMessage createMimeMessage(Session session, final String from, final String to, final String Shop_name, Context context) {
+        try {
+            MimeMessage message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(from));
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(to));
+            message.setSubject("Soporte " + Shop_name + " " + "Ciudad: " + Utils.getIdCity(context));
+            return message;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static BodyPart createMimeBodyPart(String comment) {
+        try {
+            BodyPart messageBodyPart1 = new MimeBodyPart();
+            messageBodyPart1.setText(comment);
+            return messageBodyPart1;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+
+    public static MimeBodyPart createMimeBodyPart2(String filename) {
+        try {
+            MimeBodyPart messageBodyPart2 = new MimeBodyPart();
+            //Location of file to be attached
+            //String filename = context.getFilesDir() + "/" + context.getResources().getString(R.string.log_file_name);
+            DataSource source = new FileDataSource(filename);
+            messageBodyPart2.setDataHandler(new DataHandler(source));
+            messageBodyPart2.setFileName("Error_Log.txt");
+            return messageBodyPart2;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static Multipart createMultipart(BodyPart messageBodyPart1, MimeBodyPart messageBodyPart2) {
+        try {
+            Multipart multipart = new MimeMultipart();
+            multipart.addBodyPart(messageBodyPart1);
+            multipart.addBodyPart(messageBodyPart2);
+            return multipart;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    public static String getToken(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.FCM_PREF), Context.MODE_PRIVATE);
+        return sharedPreferences.getString(context.getString(R.string.FCM_TOKEN), "");
+    }
+    public static String getOldToken(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.FCM_PREF), Context.MODE_PRIVATE);
+        return sharedPreferences.getString(context.getString(R.string.FCM_OLD_TOKEN), "");
+    }
+    public static boolean getIsNewToken(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.FCM_PREF), Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(context.getString(R.string.FCM_IS_NEW), false);
+    }
+
+    public static void setOldAndNewToken(Context context, String old_token, String recent_token, boolean isNew) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.FCM_PREF), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(context.getString(R.string.FCM_OLD_TOKEN), old_token);
+        editor.putString(context.getString(R.string.FCM_TOKEN), recent_token);
+        editor.putBoolean(context.getString(R.string.FCM_IS_NEW), isNew);
         editor.commit();
     }
 
-    public static int getIdUser(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.user_id_shared), Context.MODE_PRIVATE);
-        return sharedPreferences.getInt(context.getString(R.string.id_user), 0);
-    }
-
-    public static void resetIdUser(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.user_id_shared), Context.MODE_PRIVATE);
+    public static void resetOldToken(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.FCM_PREF), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putInt(context.getString(R.string.id_user), 0);
+        editor.putString(context.getString(R.string.FCM_OLD_TOKEN), "");
+        editor.putBoolean(context.getString(R.string.FCM_IS_NEW), false);
         editor.commit();
     }
-    */
+
+    public static void processToken(Context context, String token){
+        String current_token = "";
+        if (token != null)
+            if (!token.isEmpty()) {
+                current_token = Utils.getToken(context);
+                if (current_token != null)
+                    if (current_token.isEmpty()) {
+                        Utils.setOldAndNewToken(context, "", token, true);
+                    } else {
+                        if (token.compareTo(current_token) != 0) {
+                            Utils.setOldAndNewToken(context, current_token, token, true);
+                        }
+                    }
+            }
+    }
 }

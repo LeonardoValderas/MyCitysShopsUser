@@ -4,6 +4,7 @@ public class SplashActivityEvent {
     private int type;
     public static final int GOTOPLACE = 0;
     public static final int GOTONAV = 1;
+    public static final int TOKENSUCCESS = 3;
     public static final int ERROR = 2;
     private String error;
 
