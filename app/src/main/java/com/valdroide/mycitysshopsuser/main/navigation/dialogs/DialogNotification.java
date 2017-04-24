@@ -43,9 +43,9 @@ public class DialogNotification {
         ButterKnife.bind(this, layout);
         try {
             Utils.writelogFile(context, "fill componentes(Notification)");
-            Utils.setPicasso(context, url, R.mipmap.ic_launcher, imageViewShop);
+            Utils.setPicasso(context, url, R.drawable.ic_launcher, imageViewShop);
             textViewMessage.setText(message);
-
+            textViewMessage.setTypeface(Utils.setFontExoTextView(context));
             buttonCerrar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -53,6 +53,8 @@ public class DialogNotification {
                 }
             });
             alertDialog = builder.create();
+
+            alertDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             //alertDialog.getWindow().setLayout(550, 500);
             alertDialog.show();
         } catch (Exception e) {

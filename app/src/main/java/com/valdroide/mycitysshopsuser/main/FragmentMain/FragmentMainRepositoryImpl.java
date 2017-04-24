@@ -7,6 +7,7 @@ import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.api.APIService;
 import com.valdroide.mycitysshopsuser.entities.category.CatSubCity;
 import com.valdroide.mycitysshopsuser.entities.category.CatSubCity_Table;
@@ -73,7 +74,7 @@ public class FragmentMainRepositoryImpl implements FragmentMainRepository {
                 post(FragmentMainEvent.GETLISTSHOPS, shopsList);
             } else {
                 Utils.writelogFile(context, "shopsList == null y post ERROR(Fragmentmain, Repository)");
-                post(FragmentMainEvent.ERROR, Utils.ERROR_DATA_BASE);
+                post(FragmentMainEvent.ERROR, context.getString(R.string.error_data_base));
             }
         } catch (Exception e) {
             Utils.writelogFile(context, " catch error " + e.getMessage() + "(Fragmentmain, Repository)");
@@ -96,7 +97,7 @@ public class FragmentMainRepositoryImpl implements FragmentMainRepository {
                 post(FragmentMainEvent.GETLISTOFFER, offers, true);
             } else {
                 Utils.writelogFile(context, "offers == null y post ERROR(Fragmentmain, Repository)");
-                post(FragmentMainEvent.ERROR, Utils.ERROR_DATA_BASE);
+                post(FragmentMainEvent.ERROR, context.getString(R.string.error_data_base));
             }
         } catch (Exception e) {
             Utils.writelogFile(context, " catch error " + e.getMessage() + "(Fragmentmain, Repository)");
@@ -104,7 +105,7 @@ public class FragmentMainRepositoryImpl implements FragmentMainRepository {
         }
     }
 
-    public int selectIdCatSubCity(Context context, SubCategory subCategory) {
+    private int selectIdCatSubCity(Context context, SubCategory subCategory) {
         Utils.writelogFile(context, "selectIdCatSubCity(Fragmentmain, Repository)");
         ConditionGroup conditionGroup = ConditionGroup.clause();
         conditionGroup.and(Condition.column(new NameAlias("CatSubCity.ID_CATEGORY_FOREIGN")).is(subCategory.getID_CATEGORY()));
@@ -154,7 +155,7 @@ public class FragmentMainRepositoryImpl implements FragmentMainRepository {
                 post(FragmentMainEvent.GETLISTSHOPS, shopsList);
             } else {
                 Utils.writelogFile(context, "shopsList == null y post ERROR (Fragmentmain, Repository)");
-                post(FragmentMainEvent.ERROR, Utils.ERROR_DATA_BASE);
+                post(FragmentMainEvent.ERROR, context.getString(R.string.error_data_base));
             }
         } catch (Exception e) {
             Utils.writelogFile(context, " catch error " + e.getMessage() + "(Fragmentmain, Repository)");
@@ -312,89 +313,100 @@ public class FragmentMainRepositoryImpl implements FragmentMainRepository {
                 post(FragmentMainEvent.ERROR, e.getMessage());
             }
         } else {
-            Utils.writelogFile(context, " Internet error " + Utils.ERROR_INTERNET + "(Fragmentmain, Repository)");
-            post(FragmentMainEvent.ERROR, Utils.ERROR_INTERNET);
+            Utils.writelogFile(context, " Internet error " + context.getString(R.string.error_internet) + "(Fragmentmain, Repository)");
+            post(FragmentMainEvent.ERROR, context.getString(R.string.error_internet));
         }
     }
 
     @Override
     public void onClickFollowOrUnFollow(final Context context, final Shop shop, final boolean isFollow) {
         Utils.writelogFile(context, "Metodo onClickFollowOrUnFollow y Se valida conexion a internet(Fragmentmain, Repository)");
-        final String date = Utils.getFechaOficialSeparate();
-        if (Utils.isNetworkAvailable(context)) {
-            try {
-                Utils.writelogFile(context, "Call followOrUnFollow(Fragmentmain, Repository)");
-                Call<ResponseWS> followService = service.followOrUnFollow(shop.getID_SHOP_KEY(), Utils.getIdCity(context),
-                        date, isFollow, getIdToken(context));
-                followService.enqueue(new Callback<ResponseWS>() {
-                    @Override
-                    public void onResponse(Call<ResponseWS> call, Response<ResponseWS> response) {
-                        if (response.isSuccessful()) {
-                            Utils.writelogFile(context, "Response Successful y get ResponseWS(Fragmentmain, Repository)");
-                            if (response.body().getSuccess() != null) {
-                                Utils.writelogFile(context, "ResponseWS != null y valida getSuccess(Fragmentmain, Repository)");
-                                if (response.body().getSuccess().equals("0")) {
-                                    Utils.writelogFile(context, "getSuccess = 0 y getId(Fragmentmain, Repository)");
-                                    int follow = response.body().getId();
-                                    if (follow != 0) {
-                                        Utils.writelogFile(context, "getId != 0 y fill shop object save y post FOLLOW(Fragmentmain, Repository)");
-                                        //shopInit = shop;
-                                        shop.setFOLLOW(follow);
-                                        if (isFollow) {
-                                            Utils.writelogFile(context, "is follow(Fragmentmain, Repository)");
-                                            shop.setIS_FOLLOW(1);
+        if (getIdToken(context) != 0) {
+            final String date = Utils.getFechaOficialSeparate();
+            if (Utils.isNetworkAvailable(context)) {
+                try {
+                    Utils.writelogFile(context, "Call followOrUnFollow(Fragmentmain, Repository)");
+                    Call<ResponseWS> followService = service.followOrUnFollow(shop.getID_SHOP_KEY(), Utils.getIdCity(context),
+                            date, isFollow, getIdToken(context));
+                    followService.enqueue(new Callback<ResponseWS>() {
+                        @Override
+                        public void onResponse(Call<ResponseWS> call, Response<ResponseWS> response) {
+                            if (response.isSuccessful()) {
+                                Utils.writelogFile(context, "Response Successful y get ResponseWS(Fragmentmain, Repository)");
+                                if (response.body().getSuccess() != null) {
+                                    Utils.writelogFile(context, "ResponseWS != null y valida getSuccess(Fragmentmain, Repository)");
+                                    if (response.body().getSuccess().equals("0")) {
+                                        Utils.writelogFile(context, "getSuccess = 0 y getId(Fragmentmain, Repository)");
+                                        int follow = response.body().getId();
+                                        if (follow != 0) {
+                                            Utils.writelogFile(context, "getId != 0 y fill shop object save y post FOLLOW(Fragmentmain, Repository)");
+                                            //shopInit = shop;
+                                            shop.setFOLLOW(follow);
+                                            if (isFollow) {
+                                                Utils.writelogFile(context, "is follow(Fragmentmain, Repository)");
+                                                shop.setIS_FOLLOW(1);
+                                            } else {
+                                                Utils.writelogFile(context, "is unfollow(Fragmentmain, Repository)");
+                                                shop.setIS_FOLLOW(0);
+                                            }
+                                            shop.setDATE_UNIQUE(date);
+                                            shop.update();
+                                            setDateUserCity(context, date);
+                                            shopFollow = new ShopFollow();
+                                            if (isFollow) {
+                                                Utils.writelogFile(context, "is follow-shopFollow(Fragmentmain, Repository)");
+                                                shopFollow.setID_SHOP_FOREIGN(shop.getID_SHOP_KEY());
+                                                shopFollow.setIS_SHOP_FOLLOW(1);
+                                                shopFollow.setID_CITY(Utils.getIdCity(context));
+                                                shopFollow.save();
+                                            } else {
+                                                Utils.writelogFile(context, "is unfollow-shopFollow(Fragmentmain, Repository)");
+                                                shopFollow = getShopFollow(shop.getID_SHOP_KEY());
+                                                if (shopFollow != null) {
+                                                    Utils.writelogFile(context, "shopFollow != null(Fragmentmain, Repository)");
+                                                    shopFollow.delete();
+                                                } else {
+                                                    Utils.writelogFile(context, "shopFollow == null(Fragmentmain, Repository)");
+                                                    post(FragmentMainEvent.ERROR, context.getString(R.string.error_data_base));
+                                                }
+                                            }
+                                            post(FragmentMainEvent.FOLLOWORUNFOLLOW, shop);
                                         } else {
-                                            Utils.writelogFile(context, "is unfollow(Fragmentmain, Repository)");
-                                            shop.setIS_FOLLOW(0);
+                                            Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(Fragmentmain, Repository)");
+                                            post(FragmentMainEvent.ERROR, context.getString(R.string.error_data_base));
                                         }
-                                        shop.setDATE_UNIQUE(date);
-                                        shop.update();
-                                        setDateUserCity(context, date);
-                                        shopFollow = new ShopFollow();
-                                        if (isFollow) {
-                                            Utils.writelogFile(context, "is follow-shopFollow(Fragmentmain, Repository)");
-                                            shopFollow.setID_SHOP_FOREIGN(shop.getID_SHOP_KEY());
-                                            shopFollow.setIS_SHOP_FOLLOW(1);
-                                            shopFollow.setID_CITY(Utils.getIdCity(context));
-                                            shopFollow.save();
-                                        } else {
-                                            Utils.writelogFile(context, "is unfollow-shopFollow(Fragmentmain, Repository)");
-                                            shopFollow = getShopFollow(shop.getID_SHOP_KEY());
-                                            shopFollow.delete();
-                                        }
-                                        post(FragmentMainEvent.FOLLOWORUNFOLLOW, shop);
                                     } else {
-                                        Utils.writelogFile(context, " Base de datos error " + Utils.ERROR_DATA_BASE + "(Fragmentmain, Repository)");
-                                        post(FragmentMainEvent.ERROR, Utils.ERROR_DATA_BASE);
+                                        Utils.writelogFile(context, " getSuccess = error " + responseWS.getMessage() + "(Fragmentmain, Repository)");
+                                        post(FragmentMainEvent.ERROR, response.body().getMessage());
                                     }
                                 } else {
-                                    Utils.writelogFile(context, " getSuccess = error " + responseWS.getMessage() + "(Fragmentmain, Repository)");
-                                    post(FragmentMainEvent.ERROR, response.body().getMessage());
+                                    Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(Fragmentmain, Repository)");
+                                    post(FragmentMainEvent.ERROR, context.getString(R.string.error_data_base));
                                 }
-                            } else {
-                                Utils.writelogFile(context, " Base de datos error " + Utils.ERROR_DATA_BASE + "(Fragmentmain, Repository)");
-                                post(FragmentMainEvent.ERROR, Utils.ERROR_DATA_BASE);
                             }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(Call<ResponseWS> call, Throwable t) {
-                        Utils.writelogFile(context, " Call error " + t.getMessage() + "(Fragmentmain, Repository)");
-                        post(FragmentMainEvent.ERROR, t.getMessage());
-                    }
-                });
-            } catch (Exception e) {
-                Utils.writelogFile(context, " catch error " + e.getMessage() + "(Fragmentmain, Repository)");
-                post(FragmentMainEvent.ERROR, e.getMessage());
+                        @Override
+                        public void onFailure(Call<ResponseWS> call, Throwable t) {
+                            Utils.writelogFile(context, " Call error " + t.getMessage() + "(Fragmentmain, Repository)");
+                            post(FragmentMainEvent.ERROR, t.getMessage());
+                        }
+                    });
+                } catch (Exception e) {
+                    Utils.writelogFile(context, " catch error " + e.getMessage() + "(Fragmentmain, Repository)");
+                    post(FragmentMainEvent.ERROR, e.getMessage());
+                }
+            } else {
+                Utils.writelogFile(context, " Internet error " + context.getString(R.string.error_internet) + "(Fragmentmain, Repository)");
+                post(FragmentMainEvent.ERROR, context.getString(R.string.error_internet));
             }
         } else {
-            Utils.writelogFile(context, " Internet error " + Utils.ERROR_INTERNET + "(Fragmentmain, Repository)");
-            post(FragmentMainEvent.ERROR, Utils.ERROR_INTERNET);
+            Utils.writelogFile(context, "Error token(Fragmentmain, Repository)");
+            post(FragmentMainEvent.ERROR, context.getString(R.string.error_id_device));
         }
     }
 
-    public boolean setDateUserCity(Context context, String date) {
+    private boolean setDateUserCity(Context context, String date) {
         Utils.writelogFile(context, "setDateUserCity(Fragmentmain, Repository)");
         try {
             DateUserCity dateUserCity = SQLite.select().from(DateUserCity.class).querySingle();
@@ -408,46 +420,52 @@ public class FragmentMainRepositoryImpl implements FragmentMainRepository {
         }
     }
 
-    public ShopFollow getShopFollow(int id_shop) {
+    private ShopFollow getShopFollow(int id_shop) {
         ConditionGroup conditionGroup = ConditionGroup.clause();
         conditionGroup.and(Condition.column(new NameAlias("ShopFollow.ID_SHOP_FOREIGN")).is(id_shop));
-
-        return SQLite.select().from(ShopFollow.class).where(conditionGroup).querySingle();
+        try {
+            return SQLite.select().from(ShopFollow.class).where(conditionGroup).querySingle();
+        } catch (Exception e) {
+            return null;
+        }
     }
 
-    public int getIdToken(Context context) {
+    private int getIdToken(Context context) {
         Utils.writelogFile(context, "getIdToken(Fragmentmain, Repository)");
         ConditionGroup conditions = ConditionGroup.clause();
         conditions.and(Condition.column(new NameAlias("Token.ID_CITY_FOREIGN")).is(Utils.getIdCity(context)));
-
-        return SQLite.select(Token_Table.ID_TOKEN_KEY).from(Token.class).where(conditions).querySingle().getID_TOKEN_KEY();
+        try {
+            return SQLite.select(Token_Table.ID_TOKEN_KEY).from(Token.class).where(conditions).querySingle().getID_TOKEN_KEY();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
-    public void post(int type) {
+    private void post(int type) {
         post(type, null, null, null, null, null);
     }
 
-    public void post(int type, List<Shop> shopsList) {
+    private void post(int type, List<Shop> shopsList) {
         post(type, shopsList, null, null, null, null);
     }
 
-    public void post(int type, List<Offer> offers, boolean isOffer) {
+    private void post(int type, List<Offer> offers, boolean isOffer) {
         post(type, null, offers, null, null, null);
     }
 
-    public void post(int type, Shop shop) {
+    private void post(int type, Shop shop) {
         post(type, null, null, shop, null, null);
     }
 
-    public void post(int type, String error) {
+    private void post(int type, String error) {
         post(type, null, null, null, null, error);
     }
 
-    public void post(int type, DateUserCity dateUserCity) {
+    private void post(int type, DateUserCity dateUserCity) {
         post(type, null, null, null, dateUserCity, null);
     }
 
-    public void post(int type, List<Shop> shopsList, List<Offer> offers, Shop shop, DateUserCity dateUserCity, String error) {
+    private void post(int type, List<Shop> shopsList, List<Offer> offers, Shop shop, DateUserCity dateUserCity, String error) {
         FragmentMainEvent event = new FragmentMainEvent();
         event.setType(type);
         event.setShopsList(shopsList);

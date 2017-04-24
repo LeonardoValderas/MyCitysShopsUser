@@ -12,6 +12,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.valdroide.mycitysshopsuser.R;
@@ -33,13 +34,10 @@ public class DialogOffer {
     ImageView imageViewShop;
     @Bind(R.id.recyclerViewOffer)
     RecyclerView recyclerViewOffer;
-//    @Bind(R.id.textViewName)
+    //    @Bind(R.id.textViewName)
 //    TextView textViewName;
     @Bind(R.id.textViewEmpty)
     TextView textViewEmpty;
-
-    @Bind(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbarLayout;
 
 
     private DialogOfferAdapter adapter;
@@ -62,12 +60,12 @@ public class DialogOffer {
 
         try {
             Utils.writelogFile(context, "fill componentes(Offer)");
-            Utils.setPicasso(context, shop.getURL_LOGO(), R.mipmap.ic_launcher, imageViewShop);
-           // textViewName.setText(shop.getSHOP());
+            Utils.setPicasso(context, shop.getURL_LOGO(), R.drawable.ic_launcher, imageViewShop);
+            // textViewName.setText(shop.getSHOP());
             if (offers.size() > 0) {
                 textViewEmpty.setVisibility(View.GONE);
                 adapter = new DialogOfferAdapter(offers, context);
-                recyclerViewOffer.setLayoutManager(new LinearLayoutManager(context));
+                recyclerViewOffer.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
                 recyclerViewOffer.setHasFixedSize(true);
                 recyclerViewOffer.setAdapter(adapter);
             } else {
@@ -80,33 +78,13 @@ public class DialogOffer {
                     alertDialog.dismiss();
                 }
             });
-            dynamicToolbarColor();
-            toolbarTextAppernce();
+
             alertDialog = builder.create();
+            alertDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             //  alertDialog.getWindow().setLayout(1200, 500);
             alertDialog.show();
         } catch (Exception e) {
             Utils.writelogFile(context, " catch error " + e.getMessage() + "(Offer)");
         }
-    }
-
-    private void dynamicToolbarColor() {
-        Utils.writelogFile(context, "dynamicToolbarColor(Offer)");
-        Bitmap bitmap = BitmapFactory.decodeResource(context.getResources(),
-                R.mipmap.ic_launcher);
-        Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-
-            @Override
-            public void onGenerated(Palette palette) {
-                collapsingToolbarLayout.setContentScrimColor(ContextCompat.getColor(context, R.color.colorAccent));
-                collapsingToolbarLayout.setStatusBarScrimColor(ContextCompat.getColor(context, R.color.colorAccent));
-            }
-        });
-    }
-
-    private void toolbarTextAppernce() {
-        Utils.writelogFile(context, "toolbarTextAppernce(Offer)");
-        collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.collapsedappbar);
-        collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.expandedappbar);
     }
 }

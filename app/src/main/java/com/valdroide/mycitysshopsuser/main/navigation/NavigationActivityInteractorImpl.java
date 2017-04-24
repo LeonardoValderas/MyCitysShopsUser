@@ -19,10 +19,4 @@ public class NavigationActivityInteractorImpl implements NavigationActivityInter
     public void changePlace(Context context) {
         repository.changePlace(context);
     }
-
-    @Override
-    public void getUrlShop(Context context, int id_shop) {
-        repository.getUrlShop(context, id_shop);
-    }
-
 }

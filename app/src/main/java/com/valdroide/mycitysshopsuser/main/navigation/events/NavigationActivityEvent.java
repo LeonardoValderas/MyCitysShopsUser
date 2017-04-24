@@ -9,11 +9,9 @@ public class NavigationActivityEvent {
     public static final int GETCATEGORIESANDSUBCATEGORIES = 0;
     public static final int ERROR = 1;
     public static final int CHANGEPLACE = 2;
-    public static final int GETURL = 3;
     private String error;
     private List<Category> categories;
     private List<SubCategory> subCategories;
-    private String url;
     public int getType() {
         return type;
     }
@@ -44,13 +42,5 @@ public class NavigationActivityEvent {
 
     public void setSubCategories(List<SubCategory> subCategories) {
         this.subCategories = subCategories;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 }

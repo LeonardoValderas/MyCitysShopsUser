@@ -3,28 +3,26 @@ package com.valdroide.mycitysshopsuser.main.navigation.ui;
 
 import android.app.AlarmManager;
 import android.app.PendingIntent;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.View;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ExpandableListView;
 
-//import com.github.arturogutierrez.Badges;
-//import com.github.arturogutierrez.BadgesNotSupportedException;
 import com.valdroide.mycitysshopsuser.MyCitysShopsUserApp;
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.entities.category.Category;
 import com.valdroide.mycitysshopsuser.entities.category.SubCategory;
-import com.valdroide.mycitysshopsuser.entities.shop.Support;
 import com.valdroide.mycitysshopsuser.main.broadcast.BroadcastUpdate;
 import com.valdroide.mycitysshopsuser.main.navigation.NavigationActivityPresenter;
 import com.valdroide.mycitysshopsuser.main.navigation.dialogs.DialogNotification;
@@ -44,8 +42,10 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import me.leolin.shortcutbadger.ShortcutBadger;
 
-import static android.app.AlarmManager.INTERVAL_HALF_DAY;
+import com.github.arturogutierrez.Badges;
+import com.github.arturogutierrez.BadgesNotSupportedException;
 
 public class NavigationActivity extends AppCompatActivity
         implements NavigationActivityView {
@@ -64,17 +64,20 @@ public class NavigationActivity extends AppCompatActivity
     Map<String, List<SubCategory>> mExpandableListData;
     @Inject
     NavigationActivityPresenter presenter;
+    //    @Bind(R.id.textViewTitle)
+//    TextView textViewTitle;
     private ActionBarDrawerToggle mDrawerToggle;
     private NavigationManager mNavigationManager;
     List<SubCategory> value;
     private int positionChild = 0;
-    private static final int REQUEST_CODE = 1;
-    private static final int TIME_INTERVAL = 1000 * 60 * 60 * 5;
+    private static final int REQUEST_CODE = 0;
+    //7*24*60*60*1000 1 week
+    private static final int TIME_INTERVAL = 3 * 60 * 60 * 1000;
+  //  private static final int TIME_INTERVAL = 1 * 60 * 1000;
     private Intent intentAlarm;
     private PendingIntent pendingIntent;
     private AlarmManager alarmManager;
-    private boolean isNotification = false;
-    private String message = "";
+    private ProgressDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,11 +91,14 @@ public class NavigationActivity extends AppCompatActivity
         presenter.onCreate();
         Utils.writelogFile(this, "Se inicia toolbar Oncreate(Navigation)");
         initToolBar();
+        Utils.writelogFile(this, "Se inicia dialog Oncreate(Navigation)");
+        initDialog();
         Utils.writelogFile(this, "FragmentNavigationManager(Navigation)");
         mNavigationManager = FragmentNavigationManager.obtain(this);
         initHeaderNav();
         addDrawerItems();
         Utils.writelogFile(this, "getCategoriesAndSubCategories(Navigation)");
+        pDialog.show();
         presenter.getCategoriesAndSubCategories(this);
         setupDrawer();
         initBroadCast();
@@ -102,18 +108,29 @@ public class NavigationActivity extends AppCompatActivity
 
     }
 
+    public void initDialog() {
+        pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Procesando...");
+        pDialog.setCancelable(false);
+    }
+
     public void getNotificationExtra() {
         try {
             Utils.writelogFile(this, "getNotificationExtra(Navigation)");
             if (getIntent().getBooleanExtra("notification", false)) {
-                message = getIntent().getStringExtra("messasge");
-                int id = getIntent().getIntExtra("id_shop", 0);
-                if (id != 0) {
-                    Utils.writelogFile(this, "id != 0 getURLShop (Navigation)");
-                    presenter.getUrlShop(this, getIntent().getIntExtra("id_shop", 0));
+                String message = getIntent().getStringExtra("messasge");
+                String url_shop = getIntent().getStringExtra("url_shop");
+                if (message != null && url_shop != null) {
+                    if (!message.isEmpty() && !url_shop.isEmpty()) {
+                        Utils.writelogFile(this, "!message.isEmpty() && !url_shop.isEmpty() y show dialog(Navigation)");
+                        new DialogNotification(this, url_shop, message);
+                    } else {
+                        Utils.writelogFile(this, "message.isEmpty() || url_shop.isEmpty(): " + getString(R.string.error_notification) + " (Navigation)");
+                        setError(getString(R.string.error_notification));
+                    }
                 } else {
-                    Utils.writelogFile(this, "id == 0 error: " + getString(R.string.notification_error) + " (Navigation)");
-                    setError(getString(R.string.notification_error));
+                    Utils.writelogFile(this, "message == null && url_shop == null " + getString(R.string.error_notification) + " (Navigation)");
+                    setError(getString(R.string.error_notification));
                 }
             }
         } catch (Exception e) {
@@ -126,9 +143,12 @@ public class NavigationActivity extends AppCompatActivity
         Utils.writelogFile(this, "initBroadCast(Navigation)");
         try {
             intentAlarm = new Intent(this, BroadcastUpdate.class);
-            pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), REQUEST_CODE, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT);
-            alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-            alarmManager.setRepeating(AlarmManager.RTC, TIME_INTERVAL, TIME_INTERVAL, pendingIntent);
+            boolean isWorking = (PendingIntent.getBroadcast(getApplicationContext(), REQUEST_CODE, intentAlarm, PendingIntent.FLAG_NO_CREATE) != null);
+            if (!isWorking) {
+                pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), REQUEST_CODE, intentAlarm, PendingIntent.FLAG_UPDATE_CURRENT);
+                alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), TIME_INTERVAL, pendingIntent);
+            }
         } catch (Exception e) {
             setError(e.getMessage());
             Utils.writelogFile(this, "catch error " + e.getMessage() + "(Navigation)");
@@ -139,7 +159,8 @@ public class NavigationActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeButtonEnabled(true);
-        getSupportActionBar().setTitle(getString(R.string.app_name));
+        getSupportActionBar().setTitle(R.string.app_name_title);
+        Utils.applyFontForToolbarTitle(this, toolbar);
     }
 
     public void initHeaderNav() {
@@ -261,16 +282,20 @@ public class NavigationActivity extends AppCompatActivity
         try {
             mExpandableListData = ExpandableListDataSource.getData(categories, subCategories);
             mExpandableListTitle = new ArrayList(mExpandableListData.keySet());
-            mExpandableListAdapter.setList(mExpandableListTitle, mExpandableListData);
+            mExpandableListAdapter.setList(categories, mExpandableListTitle, mExpandableListData);
         } catch (Exception e) {
             setError(e.getMessage());
             Utils.writelogFile(this, "catch error " + e.getMessage() + "(Navigation)");
         }
+        if (pDialog.isShowing())
+            pDialog.dismiss();
     }
 
     @Override
     public void setError(String msg) {
         Utils.writelogFile(this, "setError " + msg + "(Navigation)");
+        if (pDialog.isShowing())
+            pDialog.dismiss();
         Utils.showSnackBar(drawer, msg);
     }
 
@@ -281,14 +306,9 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     @Override
-    public void setUrlShowDialog(String url) {
-        Utils.writelogFile(this, "setUrlShowDialog(Navigation)");
-        new DialogNotification(this, url, message);
-    }
-
-    @Override
     protected void onDestroy() {
         Utils.writelogFile(this, "onDestroy(Navigation)");
+        pDialog.dismiss();
         presenter.onDestroy();
         super.onDestroy();
     }
@@ -303,7 +323,7 @@ public class NavigationActivity extends AppCompatActivity
     public void openFragmentMyFavoriteShop() {
         Utils.writelogFile(this, "openFragmentMyFavoriteShop(Navigation)");
         try {
-            getSupportActionBar().setTitle("Mis Locales Favoritos");
+            getSupportActionBar().setTitle(getString(R.string.my_favorites_shops_title));
             mNavigationManager.showFragmentAction(null, true);
         } catch (Exception e) {
             setError(e.getMessage());
@@ -317,7 +337,10 @@ public class NavigationActivity extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.action_favorite) {
             Utils.writelogFile(this, "action_favorite click(Navigation)");
+            pDialog.show();
             openFragmentMyFavoriteShop();
+            if (pDialog.isShowing())
+                pDialog.dismiss();
             return true;
         } else if (id == R.id.action_change_place) {
             Utils.writelogFile(this, "action_change_place click(Navigation)");

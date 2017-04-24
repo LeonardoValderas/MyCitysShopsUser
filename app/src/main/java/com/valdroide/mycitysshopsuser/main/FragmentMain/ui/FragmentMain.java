@@ -53,8 +53,6 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     FragmentMainPresenter presenter;
 
     MyCitysShopsUserApp app;
-    //  private List<Shop> shopsList;
-    //private static String title = "";
     private static SubCategory subCategoryExtra;
     private ProgressDialog pDialog;
     private int position = 0;
@@ -122,7 +120,7 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
 
     public void initDialog() {
         pDialog = new ProgressDialog(getActivity());
-        pDialog.setMessage("Procesando...");
+        pDialog.setMessage(getString(R.string.process));
         pDialog.setCancelable(false);
     }
 
@@ -131,7 +129,7 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
         try {
             recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
             recyclerView.setHasFixedSize(true);
-            recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+            //recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
             recyclerView.setAdapter(adapter);
         } catch (Exception e) {
             setError(e.getMessage());
@@ -184,17 +182,8 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
 //        mAdView.loadAd(adRequest);
 //    }
 
-//    @Override
-//    public void onPause() {
-//        if (mAdView != null) {
-//            mAdView.pause();
-//        }
-//        super.onPause();
-//    }
-
     @Override
     public void setListShops(List<Shop> shops) {
-        // this.shopsList = shops;
         Utils.writelogFile(getActivity(), "setListShops " + shops.size() + "(FragmentMain)");
         if (pDialog.isShowing())
             pDialog.dismiss();
@@ -241,14 +230,6 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
         adapter.setUpdateShop(position);
     }
 
-//    @Override
-//    public void followSuccess(Shop shop) {
-//        Utils.writelogFile(getActivity(), "followSuccess(FragmentMain)");
-//        adapter.setUpdateShop(position, shop);
-//        if (pDialog.isShowing())
-//            pDialog.dismiss();
-//    }
-
     @Override
     public void followUnFollowSuccess(Shop shop) {
         Utils.writelogFile(getActivity(), "followSuccessUnFollow(FragmentMain)");
@@ -264,14 +245,6 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
         this.position = position;
         presenter.onClickFollowOrUnFollow(getActivity(), shop, isFollow);
     }
-
-//    @Override
-//    public void onClickUnFollow(int position, Shop shop) {
-//        Utils.writelogFile(getActivity(), "onClickUnFollow(FragmentMain)");
-//        pDialog.show();
-//        this.position = position;
-//        presenter.onClickUnFollow(getActivity(), shop);
-//    }
 
     @Override
     public void onClickOffer(int position, Shop shop) {
@@ -292,9 +265,9 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     }
 
     @Override
-    public void onClickMap(Shop shop) {
+    public void onClickMap(Shop shop, View v) {
         Utils.writelogFile(getActivity(), "onClickMap y DialogMap(FragmentMain)");
-        new DialogMap(getActivity(), this, shop);
+        new DialogMap(getActivity(), this, shop, v);
     }
 
     @Override
@@ -311,10 +284,6 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
 //        }
 //    }
 
-//    @Override
-//    public void onClick(View view, int position) {
-//        new DialogOffer(getActivity(), shopsList.get(position), title);
-//    }
 
     @Override
     public void onDestroyView() {

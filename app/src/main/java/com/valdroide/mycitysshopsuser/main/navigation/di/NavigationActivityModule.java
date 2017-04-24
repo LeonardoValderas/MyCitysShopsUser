@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.valdroide.mycitysshopsuser.api.APIService;
 import com.valdroide.mycitysshopsuser.api.ShopClient;
+import com.valdroide.mycitysshopsuser.entities.category.Category;
 import com.valdroide.mycitysshopsuser.entities.category.SubCategory;
 import com.valdroide.mycitysshopsuser.lib.base.EventBus;
 import com.valdroide.mycitysshopsuser.main.navigation.NavigationActivityInteractor;
@@ -16,6 +17,7 @@ import com.valdroide.mycitysshopsuser.main.navigation.ui.NavigationActivityView;
 import com.valdroide.mycitysshopsuser.main.navigation.ui.adapters.CustomExpandableListAdapter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -55,8 +57,8 @@ public class NavigationActivityModule {
 
     @Provides
     @Singleton
-    NavigationActivityRepository providesNavigationActivityRepository(EventBus eventBus, APIService service) {
-        return new NavigationActivityRepositoryImpl(eventBus, service);
+    NavigationActivityRepository providesNavigationActivityRepository(EventBus eventBus) {
+        return new NavigationActivityRepositoryImpl(eventBus);
     }
 
     @Provides
@@ -77,12 +79,5 @@ public class NavigationActivityModule {
     CustomExpandableListAdapter providesCustomExpandableListAdapter(Context context, List<String> expandableListTitle,
                                                                     Map<String, List<SubCategory>> expandableListDetail) {
         return new CustomExpandableListAdapter(context, expandableListTitle, expandableListDetail);
-    }
-
-    @Provides
-    @Singleton
-    APIService provideAPIService() {
-        ShopClient client = new ShopClient();
-        return client.getAPIService();
     }
 }

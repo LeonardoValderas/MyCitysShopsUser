@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_place"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back"
+    tools:context="com.valdroide.mycitysshopsuser.main.place.ui.PlaceActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_margin="45dp"
+            android:layout_weight="65"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textCountry"
+                style="@style/TextView_Place"
+                android:text="@string/country"
+                android:textSize="55dp" />
+
+            <Spinner
+                android:id="@+id/spinnerCountry"
+                style="@style/Spinner_Place"
+                android:layout_height="110dp"
+                android:layout_marginTop="15dp" />
+
+            <TextView
+                android:id="@+id/textState"
+                style="@style/TextView_Place"
+                android:layout_marginTop="15dp"
+                android:text="@string/state"
+                android:textSize="55dp" />
+
+            <Spinner
+                android:id="@+id/spinnerState"
+                style="@style/Spinner_Place"
+                android:layout_height="110dp"
+                android:layout_marginTop="15dp" />
+
+            <TextView
+                android:id="@+id/textCity"
+                style="@style/TextView_Place"
+                android:layout_marginTop="15dp"
+                android:text="@string/city"
+                android:textSize="55dp" />
+
+            <Spinner
+                android:id="@+id/spinnerCity"
+                style="@style/Spinner_Place"
+                android:layout_height="110dp"
+                android:layout_marginTop="15dp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="35"
+            android:gravity="center">
+
+            <Button
+                android:id="@+id/buttonInto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_oval_button"
+                android:padding="35dp"
+                android:text="@string/enter_button"
+                android:textColor="@color/white"
+                android:textSize="28dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>

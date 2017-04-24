@@ -6,7 +6,7 @@ import com.raizlabs.android.dbflow.sql.language.Condition;
 import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.valdroide.mycitysshopsuser.api.APIService;
+import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.entities.place.City;
 import com.valdroide.mycitysshopsuser.entities.place.Country;
 import com.valdroide.mycitysshopsuser.entities.place.MyPlace;
@@ -22,11 +22,10 @@ public class PlaceActivityRepositoryImpl implements PlaceActivityRepository {
     private List<Country> countries;
     private List<State> states;
     private List<City> cities;
-    private APIService service;// no se usaaaaaaa
 
-    public PlaceActivityRepositoryImpl(EventBus eventBus, APIService service) {
+
+    public PlaceActivityRepositoryImpl(EventBus eventBus) {
         this.eventBus = eventBus;
-        this.service = service;
     }
 
     @Override
@@ -38,8 +37,8 @@ public class PlaceActivityRepositoryImpl implements PlaceActivityRepository {
                 Utils.writelogFile(context, " countries != null(Place, Repository)");
                 post(PlaceActivityEvent.GETCOUNTRIES, countries);
             } else {
-                Utils.writelogFile(context, " Base de datos error " + Utils.ERROR_DATA_BASE + "(Place, Repository)");
-                post(PlaceActivityEvent.ERROR, Utils.ERROR_DATA_BASE);
+                Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(Place, Repository)");
+                post(PlaceActivityEvent.ERROR, context.getString(R.string.error_data_base));
             }
         } catch (Exception e) {
             Utils.writelogFile(context, " catch error " + e.getMessage() + "(Place, Repository)");
@@ -59,8 +58,8 @@ public class PlaceActivityRepositoryImpl implements PlaceActivityRepository {
                 Utils.writelogFile(context, " states != null(Place, Repository)");
                 post(PlaceActivityEvent.GETSTATES, states, true);
             } else {
-                Utils.writelogFile(context, " Base de datos error " + Utils.ERROR_DATA_BASE + "(Place, Repository)");
-                post(PlaceActivityEvent.ERROR, Utils.ERROR_DATA_BASE);
+                Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(Place, Repository)");
+                post(PlaceActivityEvent.ERROR, context.getString(R.string.error_data_base));
             }
         } catch (Exception e) {
             Utils.writelogFile(context, " catch error " + e.getMessage() + "(Place, Repository)");
@@ -79,8 +78,8 @@ public class PlaceActivityRepositoryImpl implements PlaceActivityRepository {
                 Utils.writelogFile(context, " cities != null(Place, Repository)");
                 post(PlaceActivityEvent.GETCITIES, 0, cities);
             } else {
-                Utils.writelogFile(context, " Base de datos error " + Utils.ERROR_DATA_BASE + "(Place, Repository)");
-                post(PlaceActivityEvent.ERROR, Utils.ERROR_DATA_BASE);
+                Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(Place, Repository)");
+                post(PlaceActivityEvent.ERROR, context.getString(R.string.error_data_base));
             }
         } catch (Exception e) {
             Utils.writelogFile(context, " catch error " + e.getMessage() + "(Place, Repository)");
@@ -98,8 +97,8 @@ public class PlaceActivityRepositoryImpl implements PlaceActivityRepository {
                 Utils.setIdCity(context, place.getID_CITY_FOREIGN());
                 post(PlaceActivityEvent.SAVE, place);
             } else {
-                Utils.writelogFile(context, " Base de datos error " + Utils.ERROR_DATA_BASE + "(Place, Repository)");
-                post(PlaceActivityEvent.ERROR, Utils.ERROR_DATA_BASE);
+                Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(Place, Repository)");
+                post(PlaceActivityEvent.ERROR, context.getString(R.string.error_data_base));
             }
         } catch (Exception e) {
             Utils.writelogFile(context, " catch error " + e.getMessage() + "(Place, Repository)");
@@ -107,27 +106,27 @@ public class PlaceActivityRepositoryImpl implements PlaceActivityRepository {
         }
     }
 
-    public void post(int type, MyPlace place) {
+    private void post(int type, MyPlace place) {
         post(type, null, null, null, null, place);
     }
 
-    public void post(int type, List<Country> countries) {
+    private void post(int type, List<Country> countries) {
         post(type, countries, null, null, null, null);
     }
 
-    public void post(int type, List<State> states, boolean isSub) {
+    private void post(int type, List<State> states, boolean isSub) {
         post(type, null, states, null, null, null);
     }
 
-    public void post(int type, int nothing, List<City> cities) {
+    private void post(int type, int nothing, List<City> cities) {
         post(type, null, null, cities, null, null);
     }
 
-    public void post(int type, String error) {
+    private void post(int type, String error) {
         post(type, null, null, null, error, null);
     }
 
-    public void post(int type, List<Country> countries, List<State> states, List<City> cities, String error, MyPlace place) {
+    private void post(int type, List<Country> countries, List<State> states, List<City> cities, String error, MyPlace place) {
         PlaceActivityEvent event = new PlaceActivityEvent();
         event.setType(type);
         event.setCountries(countries);

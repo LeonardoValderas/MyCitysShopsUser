@@ -21,4 +21,7 @@
     <color name="colorFollow">#AAAAAA</color>
     <color name="colorFollowing">#FF4081</color>
 
+    <color name="myWindowBackground">#DEDEDE</color>
+    <color name="myNavigationColor">#000000</color>
+
 </resources>

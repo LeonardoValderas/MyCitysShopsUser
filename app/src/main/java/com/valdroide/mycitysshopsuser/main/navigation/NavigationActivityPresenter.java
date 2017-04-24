@@ -9,6 +9,5 @@ public interface NavigationActivityPresenter {
     void onDestroy();
     void getCategoriesAndSubCategories(Context context);
     void changePlace(Context context);
-    void getUrlShop(Context context, int id_shop);
     void onEventMainThread(NavigationActivityEvent event);
 }

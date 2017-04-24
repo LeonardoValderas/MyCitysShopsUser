@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
-import com.valdroide.mycitysshopsuser.main.FragmentMain.dialogs.adapters.DialogOfferAdapter;
 import com.valdroide.mycitysshopsuser.utils.Utils;
 
 import butterknife.Bind;
@@ -40,7 +39,7 @@ public class DialogContact {
     TextView textViewSna;
     @Bind(R.id.buttonCerrar)
     ImageView buttonCerrar;
-    @Bind(R.id.linearConteiner)
+    @Bind(R.id.conteiner)
     LinearLayout conteiner;
 
     private Context context;
@@ -61,7 +60,7 @@ public class DialogContact {
         ButterKnife.bind(this, layout);
         try {
             Utils.writelogFile(context, "fill componentes(Contact)");
-            Utils.setPicasso(context, shop.getURL_LOGO(), R.mipmap.ic_launcher, imageViewShop);
+            Utils.setPicasso(context, shop.getURL_LOGO(), R.drawable.ic_launcher, imageViewShop);
             // textViewName.setText(shop.getSHOP());
             textViewPhone.setText(shop.getPHONE());
             setCopyClipBoard(textViewPhone);
@@ -86,6 +85,8 @@ public class DialogContact {
                 }
             });
             alertDialog = builder.create();
+            alertDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+
             //alertDialog.getWindow().setLayout(550, 500);
             alertDialog.show();
         } catch (Exception e) {
@@ -93,7 +94,7 @@ public class DialogContact {
         }
     }
 
-    public void setCopyClipBoard(final TextView textView) {
+    private void setCopyClipBoard(final TextView textView) {
         final String textCopy = textView.getText().toString();
         textView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -101,11 +102,11 @@ public class DialogContact {
                 if (textCopy != null)
                     if (!textCopy.isEmpty()) {
                         setClipboard(context, textView.getText().toString());
-                        Utils.showSnackBar(conteiner, "Dato copiado.");
+                        Utils.showSnackBar(conteiner, context.getString(R.string.data_copy));
                     } else
-                        Utils.showSnackBar(conteiner, "Dato vacio.");
+                        Utils.showSnackBar(conteiner, context.getString(R.string.data_empty));
                 else
-                    Utils.showSnackBar(conteiner, "Dato vacio.");
+                    Utils.showSnackBar(conteiner, context.getString(R.string.data_empty));
             }
         });
 

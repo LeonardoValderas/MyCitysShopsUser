@@ -1,11 +1,7 @@
 package com.valdroide.mycitysshopsuser.main.place.di;
 
 import android.app.Activity;
-import android.content.Context;
-
 import com.valdroide.mycitysshopsuser.R;
-import com.valdroide.mycitysshopsuser.api.APIService;
-import com.valdroide.mycitysshopsuser.api.ShopClient;
 import com.valdroide.mycitysshopsuser.entities.place.City;
 import com.valdroide.mycitysshopsuser.entities.place.Country;
 import com.valdroide.mycitysshopsuser.entities.place.State;
@@ -60,8 +56,8 @@ public class PlaceActivityModule {
 
     @Provides
     @Singleton
-    PlaceActivityRepository providePlaceActivityRepository(EventBus eventBus, APIService service) {
-        return new PlaceActivityRepositoryImpl(eventBus, service);
+    PlaceActivityRepository providePlaceActivityRepository(EventBus eventBus) {
+        return new PlaceActivityRepositoryImpl(eventBus);
     }
 
     @Provides
@@ -106,12 +102,5 @@ public class PlaceActivityModule {
     @Singleton
     AdapterSpinnerCity provideAdapterSpinnerCity(Activity context, int resource, List<City> cities) {
         return new AdapterSpinnerCity(context, resource, cities);
-    }
-
-    @Provides
-    @Singleton
-    APIService provideAPIService() {
-        ShopClient client = new ShopClient();
-        return client.getAPIService();
     }
 }

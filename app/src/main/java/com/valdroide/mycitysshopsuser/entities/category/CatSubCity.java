@@ -9,7 +9,6 @@ import com.valdroide.mycitysshopsuser.db.ShopsDatabase;
 
 @Table(database = ShopsDatabase.class)
 public class CatSubCity extends BaseModel {
-    //  @PrimaryKey(autoincrement = true)
     @Column
     @PrimaryKey
     @SerializedName("id")

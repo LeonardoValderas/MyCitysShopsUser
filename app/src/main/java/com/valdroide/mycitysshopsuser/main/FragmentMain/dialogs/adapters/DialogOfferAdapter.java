@@ -23,13 +23,9 @@ public class DialogOfferAdapter extends RecyclerView.Adapter<DialogOfferAdapter.
 
     private List<Offer> offerList;
     private Context context;
-    //    private OnItemClickListener onItemClickListener;
-//    private Fragment fragment;
 
     public DialogOfferAdapter(List<Offer> offerList, Context context) {
         this.offerList = offerList;
-//        this.onItemClickListener = onItemClickListener;
-//        this.fragment = (FragmentMain) fragment;
         this.context = context;
     }
 
@@ -43,10 +39,11 @@ public class DialogOfferAdapter extends RecyclerView.Adapter<DialogOfferAdapter.
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Offer offer = offerList.get(position);
-        Utils.setPicasso(context, offer.getURL_IMAGE(), R.mipmap.ic_launcher, holder.imageViewOffer);
+        Utils.setPicasso(context, offer.getURL_IMAGE(), R.drawable.ic_launcher, holder.imageViewOffer);
         holder.textViewTitle.setText(offer.getTITLE());
+        holder.textViewTitle.setTypeface(Utils.setFontExoTextView(context));
         holder.textViewOffer.setText(offer.getOFFER());
-   //     holder.setOnItemClickListener(onItemClickListener, position, shop);
+        holder.textViewOffer.setTypeface(Utils.setFontRalewatTextView(context));
     }
 
     @Override
@@ -67,46 +64,12 @@ public class DialogOfferAdapter extends RecyclerView.Adapter<DialogOfferAdapter.
         TextView textViewTitle;
         @Bind(R.id.textViewOffer)
         TextView textViewOffer;
-        @Bind(R.id.linearConteiner)
-        LinearLayout linearConteiner;
+//        @Bind(R.id.linearConteiner)
+//        LinearLayout linearConteiner;
 
         public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
-
-
-//        public void setOnItemClickListener(final OnItemClickListener listener, final int position, final Shop shop) {
-//
-//            buttonFollow.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    if (shop.getIS_FOLLOW() == 0)
-//                        listener.onClickFollow(position, shop);
-//                    else
-//                        listener.onClickUnFollow(position, shop);
-//
-//                }
-//            });
-//            buttonOffer.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    listener.onClickOffer(shop);
-//                }
-//            });
-//            buttonMap.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    listener.onClickMap(shop);
-//                }
-//            });
-//            buttonCont.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    listener.onClickContact(shop);
-//                }
-//            });
-//
-//        }
     }
 }

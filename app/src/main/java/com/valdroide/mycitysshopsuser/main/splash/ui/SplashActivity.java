@@ -47,7 +47,7 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
             setupInjection();
             Utils.writelogFile(this, "Se inicia presenter Oncreate(Splash)");
             presenter.onCreate();
-            Utils.writelogFile(this, "Validate token Oncreate(Splash)");
+            Utils.writelogFile(this, "isPlace Oncreate(Splash)");
 
             isPlace = isPlace();
             if (!isPlace) {
@@ -77,10 +77,11 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
         try {
             Utils.writelogFile(this, "getNotificationExtra(Splash)");
             if (getIntent().getBooleanExtra("notification", false)) {
+                Utils.writelogFile(this, "getNotificationExtra is true(Splash)");
                 intent = new Intent(this, NavigationActivity.class);
                 intent.putExtra("notification", true);
                 intent.putExtra("messasge", getIntent().getStringExtra("messasge"));
-                intent.putExtra("id_shop", getIntent().getIntExtra("id_shop", 0));
+                intent.putExtra("url_shop", getIntent().getStringExtra("url_shop"));
             }
         } catch (Exception e) {
             Utils.writelogFile(this, "getNotificationExtra error: " + e.getMessage() + "(Splash)");
@@ -93,12 +94,6 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
         MyCitysShopsUserApp app = (MyCitysShopsUserApp) getApplication();
         app.getSplashActivityComponent(this, this).inject(this);
     }
-
-//    @Override
-//    public void goToLog() {
-//        progressBar.setVisibility(View.INVISIBLE);
-//        startActivity(new Intent(this, LoginActivity.class));
-//    }
 
     @Override
     public void goToPlace() {
@@ -130,7 +125,7 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
         try {
             progressBar.setVisibility(View.INVISIBLE);
             presenter.sendEmail(this, "Error Splash, Email Automatico.");
-            textViewDownload.setText(msg + "\nSe envió una email automaticamente a soporte. ");
+            textViewDownload.setText(msg + "\n" + getString(R.string.sent_email_text));
         } catch (Exception e) {
             Utils.writelogFile(this, "catch error " + e.getMessage() + "(Splash)");
         }

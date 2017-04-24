@@ -10,6 +10,7 @@ import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.api.APIService;
 import com.valdroide.mycitysshopsuser.api.ShopClient;
 import com.valdroide.mycitysshopsuser.entities.category.CatSubCity;
@@ -24,6 +25,7 @@ import com.valdroide.mycitysshopsuser.utils.Utils;
 
 import java.util.List;
 
+import me.leolin.shortcutbadger.ShortcutBadger;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -43,6 +45,9 @@ public class BroadcastUpdate extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Utils.writelogFile(context, "Se inicia onReceive(BroadcastUpdate)");
         try {
+            int badgeCount = 1;
+            ShortcutBadger.applyCount(context, badgeCount); //for 1.1.4+
+
             service = client.getAPIService();
             dateUserCity = SQLite.select().from(DateUserCity.class).querySingle();
             if (dateUserCity != null)
@@ -52,7 +57,6 @@ public class BroadcastUpdate extends BroadcastReceiver {
             Toast.makeText(context, "alarm started", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Utils.writelogFile(context, "onReceive error: " + e.getMessage() + "(BroadcastUpdate)");
-            //don't use post because this Broadcast work in background
         }
     }
 
@@ -144,6 +148,7 @@ public class BroadcastUpdate extends BroadcastReceiver {
                                                 Utils.writelogFile(context, "save shops " + shop.getID_SHOP_KEY() + "(BroadcastUpdate)");
                                                 shop.setIS_SHOP_UPDATE(1);
                                                 shop.save();
+                                                setUpdateCatSub(context, shop.getID_CAT_SUB_FOREIGN());
                                             }
                                         } else {
                                             Utils.writelogFile(context, "shops.size() == 0 y delete Shop(BroadcastUpdate)");
@@ -160,11 +165,12 @@ public class BroadcastUpdate extends BroadcastReceiver {
                                                 Utils.writelogFile(context, "save offer " + offer.getID_OFFER_KEY() + "(BroadcastUpdate)");
                                                 offer.save();
                                                 Utils.writelogFile(context, " getShop (BroadcastUpdate)");
-                                                Shop shop = getShop(offer.getID_SHOP_FOREIGN());
-                                                if(shop != null) {
+                                                Shop shop = getShop(context, offer.getID_SHOP_FOREIGN());
+                                                if (shop != null) {
                                                     Utils.writelogFile(context, " shop != null y save (BroadcastUpdate)");
                                                     shop.setIS_OFFER_UPDATE(1);
-                                                    shop.save();
+                                                    shop.update();
+                                                    setUpdateCatSub(context, shop.getID_CAT_SUB_FOREIGN());
                                                 }
                                             }
                                         } else {
@@ -179,7 +185,7 @@ public class BroadcastUpdate extends BroadcastReceiver {
                                 }
                             }
                         } else {
-                            Utils.writelogFile(context, " Base de datos error " + Utils.ERROR_DATA_BASE + "(BroadcastUpdate)");
+                            Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(BroadcastUpdate)");
                         }
                     }
 
@@ -192,12 +198,73 @@ public class BroadcastUpdate extends BroadcastReceiver {
                 Utils.writelogFile(context, " catch error " + e.getMessage() + "(BroadcastUpdate)");
             }
         } else {
-            Utils.writelogFile(context, " Internet error " + Utils.ERROR_INTERNET + "(BroadcastUpdate)");
+            Utils.writelogFile(context, " Internet error " + context.getString(R.string.error_internet) + "(BroadcastUpdate)");
         }
     }
-    public Shop getShop(int id_shop) {
+
+    public Shop getShop(Context context, int id_shop) {
         ConditionGroup conditionGroup = ConditionGroup.clause();
         conditionGroup.and(Condition.column(new NameAlias("Shop.ID_SHOP_KEY")).is(id_shop));
-        return SQLite.select().from(Shop.class).where(conditionGroup).querySingle();
+        try {
+            return SQLite.select().from(Shop.class).where(conditionGroup).querySingle();
+        } catch (Exception e) {
+            Utils.writelogFile(context, "catch: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private CatSubCity getCatSubEntity(int id) {
+        ConditionGroup conditions = ConditionGroup.clause();
+        conditions.and(Condition.column(new NameAlias("CatSubCity.ID_CAT_SUB_KEY")).is(id));
+        try {
+            return SQLite.select().from(CatSubCity.class).where(conditions).querySingle();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private Category getCategoryEntity(int id) {
+        ConditionGroup conditions = ConditionGroup.clause();
+        conditions.and(Condition.column(new NameAlias("Category.ID_CATEGORY_KEY")).is(id));
+        try {
+            return SQLite.select().from(Category.class).where(conditions).querySingle();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private SubCategory getSubCategoryEntity(int id) {
+        ConditionGroup conditions = ConditionGroup.clause();
+        conditions.and(Condition.column(new NameAlias("SubCategory.ID_SUBCATEGORY_KEY")).is(id));
+        try {
+            return SQLite.select().from(SubCategory.class).where(conditions).querySingle();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private boolean setUpdateCatSub(Context context, int id) {
+        Utils.writelogFile(context, "metodo setUpdateCatSub y getCatSubEntity(BroadcastUpdate)");
+        CatSubCity catSubCity = getCatSubEntity(id);
+        if (catSubCity != null) {
+            Utils.writelogFile(context, "catSubCity != null y getCategoryEntity y getSubCategoryEntity(BroadcastUpdate)");
+            Category category = getCategoryEntity(catSubCity.getID_CATEGORY_FOREIGN());
+            SubCategory subCategory = getSubCategoryEntity(catSubCity.getID_SUBCATEGORY_FOREIGN());
+            if (category != null && subCategory != null) {
+                Utils.writelogFile(context, "category != null && subCategory != null y update(BroadcastUpdate)");
+                category.setIS_UPDATE(1);
+                category.update();
+
+                subCategory.setIS_UPDATE(1);
+                subCategory.update();
+            } else {
+                Utils.writelogFile(context, "category == null && subCategory == null(BroadcastUpdate)");
+                return false;
+            }
+            return true;
+        } else {
+            Utils.writelogFile(context, "catSubCity == null(BroadcastUpdate)");
+            return false;
+        }
     }
 }

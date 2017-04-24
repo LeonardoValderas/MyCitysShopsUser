@@ -20,6 +20,7 @@ import javax.mail.internet.MimeMessage;
 public class SupportActivityRepositoryImpl implements SupportActivityRepository {
     private EventBus eventBus;
     private Support support;
+    private boolean isSent = false;
 
     public SupportActivityRepositoryImpl(EventBus eventBus) {
         this.eventBus = eventBus;
@@ -35,24 +36,23 @@ public class SupportActivityRepositoryImpl implements SupportActivityRepository 
                 @Override
                 public void run() {
                     Utils.writelogFile(context, "sendEmail(support, Repository)");
-                    sendEmail(context, support, "Usuario", comment);
+                    isSent = sendEmail(context, support, "Usuario", comment);
                 }
             };
             new Thread(runnable).start();
-            Utils.writelogFile(context, "post SENDEMAILSUCCESS(support, Repository)");
-            post(SupportActivityEvent.SENDEMAILSUCCESS);
         } else {
-            Utils.writelogFile(context, " Base de datos error " + Utils.ERROR_DATA_BASE + "(support, Repository)");
-            post(SupportActivityEvent.ERROR, Utils.ERROR_DATA_BASE);
+            Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(support, Repository)");
+            post(SupportActivityEvent.ERROR, context.getString(R.string.error_data_base));
         }
+        Utils.writelogFile(context, "post SENDEMAILSUCCESS(support, Repository)");
     }
 
-    public Support getSupport(Context context) {
+    private Support getSupport(Context context) {
         Utils.writelogFile(context, "getSupport(support, Repository)");
         return SQLite.select().from(Support.class).querySingle();
     }
 
-    public void sendEmail(Context context, final Support support, String Shop_name, String comment) {
+    public boolean sendEmail(Context context, final Support support, String Shop_name, String comment) {
         Utils.writelogFile(context, "Metodo sendEmail y Se valida conexion a internet(support, Repository)");
         if (Utils.isNetworkAvailable(context)) {
             Utils.writelogFile(context, "setSupport variables(support, Repository)");
@@ -77,25 +77,28 @@ public class SupportActivityRepositoryImpl implements SupportActivityRepository 
                 message.setContent(multipart);
                 Utils.writelogFile(context, "send(support, Repository)");
                 Transport.send(message);
+                post(SupportActivityEvent.SENDEMAILSUCCESS);
+                return true;
             } catch (MessagingException ex) {
                 Utils.writelogFile(context, " send error " + ex.getMessage() + "(support, Repository)");
                 post(SupportActivityEvent.ERROR, ex.getMessage());
+                return false;
             }
         } else {
-            Utils.writelogFile(context, " Internet error " + Utils.ERROR_INTERNET + "(support, Repository)");
-            post(SupportActivityEvent.ERROR, Utils.ERROR_INTERNET);
+            Utils.writelogFile(context, " Internet error " + context.getString(R.string.error_internet) + "(support, Repository)");
+            post(SupportActivityEvent.ERROR, context.getString(R.string.error_internet));
+            return false;
         }
     }
 
-    public void post(int type) {
+    private void post(int type) {
         post(type, null);
     }
 
-    public void post(int type, String error) {
+    private void post(int type, String error) {
         SupportActivityEvent event = new SupportActivityEvent();
         event.setType(type);
         event.setError(error);
         eventBus.post(event);
     }
-
 }

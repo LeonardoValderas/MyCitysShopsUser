@@ -17,10 +17,6 @@ import com.valdroide.mycitysshopsuser.main.navigation.di.DaggerNavigationActivit
 import com.valdroide.mycitysshopsuser.main.navigation.di.NavigationActivityComponent;
 import com.valdroide.mycitysshopsuser.main.navigation.di.NavigationActivityModule;
 import com.valdroide.mycitysshopsuser.main.navigation.ui.NavigationActivityView;
-import com.valdroide.mycitysshopsuser.main.offer.di.DaggerOfferActivityComponent;
-import com.valdroide.mycitysshopsuser.main.offer.di.OfferActivityComponent;
-import com.valdroide.mycitysshopsuser.main.offer.di.OfferActivityModule;
-import com.valdroide.mycitysshopsuser.main.offer.ui.OfferActivityView;
 import com.valdroide.mycitysshopsuser.main.place.di.DaggerPlaceActivityComponent;
 import com.valdroide.mycitysshopsuser.main.place.di.PlaceActivityComponent;
 import com.valdroide.mycitysshopsuser.main.place.di.PlaceActivityModule;
@@ -109,24 +105,4 @@ public class MyCitysShopsUserApp extends Application {
                 .fragmentMainModule(new FragmentMainModule(view, fragment, onItemClickListener))
                 .build();
     }
-
-    public OfferActivityComponent getOfferActivityComponent(OfferActivityView view, Activity activity) {
-        return DaggerOfferActivityComponent
-                .builder()
-                .myCitysShopsUserAppModule(myCitysShopsUserAppModule)
-                .libsModule(new LibsModule(activity))
-                .offerActivityModule(new OfferActivityModule(view, activity))
-                .build();
-    }
-    /*
-        public AccountActivityComponent getAccountActivityComponent(AccountActivityView view, Activity activity) {
-        return DaggerAccountActivityComponent
-                .builder()
-                .myCitysShopsAdmAppModule(myCitysShopsAdmAppModule)
-                .libsModule(new LibsModule(activity))
-                .accountActivityModule(new AccountActivityModule(view, activity))
-                .build();
-    }
-    */
-
 }

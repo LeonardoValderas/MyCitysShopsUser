@@ -37,24 +37,26 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item, parent, false);
 
-        return new ViewHolder(view, fragment, onItemClickListener);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Shop shop = shopsList.get(position);
-       // holder.imageViewOfferNew.setVisibility(View.INVISIBLE); // ver si podemos individualizar los cambios de offer
-        Utils.setPicasso(fragment.getActivity(), shop.getURL_LOGO(), R.mipmap.ic_launcher, holder.imageViewShop);
+        // holder.imageViewOfferNew.setVisibility(View.INVISIBLE); // ver si podemos individualizar los cambios de offer
+        Utils.setPicasso(fragment.getActivity(), shop.getURL_LOGO(), R.drawable.ic_launcher, holder.imageViewShop);
 
-        holder.textViewDescription.setText("Esta es una descripcion del local. Esta es una descripcion del local." +
-                "Esta es una descripcion del local. Esta es una descripcion del local." +
-                "Esta es una descripcion del local. Esta es una descripcion del local.\n" + shop.getWORKING_HOURS());
+        holder.textViewDescription.setText(shop.getDESCRIPTION());
+        holder.textViewDescription.setTypeface(Utils.setFontGoodDogTextView(fragment.getActivity()));
+        if (shop.getWORKING_HOURS() != null)
+            if (!shop.getWORKING_HOURS().equals("null"))
+                holder.textViewWorking.setText(shop.getWORKING_HOURS());
         if (shop.getIS_FOLLOW() == 1)
             holder.imageViewFollow.setColorFilter(ContextCompat.getColor(fragment.getActivity(), R.color.colorFollowing));
         else
             holder.imageViewFollow.setColorFilter(ContextCompat.getColor(fragment.getActivity(), R.color.colorFollow));
 
-        if (shop.getIS_OFFER_UPDATE()== 1)
+        if (shop.getIS_OFFER_UPDATE() == 1)
             holder.imageViewOfferNew.setVisibility(View.VISIBLE);
         else
             holder.imageViewOfferNew.setVisibility(View.INVISIBLE);
@@ -89,8 +91,8 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
         ImageView imageViewShop;
         @Bind(R.id.textViewDescription)
         TextView textViewDescription;
-        @Bind(R.id.linearConteiner)
-        LinearLayout linearConteiner;
+        @Bind(R.id.textViewWorking)
+        TextView textViewWorking;
         @Bind(R.id.imageViewFollow)
         ImageView imageViewFollow;
         @Bind(R.id.textViewFollow)
@@ -104,7 +106,7 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
         @Bind(R.id.imageViewMap)
         ImageView imageViewMap;
 
-        public ViewHolder(View view, Fragment fragment, OnItemClickListener onItemClickListener) {
+        public ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
@@ -130,7 +132,8 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
             imageViewMap.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    listener.onClickMap(shop);
+                    v.setEnabled(false);
+                    listener.onClickMap(shop, v);
                 }
             });
             imageViewContact.setOnClickListener(new View.OnClickListener() {
@@ -139,7 +142,6 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
                     listener.onClickContact(shop);
                 }
             });
-
         }
     }
 }

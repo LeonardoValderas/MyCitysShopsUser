@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--MENU-->
+    <string name="action_my_shops">Minhas Lojas</string>
+    <string name="action_change_city">Mudar de Cidade</string>
+    <string name="action_support">Suporte</string>
+    <!--ERROR MSG-->
+    <string name="error_fill_place">Problemas ao carregar os datos. Feche a aplicação e tente novamente.</string>
+    <string name="error_file_log">Problemas para gerar o arquivo Log.</string>
+    <string name="email_success">Email enviado correctamente. Suporte se comunicará com você.</string>
+    <string name="error_notification">Problemas para mostrar a notificação.</string>
+    <string name="error_data_base">Problemas na base de datos.</string>
+    <string name="error_internet">Verificar sua conexão de Internet.</string>
+    <!--HINT-->
+    <string name="hint_support">Ingrese um comentario e seu email</string>
+    <!--TITLE TOOLBAR-->
+    <string name="support_title">Soporte</string>
+    <string name="app_name_title">My City\'s Shops</string>
+    <string name="my_favorites_shops_title">Minhas Lojas</string>
+
+    <string name="insert_commentary">Ingrese um comentario</string>
+    <string name="sent_email_text">Se enviou um email automaticamente para suporte.</string>
+    <string name="process">Processando...</string>
+    <string name="state">Estado</string>
+    <string name="city">Cidade</string>
+    <string name="enter_button">Ingresar</string>
+    <string name="country">País</string>
+    <string name="adding">Carregando...</string>
+    <string name="phone">Telefone</string>
+    <string name="error_id_device">Problemas ao obter o ID de seu dispositivo.</string>
+    <string name="data_copy">Copiado.</string>
+    <string name="data_empty">Vacio.</string>
+</resources>

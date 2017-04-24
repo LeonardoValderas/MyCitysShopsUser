@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/content_navigation"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/back"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="com.valdroide.mycitysshopsuser.main.support.ui.SupportActivity"
+    tools:showIn="@layout/activity_support">
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/editTextEmailHint"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp">
+
+        <EditText
+            android:id="@+id/editTextEmail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:textSize="30dp"
+            android:hint="@string/hint_support"
+            android:lines="5"
+            android:maxLength="200" />
+    </android.support.design.widget.TextInputLayout>
+</RelativeLayout>

@@ -9,6 +9,7 @@ import com.raizlabs.android.dbflow.sql.language.Condition;
 import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.api.APIService;
 import com.valdroide.mycitysshopsuser.api.ShopClient;
 import com.valdroide.mycitysshopsuser.entities.response.ResponseWS;
@@ -42,22 +43,36 @@ public class FmcInstanceIdService extends FirebaseInstanceIdService {
                         token.setTOKEN(recent_token);
                         //UPDATE
                         validateToken(getApplicationContext(), token, false);
+                    } else {
+                        Utils.writelogFile(getApplicationContext(), "insert token(FmcInstanceIdService)");
+                        if (Utils.getIdCity(getApplicationContext()) != 0) {
+                            token = setTokenDB(recent_token);
+                            //INSERT
+                            validateToken(getApplicationContext(), token, true);
+                        } else {
+                            Utils.writelogFile(getApplicationContext(), "id_city is 0. No selecciono una ciudad(FmcInstanceIdService)");
+                        }
                     }
                 } else {
-                    Utils.writelogFile(getApplicationContext(), "insert token(FmcInstanceIdService)");
-                    if(Utils.getIdCity(getApplicationContext()) != 0) {
-                        token = new Token();
-                        token.setID_TOKEN_KEY(0);
-                        token.setTOKEN(recent_token);
-                        token.setID_CITY_FOREIGN(Utils.getIdCity(getApplicationContext()));
+                    Utils.writelogFile(getApplicationContext(), "token == null(FmcInstanceIdService)");
+                    if (Utils.getIdCity(getApplicationContext()) != 0) {
+                        token = setTokenDB(recent_token);
                         //INSERT
                         validateToken(getApplicationContext(), token, true);
-                    }else{
+                    } else {
                         Utils.writelogFile(getApplicationContext(), "id_city is 0. No selecciono una ciudad(FmcInstanceIdService)");
                     }
                 }
             }
         }
+    }
+
+    private Token setTokenDB(String recent_token) {
+        Token token = new Token();
+        token.setID_TOKEN_KEY(0);
+        token.setTOKEN(recent_token);
+        token.setID_CITY_FOREIGN(Utils.getIdCity(getApplicationContext()));
+        return token;
     }
 
     public Token getToken() {
@@ -91,7 +106,7 @@ public class FmcInstanceIdService extends FirebaseInstanceIdService {
                                             token.setID_TOKEN_KEY(id);
                                             token.save();
                                         } else {
-                                            Toast.makeText(getApplicationContext(), Utils.ERROR_DATA_BASE, Toast.LENGTH_LONG).show();
+                                            Toast.makeText(getApplicationContext(), context.getString(R.string.error_data_base), Toast.LENGTH_LONG).show();
                                         }
                                     } else {
                                         Utils.writelogFile(context, "update(FmcInstanceIdService)");
@@ -102,12 +117,12 @@ public class FmcInstanceIdService extends FirebaseInstanceIdService {
                                     Toast.makeText(getApplicationContext(), responseWS.getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Utils.writelogFile(context, "responseWS == null: " + Utils.ERROR_DATA_BASE + "(FmcInstanceIdService)");
-                                Toast.makeText(getApplicationContext(), Utils.ERROR_DATA_BASE, Toast.LENGTH_LONG).show();
+                                Utils.writelogFile(context, "responseWS == null: " + context.getString(R.string.error_data_base) + "(FmcInstanceIdService)");
+                                Toast.makeText(getApplicationContext(), context.getString(R.string.error_data_base), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Utils.writelogFile(context, "!response.isSuccessful() " + Utils.ERROR_DATA_BASE + "(FmcInstanceIdService)");
-                            Toast.makeText(getApplicationContext(), Utils.ERROR_DATA_BASE, Toast.LENGTH_LONG).show();
+                            Utils.writelogFile(context, "!response.isSuccessful() " + context.getString(R.string.error_data_base) + "(FmcInstanceIdService)");
+                            Toast.makeText(getApplicationContext(), context.getString(R.string.error_data_base), Toast.LENGTH_LONG).show();
                         }
                     }
 
@@ -122,9 +137,8 @@ public class FmcInstanceIdService extends FirebaseInstanceIdService {
                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         } else {
-            Utils.writelogFile(context, "internt error: " + Utils.ERROR_INTERNET + "(FmcInstanceIdService)");
-            Toast.makeText(getApplicationContext(), Utils.ERROR_INTERNET, Toast.LENGTH_LONG).show();
+            Utils.writelogFile(context, "internt error: " + context.getString(R.string.error_internet) + "(FmcInstanceIdService)");
+            Toast.makeText(getApplicationContext(), context.getString(R.string.error_internet), Toast.LENGTH_LONG).show();
         }
     }
-
 }

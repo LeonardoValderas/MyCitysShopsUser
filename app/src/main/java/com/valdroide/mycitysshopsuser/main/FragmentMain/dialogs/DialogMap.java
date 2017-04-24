@@ -8,8 +8,6 @@ import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.TextView;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -20,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
+import com.valdroide.mycitysshopsuser.main.FragmentMain.ui.FragmentMain;
 import com.valdroide.mycitysshopsuser.utils.Utils;
 
 import butterknife.Bind;
@@ -44,7 +43,7 @@ public class DialogMap implements OnMapReadyCallback {
     private Shop shop;
     private FragmentTransaction fragmentTransaction;
 
-    public DialogMap(Context context, final Fragment fragment, Shop shop) {
+    public DialogMap(Context context, final Fragment fragment, Shop shop, final View view) {
         this.context = context;
         this.fragment = fragment;
         this.shop = shop;
@@ -61,7 +60,7 @@ public class DialogMap implements OnMapReadyCallback {
         ButterKnife.bind(this, layout);
         try {
             Utils.writelogFile(context, "fill componentes(Map)");
-            Utils.setPicasso(context, shop.getURL_LOGO(), R.mipmap.ic_launcher, imageViewShop);
+            Utils.setPicasso(context, shop.getURL_LOGO(), R.drawable.ic_launcher, imageViewShop);
            // textViewName.setText(shop.getSHOP());
             if (shop.getLATITUD() != null && shop.getLONGITUD() != null) {
                 latitudExtra = Double.valueOf(shop.getLATITUD());
@@ -78,11 +77,14 @@ public class DialogMap implements OnMapReadyCallback {
                 public void onClick(View v) {
                     deleteFragmentId();
                     alertDialog.dismiss();
+                    view.setEnabled(true);
                 }
             });
 
             alertDialog = builder.create();
+            alertDialog.setCanceledOnTouchOutside(false);
             alertDialog.show();
+
         } catch (Exception e) {
             Utils.writelogFile(context, " catch error " + e.getMessage() + "(Map)");
         }
@@ -113,7 +115,7 @@ public class DialogMap implements OnMapReadyCallback {
         }
     }
 
-    public void deleteFragmentId() {
+    private void deleteFragmentId() {
         Utils.writelogFile(context, "deleteFragmentId(Map)");
         try {
             fragmentTransaction = fragment.getActivity().getSupportFragmentManager()

@@ -9,7 +9,6 @@ import com.valdroide.mycitysshopsuser.db.ShopsDatabase;
 @Table(database = ShopsDatabase.class)
 public class MyPlace extends BaseModel {
 
-    // @PrimaryKey(autoincrement = true)
     @Column
     @PrimaryKey
     private int ID_PLACE_KEY;

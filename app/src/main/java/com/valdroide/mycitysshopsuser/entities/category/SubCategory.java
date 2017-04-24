@@ -9,7 +9,6 @@ import com.valdroide.mycitysshopsuser.db.ShopsDatabase;
 
 @Table(database = ShopsDatabase.class)
 public class SubCategory extends BaseModel {
-    //  @PrimaryKey(autoincrement = true)
     @Column
     @PrimaryKey
     @SerializedName("id")
@@ -22,6 +21,9 @@ public class SubCategory extends BaseModel {
     private int ID_CATEGORY;
 
     private String CATEGORY;
+
+    @Column
+    private int IS_UPDATE;
 
     public SubCategory() {
     }
@@ -67,5 +69,13 @@ public class SubCategory extends BaseModel {
 
     public void setID_CATEGORY(int ID_CATEGORY) {
         this.ID_CATEGORY = ID_CATEGORY;
+    }
+
+    public int getIS_UPDATE() {
+        return IS_UPDATE;
+    }
+
+    public void setIS_UPDATE(int IS_UPDATE) {
+        this.IS_UPDATE = IS_UPDATE;
     }
 }

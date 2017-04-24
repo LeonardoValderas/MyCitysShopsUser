@@ -1,32 +1,25 @@
 package com.valdroide.mycitysshopsuser.utils;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
-import android.net.Uri;
-import android.os.Build;
 import android.support.design.widget.Snackbar;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.valdroide.mycitysshopsuser.R;
-
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStreamWriter;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -47,12 +40,9 @@ import javax.mail.internet.MimeMultipart;
 
 public class Utils {
 
-    public static String URL_IMAGE = "http://10.0.2.2:8080/my_citys_shops_adm/account/image_account/";
+   // public static String URL_IMAGE = "http://10.0.2.2:8080/my_citys_shops_adm/account/image_account/";
+    //public static String URL_IMAGE = "http://10.0.3.2:8080/my_citys_shops_adm/account/image_account/";
     //public static String URL_IMAGE = "http://myd.esy.es/myd/clothes/image_clothes/";
-
-    public static String ERROR_DATA_BASE = "Error en la base de datos.";
-    public static String ERROR_INTERNET = "Verificar su conexión de Internet.";
-    public static String ERROR_OFFER_VALIDATE = "Problemas al validar sus Promos.";
 
     //FECHAS
     public static String getFechaLogFile() {
@@ -67,65 +57,8 @@ public class Utils {
         return sdf.format(dateOficial);
     }
 
-    public static String getFechaOficial() {
-        Date dateOficial = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-        return sdf.format(dateOficial);
-    }
-
-    public static boolean oldPhones() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-            return false;
-        else
-            return true;
-    }
-
-    public static String getLastDateWeek() {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        cal.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
-        cal.add(Calendar.DATE, 7);
-        return df.format(cal.getTime());
-    }
-
-    public static String getLastDateMonth() {
-        Calendar cal = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-        cal.set(Calendar.DATE, Calendar.getInstance().getActualMaximum(Calendar.DATE));
-        return df.format(cal.getTime());
-    }
-
-    public static boolean validateExpirateOffer(String dateExperate) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-        Date strDate = null;
-        try {
-            strDate = sdf.parse(dateExperate);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        if (strDate != null)
-            if (System.currentTimeMillis() > strDate.getTime()) {
-                return true;
-            }
-        return false;
-    }
-
     public static void showSnackBar(View conteiner, String msg) {
         Snackbar.make(conteiner, msg, Snackbar.LENGTH_LONG).show();
-    }
-
-    public static byte[] readBytes(Uri uri, Context context) throws IOException {
-        InputStream inputStream = context.getContentResolver().openInputStream(uri);
-        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
-
-        int bufferSize = 1024;
-        byte[] buffer = new byte[bufferSize];
-
-        int len = 0;
-        while ((len = inputStream.read(buffer)) != -1) {
-            byteBuffer.write(buffer, 0, len);
-        }
-        return byteBuffer.toByteArray();
     }
 
     public static void setPicasso(Context context, String url, final int resource, final ImageView imageView) {
@@ -144,54 +77,63 @@ public class Utils {
                 });
     }
 
-    public static void setPicasso(Context context, Uri uri, final int resource, final ImageView imageView) {
-        Picasso.with(context)
-                .load(uri.toString()).fit()
-                .placeholder(resource)
-                .into(imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                    }
+    public static void applyFontForToolbarTitle(Activity context, Toolbar toolbar) {
+        for (int i = 0; i < toolbar.getChildCount(); i++) {
+            View view = toolbar.getChildAt(i);
+            if (view instanceof TextView) {
+                TextView tv = (TextView) view;
+                Typeface titleFont = Typeface.
+                        createFromAsset(context.getAssets(), "fonts/antspan.ttf");
+                if (tv.getText() != null) {
+                    tv.setTypeface(titleFont);
+                    break;
+                }
+            }
+        }
+    }
 
-                    @Override
-                    public void onError() {
-                        imageView.setImageResource(resource);
-                    }
-                });
+    //TITLE GRUOP
+    public static Typeface setFontPacificoTextView(Context context) {
+        return Typeface.createFromAsset(context.getAssets(), "fonts/Pacifico.ttf");
+    }
+
+    //TITLE ITEM
+    public static Typeface setFontGoodDogTextView(Context context) {
+        return Typeface.createFromAsset(context.getAssets(), "fonts/GoodDog.otf");
+    }
+
+    //TITLE DIALOG
+    public static Typeface setFontExoTextView(Context context) {
+        return Typeface.createFromAsset(context.getAssets(), "fonts/Exo.otf");
+    }
+
+    //TITLE TEXT DIALOG
+    public static Typeface setFontRalewatTextView(Context context) {
+        return Typeface.createFromAsset(context.getAssets(), "fonts/Raleway.ttf");
     }
 
     public static boolean isNetworkAvailable(Context context) {
-        int[] networkTypes = {ConnectivityManager.TYPE_MOBILE,
-                ConnectivityManager.TYPE_WIFI};
         try {
             ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            for (int networkType : networkTypes) {
-                NetworkInfo netInfo = cm.getActiveNetworkInfo();
-                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
-                    return true;
-                }
-            }
+            return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnectedOrConnecting();
         } catch (Exception e) {
             return false;
         }
-        return false;
-    }
 
-    public boolean isNetworkAvailableNonStatic(Context context) {
-        int[] networkTypes = {ConnectivityManager.TYPE_MOBILE,
-                ConnectivityManager.TYPE_WIFI};
-        try {
-            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            for (int networkType : networkTypes) {
-                NetworkInfo netInfo = cm.getActiveNetworkInfo();
-                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
-                    return true;
-                }
-            }
-        } catch (Exception e) {
-            return false;
-        }
-        return false;
+//        int[] networkTypes = {ConnectivityManager.TYPE_MOBILE,
+//                ConnectivityManager.TYPE_WIFI};
+//        try {
+//            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+//            for (int networkType : networkTypes) {
+//                NetworkInfo netInfo = cm.getActiveNetworkInfo();
+//                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
+//                    return true;
+//                }
+//            }
+//        } catch (Exception e) {
+//            return false;
+//        }
+        //  return false;
     }
 
     private static Map<Character, Character> MAP_NORM;
@@ -424,8 +366,6 @@ public class Utils {
     public static MimeBodyPart createMimeBodyPart2(String filename) {
         try {
             MimeBodyPart messageBodyPart2 = new MimeBodyPart();
-            //Location of file to be attached
-            //String filename = context.getFilesDir() + "/" + context.getResources().getString(R.string.log_file_name);
             DataSource source = new FileDataSource(filename);
             messageBodyPart2.setDataHandler(new DataHandler(source));
             messageBodyPart2.setFileName("Error_Log.txt");
@@ -444,51 +384,5 @@ public class Utils {
         } catch (Exception e) {
             return null;
         }
-    }
-
-    public static String getToken(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.FCM_PREF), Context.MODE_PRIVATE);
-        return sharedPreferences.getString(context.getString(R.string.FCM_TOKEN), "");
-    }
-    public static String getOldToken(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.FCM_PREF), Context.MODE_PRIVATE);
-        return sharedPreferences.getString(context.getString(R.string.FCM_OLD_TOKEN), "");
-    }
-    public static boolean getIsNewToken(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.FCM_PREF), Context.MODE_PRIVATE);
-        return sharedPreferences.getBoolean(context.getString(R.string.FCM_IS_NEW), false);
-    }
-
-    public static void setOldAndNewToken(Context context, String old_token, String recent_token, boolean isNew) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.FCM_PREF), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.FCM_OLD_TOKEN), old_token);
-        editor.putString(context.getString(R.string.FCM_TOKEN), recent_token);
-        editor.putBoolean(context.getString(R.string.FCM_IS_NEW), isNew);
-        editor.commit();
-    }
-
-    public static void resetOldToken(Context context) {
-        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.FCM_PREF), Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(context.getString(R.string.FCM_OLD_TOKEN), "");
-        editor.putBoolean(context.getString(R.string.FCM_IS_NEW), false);
-        editor.commit();
-    }
-
-    public static void processToken(Context context, String token){
-        String current_token = "";
-        if (token != null)
-            if (!token.isEmpty()) {
-                current_token = Utils.getToken(context);
-                if (current_token != null)
-                    if (current_token.isEmpty()) {
-                        Utils.setOldAndNewToken(context, "", token, true);
-                    } else {
-                        if (token.compareTo(current_token) != 0) {
-                            Utils.setOldAndNewToken(context, current_token, token, true);
-                        }
-                    }
-            }
     }
 }

@@ -1,29 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Las Tiendas de Mi Ciudad</string>
-
-    <string name="title_activity_navigation">NavigationActivity</string>
+    <string name="app_name">My City\'s Shops</string>
     <!--NAVIGATION-->
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
     <!--MENU-->
-    <string name="action_my_shops">Mis Locales</string>
+    <string name="action_my_shops">Mis Tiendas</string>
     <string name="action_change_city">Cambiar de Ciudad</string>
     <string name="action_support">Soporte</string>
     <!--SHARED-->
     <string name="my_city_id_shared">my_city_id</string>
     <string name="id_city">id_city</string>
-    <string name="error_fill_place">Error al cargar los datos. Cierre la aplicación y vuelva a intentarlo.</string>
+    <string name="log_date_shared">date_log_file</string>
+    <!--ERROR MSG-->
+    <string name="error_fill_place">Problemas al cargar los datos. Cierre la aplicación y vuelva a intentarlo.</string>
+    <string name="error_file_log">Problemas para generar el archivo Log.</string>
+    <string name="email_success">Email enviado correctamente. Soporte se comunicará con usted.</string>
+    <string name="error_notification">Problemas para mostrar la notificación.</string>
+    <string name="error_data_base">Problemas en la base de datos.</string>
+    <string name="error_id_device">Problemas al obtener el ID de su dispositivo.</string>
+    <string name="error_internet">Verificar su conexión de Internet.</string>
+    <!--GOOGLE MAP -->
     <string name="google_maps_key">AIzaSyCJvouldRxod-_4soNKzBYOTs8tLr9bxyg</string>
+    <!--LOG-->
     <string name="log_file_name">LogMyCity.txt</string>
     <string name="log_date">log_date</string>
-    <string name="log_date_shared">date_log_file</string>
-    <string name="error_file_log">Problemas para generar el archivo Log</string>
-    <string name="email_success">Email enviado correctamente. Soporte se comunicará con usted.</string>
+    <!--HINT-->
     <string name="hint_support">Ingrese un comentario y su email</string>
-    <string name="support_title">EMAIL SOPORTE</string>
-    <string name="FCM_PREF">fcm_shared_preference</string>
-    <string name="FCM_TOKEN">fcm_token_shared</string>
-    <string name="FCM_OLD_TOKEN">fcm_old_token_shared</string>
-    <string name="FCM_IS_NEW">fcm_is_new_token_shared</string>
-    <string name="notification_error">Problemas para mostrar la notificación.</string>
+    <!--TITLE TOOLBAR-->
+    <string name="support_title">Soporte</string>
+    <string name="app_name_title">My City\'s Shops</string>
+    <string name="my_favorites_shops_title">Mis Tiendas</string>
+
+
+
+
+    <string name="insert_commentary">Ingrese un comentario</string>
+    <string name="sent_email_text">Se envió un email automaticamente a soporte.</string>
+    <string name="process">Procesando...</string>
+    <string name="state">Provincia</string>
+    <string name="city">Ciudad</string>
+    <string name="enter_button">Ingresar</string>
+    <string name="country">País</string>
+    <string name="adding">Cargando...</string>
+    <string name="phone">Telefono</string>
+    <string name="whatsapp">Whatsapp</string>
+    <string name="email">Email</string>
+    <string name="web">Web</string>
+    <string name="facebook">Facebook</string>
+    <string name="instagram">Instagram</string>
+    <string name="twitter">Twitter</string>
+    <string name="snapchat">Snapchat</string>
+
+    <string name="data_copy">Copiado.</string>
+    <string name="data_empty">Vacio.</string>
 </resources>

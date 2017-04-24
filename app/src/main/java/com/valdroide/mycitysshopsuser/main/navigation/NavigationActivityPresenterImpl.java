@@ -42,12 +42,6 @@ public class NavigationActivityPresenterImpl implements NavigationActivityPresen
     }
 
     @Override
-    public void getUrlShop(Context context, int id_shop) {
-        interactor.getUrlShop(context, id_shop);
-    }
-
-
-    @Override
     @Subscribe
     public void onEventMainThread(NavigationActivityEvent event) {
         if (this.view != null) {
@@ -57,9 +51,6 @@ public class NavigationActivityPresenterImpl implements NavigationActivityPresen
                     break;
                 case NavigationActivityEvent.CHANGEPLACE:
                     view.goToPlace();
-                    break;
-                case NavigationActivityEvent.GETURL:
-                    view.setUrlShowDialog(event.getUrl());
                     break;
                 case NavigationActivityEvent.ERROR:
                     view.setError(event.getError());

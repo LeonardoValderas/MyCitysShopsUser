@@ -47,9 +47,7 @@ public class SupportActivity extends AppCompatActivity implements SupportActivit
         Utils.writelogFile(this, "Se inicia presenter Oncreate(support)");
         presenter.onCreate();
         Utils.writelogFile(this, "Se inicia toolbar Oncreate(support)");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.support_title);
+        initToolBar();
         Utils.writelogFile(this, "Se inicia dialog Oncreate(support)");
         initDialog();
     }
@@ -59,9 +57,16 @@ public class SupportActivity extends AppCompatActivity implements SupportActivit
         app.getSupportActivityComponent(this, this).inject(this);
     }
 
+    public void initToolBar() {
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(R.string.support_title);
+        Utils.applyFontForToolbarTitle(this, toolbar);
+    }
+
     public void initDialog() {
         pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Procesando...");
+        pDialog.setMessage(getString(R.string.process));
         pDialog.setCancelable(false);
     }
 
@@ -70,7 +75,7 @@ public class SupportActivity extends AppCompatActivity implements SupportActivit
     public void sendEmail() {
         try {
             if (editTextEmail.getText().toString().equals(""))
-                setError("Ingrese un comentario");
+                setError(getString(R.string.insert_commentary));
             else {
                 pDialog.show();
                 presenter.sendEmail(this, editTextEmail.getText().toString());
@@ -84,7 +89,9 @@ public class SupportActivity extends AppCompatActivity implements SupportActivit
     @Override
     public void sendEmailSuccess() {
         Utils.writelogFile(this, "sendEmailSuccess(support)");
-        editTextEmail.setText("");
+        setText(editTextEmail, "");
+        if (pDialog.isShowing())
+            pDialog.dismiss();
         setError(getString(R.string.email_success));
     }
 
@@ -94,6 +101,15 @@ public class SupportActivity extends AppCompatActivity implements SupportActivit
         if (pDialog.isShowing())
             pDialog.dismiss();
         Utils.showSnackBar(contentNavigation, error);
+    }
+
+    private void setText(final EditText editText,final String value){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                editText.setText(value);
+            }
+        });
     }
 
     @Override

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--MENU-->
+    <string name="action_my_shops">My Shops</string>
+    <string name="action_change_city">Change City</string>
+    <string name="action_support">Support</string>
+    <!--ERROR MSG-->
+    <string name="error_fill_place">Problems to loading the data. Close the app and try again.</string>
+    <string name="error_file_log">Problem to creating the Log file.</string>
+    <string name="email_success">Email sent successfully. Support will contact you.</string>
+    <string name="error_notification">Problem to showing the notification.</string>
+    <string name="error_data_base">Database Problems.</string>
+    <string name="error_internet">Verify your Internet connection.</string>
+    <!--HINT-->
+    <string name="hint_support">Enter a commentary and your email.</string>
+    <!--TITLE TOOLBAR-->
+    <string name="support_title">Support</string>
+    <string name="app_name_title">My City\'s Shops</string>
+    <string name="my_favorites_shops_title">My Shops</string>
+
+    <string name="insert_commentary">Enter a commentary</string>
+    <string name="sent_email_text">An email was automatically sent to support.</string>
+    <string name="process">Processing...</string>
+    <string name="state">State</string>
+    <string name="city">City</string>
+    <string name="enter_button">Enter</string>
+    <string name="country">Country</string>
+    <string name="adding">Loading...</string>
+    <string name="phone">Phone</string>
+    <string name="error_id_device">Problems to get the device ID.</string>
+    <string name="data_copy">Copied.</string>
+    <string name="data_empty">Empty.</string>
+</resources>

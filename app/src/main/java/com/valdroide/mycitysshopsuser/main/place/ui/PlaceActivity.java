@@ -17,7 +17,6 @@ import com.valdroide.mycitysshopsuser.entities.place.City;
 import com.valdroide.mycitysshopsuser.entities.place.Country;
 import com.valdroide.mycitysshopsuser.entities.place.MyPlace;
 import com.valdroide.mycitysshopsuser.entities.place.State;
-import com.valdroide.mycitysshopsuser.main.navigation.ui.NavigationActivity;
 import com.valdroide.mycitysshopsuser.main.place.PlaceActivityPresenter;
 import com.valdroide.mycitysshopsuser.main.place.ui.adapters.AdapterSpinnerCity;
 import com.valdroide.mycitysshopsuser.main.place.ui.adapters.AdapterSpinnerCountry;
@@ -98,7 +97,7 @@ public class PlaceActivity extends AppCompatActivity implements PlaceActivityVie
 
     public void initDialog() {
         pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Procesando...");
+        pDialog.setMessage(getString(R.string.process));
         pDialog.setCancelable(false);
     }
 
