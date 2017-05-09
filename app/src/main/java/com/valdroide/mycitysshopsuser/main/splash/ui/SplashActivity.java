@@ -21,6 +21,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import me.leolin.shortcutbadger.ShortcutBadger;
 
 public class SplashActivity extends AppCompatActivity implements SplashActivityView {
 
@@ -48,7 +49,7 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
             Utils.writelogFile(this, "Se inicia presenter Oncreate(Splash)");
             presenter.onCreate();
             Utils.writelogFile(this, "isPlace Oncreate(Splash)");
-
+            resetBadge();
             isPlace = isPlace();
             if (!isPlace) {
                 Utils.writelogFile(this, "isPlace false y validateDatePlace(Splash)");
@@ -61,6 +62,11 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
             Utils.writelogFile(this, getString(R.string.error_file_log));
             setError(getString(R.string.error_file_log));
         }
+    }
+
+    public void resetBadge() {
+        Utils.resetCounterBadge(this);
+        ShortcutBadger.removeCount(this);
     }
 
     private boolean validateLogFile(Context context) {
@@ -124,8 +130,12 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
         Utils.writelogFile(this, "setError " + msg + "(Splash)");
         try {
             progressBar.setVisibility(View.INVISIBLE);
-            presenter.sendEmail(this, "Error Splash, Email Automatico.");
-            textViewDownload.setText(msg + "\n" + getString(R.string.sent_email_text));
+            if (msg.equalsIgnoreCase(getString(R.string.error_internet))) {
+                textViewDownload.setText(msg);
+            } else {
+                presenter.sendEmail(this, "Error Splash, Email Automatico.");
+                textViewDownload.setText(msg + "\n" + getString(R.string.sent_email_text));
+            }
         } catch (Exception e) {
             Utils.writelogFile(this, "catch error " + e.getMessage() + "(Splash)");
         }

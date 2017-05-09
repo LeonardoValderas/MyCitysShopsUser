@@ -14,8 +14,8 @@ public class FragmentMainEvent {
     public static final int FOLLOWORUNFOLLOW = 3;
     public static final int WITHOUTCHANGE = 4;
     public static final int CALLSHOPS = 5;
-    public static final int GETDATEUSERCITY = 6;
-    public static final int ISUPDATE = 7;
+    public static final int ISUPDATE = 6;
+    public static final int MYSHOPS = 7;
 
     private List<Shop> shopsList;
     private List<Offer> offers;

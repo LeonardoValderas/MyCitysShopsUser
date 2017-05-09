@@ -8,4 +8,5 @@ public interface NavigationActivityView {
    void setListCategoriesAndSubCategories(List<Category> categories, List<SubCategory> subCategories);
    void setError(String msg);
    void goToPlace();
+   void updateAdapter();
 }

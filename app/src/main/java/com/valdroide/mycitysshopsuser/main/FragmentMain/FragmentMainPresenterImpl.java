@@ -3,7 +3,6 @@ package com.valdroide.mycitysshopsuser.main.FragmentMain;
 import android.content.Context;
 
 import com.valdroide.mycitysshopsuser.entities.category.SubCategory;
-import com.valdroide.mycitysshopsuser.entities.shop.DateUserCity;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
 import com.valdroide.mycitysshopsuser.lib.base.EventBus;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.events.FragmentMainEvent;
@@ -44,13 +43,8 @@ public class FragmentMainPresenterImpl implements FragmentMainPresenter {
     }
 
     @Override
-    public void getDateUserCity(Context context) {
-        interactor.getDateUserCity(context);
-    }
-
-    @Override
-    public void refreshLayout(Context context, DateUserCity dateUserCity) {
-        interactor.refreshLayout(context, dateUserCity);
+    public void refreshLayout(Context context, boolean isMyShop) {
+        interactor.refreshLayout(context, isMyShop);
     }
 
     @Override
@@ -67,11 +61,6 @@ public class FragmentMainPresenterImpl implements FragmentMainPresenter {
     public void onClickFollowOrUnFollow(Context context, Shop shop, boolean isFollow) {
         interactor.onClickFollowOrUnFollow(context, shop, isFollow);
     }
-
-//    @Override
-//    public void onClickUnFollow(Context context, Shop shop) {
-//        interactor.onClickUnFollow(context, shop);
-//    }
 
     @Override
     @Subscribe
@@ -93,8 +82,8 @@ public class FragmentMainPresenterImpl implements FragmentMainPresenter {
                 case FragmentMainEvent.CALLSHOPS:
                     view.callShops();
                     break;
-                case FragmentMainEvent.GETDATEUSERCITY:
-                    view.setDateUserCity(event.getDateUserCity());
+                case FragmentMainEvent.MYSHOPS:
+                    view.callMyShops();
                     break;
                 case FragmentMainEvent.ISUPDATE:
                     view.isUpdate();

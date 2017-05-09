@@ -496,14 +496,13 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
             try {
                 Utils.writelogFile(context, "Call validateDateUser(Splash, Repository)");
                 Call<ResultShop> validateDateUser = service.validateDateUser(Utils.getIdCity(context), dateUserCityWS.getCATEGORY_DATE(),
-                        dateUserCityWS.getSUBCATEGORY_DATE(), dateUserCityWS.getCAT_SUB_CITY_DATE(),
-                        dateUserCityWS.getSHOP_DATE(), dateUserCityWS.getOFFER_DATE(), dateUserCityWS.getDATE_USER_CITY());
+                        dateUserCityWS.getSUBCATEGORY_DATE(), dateUserCityWS.getCAT_SUB_CITY_DATE(), dateUserCityWS.getSHOP_DATE(),
+                        dateUserCityWS.getOFFER_DATE(), dateUserCityWS.getSUPPORT_DATE(), dateUserCityWS.getDATE_USER_CITY());
                 validateDateUser.enqueue(new Callback<ResultShop>() {
                     @Override
                     public void onResponse(Call<ResultShop> call, Response<ResultShop> response) {
                         if (response.isSuccessful()) {
                             Utils.writelogFile(context, "Response Successful y get ResponseWS(Splash, Repository)");
-
                             responseWS = response.body().getResponseWS();
                             if (responseWS != null) {
                                 Utils.writelogFile(context, "ResponseWS != null y valida getSuccess(Splash, Repository)");
@@ -518,6 +517,7 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                         dateUserCity.save();
                                         Utils.writelogFile(context, "save dateUserCity y getCategories(Splash, Repository)");
                                     }
+
                                     categories = response.body().getCategories();
                                     if (categories != null) {
                                         Utils.writelogFile(context, "categories != null y categories.size()(Splash, Repository)");

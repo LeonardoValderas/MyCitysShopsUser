@@ -1,6 +1,5 @@
 package com.valdroide.mycitysshopsuser.main.FragmentMain.ui.adapters;
 
-import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
@@ -8,9 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.ui.FragmentMain;
@@ -82,8 +79,10 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
     }
 
     public void setUpdateShop(int position) {
-        shopsList.get(position).setIS_OFFER_UPDATE(0);
-        notifyDataSetChanged();
+        if (shopsList.get(position).getIS_OFFER_UPDATE() != 0) {
+            shopsList.get(position).setIS_OFFER_UPDATE(0);
+            notifyDataSetChanged();
+        }
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

@@ -2,6 +2,8 @@ package com.valdroide.mycitysshopsuser.main.navigation;
 
 import android.content.Context;
 
+import com.raizlabs.android.dbflow.sql.language.Condition;
+import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -58,6 +60,47 @@ public class NavigationActivityRepositoryImpl implements NavigationActivityRepos
             Utils.writelogFile(context, "reset id city shared y post CHANGEPLACE(Navigation, Repository)");
             Utils.resetIdCity(context);
             post(NavigationActivityEvent.CHANGEPLACE);
+        } catch (Exception e) {
+            Utils.writelogFile(context, " catch error " + e.getMessage() + "(Navigation, Repository)");
+            post(NavigationActivityEvent.ERROR, e.getMessage());
+        }
+    }
+
+    @Override
+    public void setUpdateCategory(Context context, String category) {
+        Utils.writelogFile(context, "metodo setUpdateCategory(Navigation, Repository)");
+        ConditionGroup conditions = ConditionGroup.clause();
+        conditions.and(Condition.column(new NameAlias("Category.CATEGORY")).is(category));
+        try {
+            Category categoryEntity = SQLite.select().from(Category.class).where(conditions).querySingle();
+            if (categoryEntity != null) {
+                if (categoryEntity.getIS_UPDATE() != 0) {
+                    Utils.writelogFile(context, "categoryEntity != null y getIS_UPDATE == 1 y update(Navigation, Repository)");
+                    categoryEntity.setIS_UPDATE(0);
+                    categoryEntity.update();
+                    Utils.writelogFile(context, "post CATEGORORYSUBCATEGORYUPDATE(Navigation, Repository)");
+                    post(NavigationActivityEvent.CATEGORORYSUBCATEGORYUPDATE);
+                }
+            }
+        } catch (Exception e) {
+            Utils.writelogFile(context, " catch error " + e.getMessage() + "(Navigation, Repository)");
+            post(NavigationActivityEvent.ERROR, e.getMessage());
+        }
+    }
+
+    @Override
+    public void setUpdateSubCategory(Context context, SubCategory subCategory) {
+        Utils.writelogFile(context, "metodo setUpdateSubCategory(Navigation, Repository)");
+        try {
+            if (subCategory != null) {
+                if (subCategory.getIS_UPDATE() != 0) {
+                    Utils.writelogFile(context, "subCategory != null y update(Navigation, Repository)");
+                    subCategory.setIS_UPDATE(0);
+                    subCategory.update();
+                    Utils.writelogFile(context, "post CATEGORORYSUBCATEGORYUPDATE(Navigation, Repository)");
+                    post(NavigationActivityEvent.CATEGORORYSUBCATEGORYUPDATE);
+                }
+            }
         } catch (Exception e) {
             Utils.writelogFile(context, " catch error " + e.getMessage() + "(Navigation, Repository)");
             post(NavigationActivityEvent.ERROR, e.getMessage());

@@ -50,8 +50,10 @@
             android:id="@+id/textViewMessage"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="10dp"
-            android:gravity="center"
+            android:gravity="center|center_vertical"
+            android:padding="5dp"
+            android:textColor="@color/colorPrimaryText"
+            android:textStyle="bold"
             android:text="Notificación"
             android:textSize="30dp" />
     </android.support.v7.widget.CardView>

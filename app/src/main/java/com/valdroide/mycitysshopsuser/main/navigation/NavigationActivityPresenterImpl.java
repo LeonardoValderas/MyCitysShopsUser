@@ -2,6 +2,7 @@ package com.valdroide.mycitysshopsuser.main.navigation;
 
 import android.content.Context;
 
+import com.valdroide.mycitysshopsuser.entities.category.SubCategory;
 import com.valdroide.mycitysshopsuser.lib.base.EventBus;
 import com.valdroide.mycitysshopsuser.main.navigation.events.NavigationActivityEvent;
 import com.valdroide.mycitysshopsuser.main.navigation.ui.NavigationActivityView;
@@ -42,6 +43,16 @@ public class NavigationActivityPresenterImpl implements NavigationActivityPresen
     }
 
     @Override
+    public void setUpdateCategory(Context context, String category) {
+        interactor.setUpdateCategory(context, category);
+    }
+
+    @Override
+    public void setUpdateSubCategory(Context context, SubCategory subCategory) {
+        interactor.setUpdateSubCategory(context, subCategory);
+    }
+
+    @Override
     @Subscribe
     public void onEventMainThread(NavigationActivityEvent event) {
         if (this.view != null) {
@@ -54,6 +65,9 @@ public class NavigationActivityPresenterImpl implements NavigationActivityPresen
                     break;
                 case NavigationActivityEvent.ERROR:
                     view.setError(event.getError());
+                    break;
+                case NavigationActivityEvent.CATEGORORYSUBCATEGORYUPDATE:
+                    view.updateAdapter();
                     break;
             }
         }

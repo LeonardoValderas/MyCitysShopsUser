@@ -85,4 +85,10 @@
         <item name="android:gravity">top|center</item>
         <item name="android:textStyle">bold</item>
     </style>
+    <style name="BannerStyle" parent="@android:style/TextAppearance.Medium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentBottom">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
 </resources>

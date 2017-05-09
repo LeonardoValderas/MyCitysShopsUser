@@ -33,6 +33,9 @@ public class DateUserCity extends BaseModel {
     @SerializedName("offer")
     public String OFFER_DATE;
     @Column
+    @SerializedName("support")
+    public String SUPPORT_DATE;
+    @Column
     @SerializedName("date_user")
     public String DATE_USER_CITY;
 
@@ -101,5 +104,13 @@ public class DateUserCity extends BaseModel {
 
     public void setDATE_USER_CITY(String DATE_USER_CITY) {
         this.DATE_USER_CITY = DATE_USER_CITY;
+    }
+
+    public String getSUPPORT_DATE() {
+        return SUPPORT_DATE;
+    }
+
+    public void setSUPPORT_DATE(String SUPPORT_DATE) {
+        this.SUPPORT_DATE = SUPPORT_DATE;
     }
 }

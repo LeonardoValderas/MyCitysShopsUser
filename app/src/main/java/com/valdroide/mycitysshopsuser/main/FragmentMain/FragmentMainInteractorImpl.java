@@ -3,7 +3,6 @@ package com.valdroide.mycitysshopsuser.main.FragmentMain;
 import android.content.Context;
 
 import com.valdroide.mycitysshopsuser.entities.category.SubCategory;
-import com.valdroide.mycitysshopsuser.entities.shop.DateUserCity;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
 
 public class FragmentMainInteractorImpl implements FragmentMainInteractor {
@@ -25,13 +24,8 @@ public class FragmentMainInteractorImpl implements FragmentMainInteractor {
     }
 
     @Override
-    public void getDateUserCity(Context context) {
-        repository.getDateUserCity(context);
-    }
-
-    @Override
-    public void refreshLayout(Context context, DateUserCity dateUserCity) {
-        repository.refreshLayout(context, dateUserCity);
+    public void refreshLayout(Context context, boolean isMyShop) {
+        repository.refreshLayout(context, isMyShop);
     }
 
     @Override
@@ -48,9 +42,4 @@ public class FragmentMainInteractorImpl implements FragmentMainInteractor {
     public void onClickFollowOrUnFollow(Context context, Shop shop, boolean isFollow) {
         repository.onClickFollowOrUnFollow(context, shop, isFollow);
     }
-
-//    @Override
-//    public void onClickUnFollow(Context context, Shop shop) {
-//        repository.onClickUnFollow(context, shop);
-//    }
 }

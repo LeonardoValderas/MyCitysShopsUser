@@ -9,6 +9,7 @@ public class NavigationActivityEvent {
     public static final int GETCATEGORIESANDSUBCATEGORIES = 0;
     public static final int ERROR = 1;
     public static final int CHANGEPLACE = 2;
+    public static final int CATEGORORYSUBCATEGORYUPDATE = 3;
     private String error;
     private List<Category> categories;
     private List<SubCategory> subCategories;

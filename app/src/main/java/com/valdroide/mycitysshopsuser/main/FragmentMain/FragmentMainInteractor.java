@@ -10,9 +10,7 @@ public interface FragmentMainInteractor {
     void getListShops(Context context, SubCategory subCategory);
     void getListOffer(Context context, int id_shop);
     void onClickFollowOrUnFollow(Context context, Shop shop, boolean isFollow);
-    //void onClickUnFollow(Context context, Shop shop);
-    void getDateUserCity(Context context);
-    void refreshLayout(Context context, DateUserCity dateUserCity);
+    void refreshLayout(Context context, boolean isMyShop);
     void getMyFavoriteShops(Context context);
     void setUpdateOffer(Context context, int position, Shop shop);
 }

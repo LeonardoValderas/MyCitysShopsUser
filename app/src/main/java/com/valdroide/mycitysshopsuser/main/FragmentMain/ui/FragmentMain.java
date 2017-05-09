@@ -1,13 +1,16 @@
 package com.valdroide.mycitysshopsuser.main.FragmentMain.ui;
 
+import android.Manifest;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,16 +18,21 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
+import com.google.ads.mediation.admob.AdMobAdapter;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
 import com.valdroide.mycitysshopsuser.MyCitysShopsUserApp;
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.entities.category.SubCategory;
-import com.valdroide.mycitysshopsuser.entities.shop.DateUserCity;
 import com.valdroide.mycitysshopsuser.entities.shop.Offer;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.FragmentMainPresenter;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.dialogs.DialogContact;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.dialogs.DialogMap;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.dialogs.DialogOffer;
+import com.valdroide.mycitysshopsuser.main.FragmentMain.dialogs.OnClickContact;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.ui.adapters.FragmentMainAdapter;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.ui.adapters.OnItemClickListener;
 import com.valdroide.mycitysshopsuser.main.navigation.ui.NavigationActivity;
@@ -37,16 +45,18 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class FragmentMain extends Fragment implements FragmentMainView, OnItemClickListener {
+public class FragmentMain extends Fragment implements FragmentMainView, OnItemClickListener, OnClickContact {
 
+    private static final int PERMISSION_CALL = 110;
     @Bind(R.id.recyclerView)
     RecyclerView recyclerView;
     @Bind(R.id.conteiner)
     FrameLayout conteiner;
     @Bind(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    //    @Bind(R.id.adView)
-//    AdView mAdView;
+    @Bind(R.id.adView)
+    AdView mAdView;
+
     @Inject
     FragmentMainAdapter adapter;
     @Inject
@@ -58,14 +68,26 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     private int position = 0;
     private Shop shopDialog;
     private static boolean isMyShop = false;
-    //private AdRequest adRequest;
-    private DateUserCity dateUserCity;
+    private AdRequest adRequest;
+    //    private AdRequest adRequestVideo;
+    static FragmentMain fragmentAction;
+    private int permissionCheck;
+    private String dateContact;
+    private boolean isRegister = false;
+//    private RewardedVideoAd mAd;
+//    private boolean mIsRewardedVideoLoading;
+//    private final Object mLock = new Object();
 
     public FragmentMain() {
     }
 
     public static FragmentMain newInstance(SubCategory subCategory, boolean isMyShops) {
-        FragmentMain fragmentAction = new FragmentMain();
+        if (fragmentAction == null)
+            createFragment();
+        else {
+            fragmentAction = null;
+            createFragment();
+        }
         try {
             Utils.writelogFile(fragmentAction.getActivity(), "Se instacia FragmentMain(FragmentMain)");
             if (!isMyShops) {
@@ -80,13 +102,17 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
         return fragmentAction;
     }
 
+    public static void createFragment() {
+        fragmentAction = new FragmentMain();
+    }
+
     @Override
     public void onActivityCreated(Bundle state) {
         super.onActivityCreated(state);
         Utils.writelogFile(getActivity(), "Se inicia Injection(FragmentMain)");
         setupInjection();
         Utils.writelogFile(getActivity(), "Se inicia presenter Oncreate(FragmentMain)");
-        presenter.onCreate();
+        register();
         Utils.writelogFile(getActivity(), "Se inicia dialog Oncreate(FragmentMain)");
         initDialog();
         if (isMyShop) {
@@ -100,11 +126,8 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
                 presenter.getListShops(getActivity(), subCategoryExtra);
             }
         }
-
         initRecyclerViewAdapter();
-        //  initSwipeRefreshLayout();
-        // BannerAd();
-
+        BannerAd();
     }
 
     @Override
@@ -116,6 +139,20 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
         initSwipeRefreshLayout();
         Utils.writelogFile(getActivity(), "return view(FragmentMain)");
         return view;
+    }
+
+    public void register() {
+        if (!isRegister) {
+            presenter.onCreate();
+            isRegister = true;
+        }
+    }
+
+    public void unregister() {
+        if (isRegister) {
+            presenter.onDestroy();
+            isRegister = false;
+        }
     }
 
     public void initDialog() {
@@ -145,8 +182,10 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     public void verifySwipeRefresh() {
         Utils.writelogFile(getActivity(), "verifySwipeRefresh(FragmentMain)");
         try {
-            if (mSwipeRefreshLayout.isRefreshing()) {
-                mSwipeRefreshLayout.setRefreshing(false);
+            if (mSwipeRefreshLayout != null) {
+                if (mSwipeRefreshLayout.isRefreshing()) {
+                    mSwipeRefreshLayout.setRefreshing(false);
+                }
             }
         } catch (Exception e) {
             setError(e.getMessage());
@@ -160,12 +199,9 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
             mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
-                    if (isMyShop)
-                        verifySwipeRefresh();
-                    else {
-                        presenter.getDateUserCity(getActivity());
-                        presenter.refreshLayout(getActivity(), dateUserCity);
-                    }
+                    Utils.writelogFile(getActivity(), "onRefresh(FragmentMain)");
+                    presenter.refreshLayout(getActivity(), isMyShop);
+
                 }
             });
         } catch (Exception e) {
@@ -174,19 +210,18 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
         }
     }
 
-//    public void BannerAd() {
-//        adRequest = new AdRequest.Builder()
-//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-//                .addTestDevice("B52960D9E6A2A5833E82FEA8ACD4B80C")
-//                .build();
-//        mAdView.loadAd(adRequest);
-//    }
+    public void BannerAd() {
+        adRequest = new AdRequest.Builder()
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .addTestDevice("B52960D9E6A2A5833E82FEA8ACD4B80C")
+                .build();
+        mAdView.loadAd(adRequest);
+    }
 
     @Override
     public void setListShops(List<Shop> shops) {
         Utils.writelogFile(getActivity(), "setListShops " + shops.size() + "(FragmentMain)");
-        if (pDialog.isShowing())
-            pDialog.dismiss();
+        dismissDialog();
         adapter.setShop(shops);
         verifySwipeRefresh();
     }
@@ -194,10 +229,9 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     @Override
     public void setError(String mgs) {
         Utils.writelogFile(getActivity(), "setError " + mgs + "(FragmentMain)");
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-        Utils.showSnackBar(conteiner, mgs);
+        dismissDialog();
         verifySwipeRefresh();
+        Utils.showSnackBar(conteiner, mgs);
     }
 
     @Override
@@ -219,23 +253,23 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     }
 
     @Override
-    public void setDateUserCity(DateUserCity dateUserCity) {
-        Utils.writelogFile(getActivity(), "setDateUserCity(FragmentMain)");
-        this.dateUserCity = dateUserCity;
+    public void callMyShops() {
+        Utils.writelogFile(getActivity(), "callMyShops(FragmentMain)");
+        presenter.getMyFavoriteShops(getActivity());
     }
 
     @Override
     public void isUpdate() {
         Utils.writelogFile(getActivity(), "isUpdate(FragmentMain)");
-        adapter.setUpdateShop(position);
+        adapter.notifyDataSetChanged();
+        dismissDialog();
     }
 
     @Override
     public void followUnFollowSuccess(Shop shop) {
         Utils.writelogFile(getActivity(), "followSuccessUnFollow(FragmentMain)");
         adapter.setUpdateShop(position, shop);
-        if (pDialog.isShowing())
-            pDialog.dismiss();
+        dismissDialog();
     }
 
     @Override
@@ -259,9 +293,13 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     @Override
     public void setListOffer(List<Offer> offers) {
         Utils.writelogFile(getActivity(), "setListOffer y DialogOffer(FragmentMain)");
+        dismissDialog();
+        new DialogOffer(getActivity(), offers, shopDialog);
+    }
+
+    public void dismissDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
-        new DialogOffer(getActivity(), offers, shopDialog);
     }
 
     @Override
@@ -273,17 +311,175 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     @Override
     public void onClickContact(Shop shop) {
         Utils.writelogFile(getActivity(), "onClickContact y DialogNotification(FragmentMain)");
-        new DialogContact(getActivity(), shop);
+        new DialogContact(this, shop, this);
     }
 
-//    @Override
-//    public void onResume() {
-//        super.onResume();
-//        if (mAdView != null) {
-//            mAdView.resume();
-//        }
-//    }
+    public void onClickPhone(String number) {
+        Utils.writelogFile(getActivity(), "onClickPhone() y validate oldPhones(FragmentMain)");
+        if (!Utils.oldPhones()) {
+            dateContact = number;
+            permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE);
+            checkForPermission(permissionCheck, PERMISSION_CALL);
+        }
+        Utils.writelogFile(getActivity(), "hasPermission() y CallPhone(Account)");
+        if (hasPermission()) {
+            callPhone(number);
+        }
+    }
 
+    @Override
+    public void onClickField(String url, String urlApp, int field) {
+        switch (field) {
+            case 0:
+                onClickPhone(url);
+                break;
+            case 1:
+                whatsappIntent();
+                break;
+            case 2:
+                emailIntent(url);
+                break;
+            case 3:
+                openWebURL(url);
+                break;
+            case 4:
+                getRedSocial(url, urlApp, 4);
+                break;
+            case 5:
+                getRedSocial(url, urlApp, 5);
+                break;
+            case 6:
+                getRedSocial(url, urlApp, 6);
+                break;
+        }
+    }
+
+    private void checkForPermission(int permissionCheck, final int PERMISSION) {
+        Utils.writelogFile(getActivity(), "is not oldPhones y checkForPermission(FragmentMain)");
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.CALL_PHONE}, PERMISSION);
+        }
+    }
+
+    private boolean hasPermission() {
+        int permissionCheck = ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CALL_PHONE);
+        return permissionCheck == PackageManager.PERMISSION_GRANTED;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            switch (requestCode) {
+                case PERMISSION_CALL:
+                    callPhone(dateContact);
+                    break;
+            }
+        }
+    }
+
+    private void callPhone(String number) {
+        Utils.writelogFile(getActivity(), "callPhone metodo (FragmentMain)");
+        try {
+            Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + number));
+            startActivity(intent);
+        } catch (Exception e) {
+            Utils.writelogFile(getActivity(), "catch: " + e.getMessage() + " (FragmentMain)");
+            setError(e.getMessage());
+        }
+    }
+
+    private void whatsappIntent() {
+        Utils.writelogFile(getActivity(), "whatsappIntent metodo (FragmentMain)");
+        try {
+            Intent shareIntent = new Intent();
+            shareIntent.setAction(Intent.ACTION_SEND);
+            shareIntent.setType("text/plain");
+            shareIntent.setPackage("com.whatsapp");
+            startActivity(shareIntent);
+        } catch (Exception e) {
+            Utils.writelogFile(getActivity(), "catch: " + e.getMessage() + " (FragmentMain)");
+            setError(e.getMessage());
+        }
+    }
+
+    public void emailIntent(String to) {
+        Utils.writelogFile(getActivity(), "emailIntent metodo (FragmentMain)");
+        try {
+            Intent intent = new Intent(Intent.ACTION_SENDTO);
+            intent.setData(Uri.parse("mailto:" + to));
+            startActivity(intent);
+        } catch (Exception e) {
+            Utils.writelogFile(getActivity(), "catch: " + e.getMessage() + " (FragmentMain)");
+            setError(e.getMessage());
+        }
+    }
+
+    public void openWebURL(String inURL) {
+        Utils.writelogFile(getActivity(), "openWebURL metodo (FragmentMain)");
+        try {
+            Intent browse = new Intent(Intent.ACTION_VIEW, Uri.parse(inURL));
+            startActivity(browse);
+        } catch (Exception e) {
+            Utils.writelogFile(getActivity(), "catch: " + e.getMessage() + " (FragmentMain)");
+            setError(e.getMessage());
+        }
+    }
+
+    private void getRedSocial(String url, String urlApp, int red) {
+        Utils.writelogFile(getActivity(), "getRedSocial metodo (FragmentMain)");
+        try {
+            PackageManager packageManager = getActivity().getPackageManager();
+            if (packageManager.getLaunchIntentForPackage(setPackageRed(red)) != null) {
+                Utils.writelogFile(getActivity(), "app found app red " + red + "(FragmentMain)");
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(urlApp)));
+            } else {
+                Utils.writelogFile(getActivity(), "not app found red " + red + "(FragmentMain)");
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(url)));
+            }
+        } catch (Exception e) {
+            Utils.writelogFile(getActivity(), "catch: " + e.getMessage() + " (FragmentMain)");
+            setError(e.getMessage());
+        }
+
+    }
+
+    private String setPackageRed(int red) {
+        String pack = "";
+        switch (red) {
+            case 4: //face
+                pack = "com.facebook.katana";
+                break;
+            case 5: //insta
+                pack = "com.instagram.android";
+                break;
+            case 6: //twitter
+                pack = "com.twitter.android";
+                break;
+            case 7: //snap
+                pack = "com.snapchat.android";
+                break;
+        }
+        return pack;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mAdView != null) {
+            mAdView.resume();
+        }
+        register();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (mAdView != null) {
+            mAdView.pause();
+        }
+        unregister();
+    }
 
     @Override
     public void onDestroyView() {
@@ -298,6 +494,7 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
         if (pDialog.isShowing())
             pDialog.dismiss();
         presenter.onDestroy();
+        unregister();
         super.onDestroy();
     }
 }

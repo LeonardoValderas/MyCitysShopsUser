@@ -32,6 +32,7 @@ public interface APIService {
                                       @Field("date_cat_sub_city") String date_cat_sub_city,
                                       @Field("date_shop") String date_shop,
                                       @Field("date_offer") String date_offer,
+                                      @Field("date_support") String date_support,
                                       @Field("date_user") String date_user);
 
     @FormUrlEncoded

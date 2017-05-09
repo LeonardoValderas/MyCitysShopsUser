@@ -1,6 +1,7 @@
 package com.valdroide.mycitysshopsuser.main.FragmentMain.dialogs;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -9,6 +10,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -72,6 +74,7 @@ public class DialogOffer {
                 recyclerViewOffer.setVisibility(View.GONE);
                 textViewEmpty.setVisibility(View.VISIBLE);
             }
+            alertDialog = builder.create();
             buttonCerrar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -79,9 +82,18 @@ public class DialogOffer {
                 }
             });
 
-            alertDialog = builder.create();
+
             alertDialog.getWindow().setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            //  alertDialog.getWindow().setLayout(1200, 500);
+            alertDialog.setCanceledOnTouchOutside(false);
+            alertDialog.setOnKeyListener(new DialogInterface.OnKeyListener() {
+                @Override
+                public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+                    if (keyCode == KeyEvent.KEYCODE_BACK) {
+                        alertDialog.dismiss();
+                    }
+                    return true;
+                }
+            });
             alertDialog.show();
         } catch (Exception e) {
             Utils.writelogFile(context, " catch error " + e.getMessage() + "(Offer)");

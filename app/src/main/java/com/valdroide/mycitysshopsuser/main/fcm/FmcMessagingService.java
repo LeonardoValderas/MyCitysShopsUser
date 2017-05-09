@@ -36,7 +36,7 @@ public class FmcMessagingService extends FirebaseMessagingService {
                 long[] pattern = {500, 500, 500, 500, 500};
 
                 NotificationCompat.Builder notificationBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(this)
-                        .setSmallIcon(R.drawable.ic_icon_notification)
+                        .setSmallIcon(R.drawable.ic_notification_icon)
                         .setContentTitle(title)
                         .setContentText(message)
                         .setAutoCancel(true)

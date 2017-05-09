@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="app_name">My City\'s Shops</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <!--SHARED-->
+    <string name="my_city_id_shared">my_city_id</string>
+    <string name="id_city">id_city</string>
+    <string name="log_date_shared">date_log_file</string>
+    <string name="my_counter_id_shared">my_counter_id</string>
+    <string name="counter_id">counter_id</string>
+    <!--LOG-->
+    <string name="log_file_name">LogMyCity.txt</string>
+    <string name="log_date">log_date</string>
     <!--MENU-->
     <string name="action_my_shops">Minhas Lojas</string>
     <string name="action_change_city">Mudar de Cidade</string>
@@ -28,6 +40,18 @@
     <string name="adding">Carregando...</string>
     <string name="phone">Telefone</string>
     <string name="error_id_device">Problemas ao obter o ID de seu dispositivo.</string>
-    <string name="data_copy">Copiado.</string>
-    <string name="data_empty">Vacio.</string>
+    <string name="data_copy">Dato copiado.</string>
+    <string name="data_empty">Campo vacio.</string>
+    <string name="whatsapp">Whatsapp</string>
+    <string name="email">Email</string>
+    <string name="web">Web</string>
+    <string name="facebook">Facebook</string>
+    <string name="instagram">Instagram</string>
+    <string name="twitter">Twitter</string>
+    <string name="snapchat">Snapchat</string>
+    <string name="url_invalid">Url inválido.</string>
+    <string name="position_not_found">Posicão não encontrada.</string>
+    <string name="legal">Legal</string>
+    <string name="banner_fragment">ca-app-pub-5908373302541656/6575972523</string>
+    <string name="video_navigation">ca-app-pub-5908373302541656/8831434920</string>
 </resources>

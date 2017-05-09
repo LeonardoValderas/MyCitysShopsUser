@@ -13,6 +13,10 @@ import com.valdroide.mycitysshopsuser.main.FragmentMain.di.FragmentMainComponent
 import com.valdroide.mycitysshopsuser.main.FragmentMain.di.FragmentMainModule;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.ui.FragmentMainView;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.ui.adapters.OnItemClickListener;
+import com.valdroide.mycitysshopsuser.main.legal.di.DaggerLegalActivityComponent;
+import com.valdroide.mycitysshopsuser.main.legal.di.LegalActivityComponent;
+import com.valdroide.mycitysshopsuser.main.legal.di.LegalActivityModule;
+import com.valdroide.mycitysshopsuser.main.legal.ui.LegalActivityView;
 import com.valdroide.mycitysshopsuser.main.navigation.di.DaggerNavigationActivityComponent;
 import com.valdroide.mycitysshopsuser.main.navigation.di.NavigationActivityComponent;
 import com.valdroide.mycitysshopsuser.main.navigation.di.NavigationActivityModule;
@@ -62,6 +66,15 @@ public class MyCitysShopsUserApp extends Application {
         myCitysShopsUserAppModule = new MyCitysShopsUserAppModule(this);
     }
 
+    public LegalActivityComponent getLegalActivityComponent(LegalActivityView view, Activity activity) {
+        return DaggerLegalActivityComponent
+                .builder()
+                .myCitysShopsUserAppModule(myCitysShopsUserAppModule)
+                .libsModule(new LibsModule(activity))
+                .legalActivityModule(new LegalActivityModule(view, activity))
+                .build();
+    }
+
     public SupportActivityComponent getSupportActivityComponent(SupportActivityView view, Activity activity) {
         return DaggerSupportActivityComponent
                 .builder()
@@ -88,6 +101,7 @@ public class MyCitysShopsUserApp extends Application {
                 .splashActivityModule(new SplashActivityModule(view, activity))
                 .build();
     }
+
     public PlaceActivityComponent getPlaceActivityComponent(PlaceActivityView view, Activity activity) {
         return DaggerPlaceActivityComponent
                 .builder()

@@ -27,12 +27,11 @@
 
             <ImageView
                 android:id="@+id/buttonCerrar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_gravity="right"
                 android:clickable="true"
-                android:src="@android:drawable/ic_menu_close_clear_cancel"
-                android:tint="@color/colorPrimaryText" />
+                android:src="@drawable/ic_close_dialog" />
 
         </FrameLayout>
     </android.support.v7.widget.CardView>

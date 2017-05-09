@@ -5,23 +5,34 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Typeface;
 import android.net.ConnectivityManager;
+import android.os.Build;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.valdroide.mycitysshopsuser.R;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 
 import javax.activation.CommandMap;
 import javax.activation.DataHandler;
@@ -40,7 +51,7 @@ import javax.mail.internet.MimeMultipart;
 
 public class Utils {
 
-   // public static String URL_IMAGE = "http://10.0.2.2:8080/my_citys_shops_adm/account/image_account/";
+    // public static String URL_IMAGE = "http://10.0.2.2:8080/my_citys_shops_adm/account/image_account/";
     //public static String URL_IMAGE = "http://10.0.3.2:8080/my_citys_shops_adm/account/image_account/";
     //public static String URL_IMAGE = "http://myd.esy.es/myd/clothes/image_clothes/";
 
@@ -61,6 +72,10 @@ public class Utils {
         Snackbar.make(conteiner, msg, Snackbar.LENGTH_LONG).show();
     }
 
+    public static void showToast(Context context, String msg) {
+        Toast.makeText(context, msg, Toast.LENGTH_LONG).show();
+    }
+
     public static void setPicasso(Context context, String url, final int resource, final ImageView imageView) {
         Picasso.with(context)
                 .load(url).fit()
@@ -75,6 +90,13 @@ public class Utils {
                         imageView.setImageResource(resource);
                     }
                 });
+    }
+
+    public static boolean oldPhones() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            return false;
+        else
+            return true;
     }
 
     public static void applyFontForToolbarTitle(Activity context, Toolbar toolbar) {
@@ -115,25 +137,39 @@ public class Utils {
     public static boolean isNetworkAvailable(Context context) {
         try {
             ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-            return cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnectedOrConnecting();
+            if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnectedOrConnecting()) {
+                return internetConnectionAvailable(5000);
+            } else {
+                return false;
+            }
         } catch (Exception e) {
             return false;
         }
+    }
 
-//        int[] networkTypes = {ConnectivityManager.TYPE_MOBILE,
-//                ConnectivityManager.TYPE_WIFI};
-//        try {
-//            ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-//            for (int networkType : networkTypes) {
-//                NetworkInfo netInfo = cm.getActiveNetworkInfo();
-//                if (netInfo != null && netInfo.getState() == NetworkInfo.State.CONNECTED) {
-//                    return true;
-//                }
-//            }
-//        } catch (Exception e) {
-//            return false;
-//        }
-        //  return false;
+    private static boolean internetConnectionAvailable(int timeOut) {
+        InetAddress inetAddress = null;
+        try {
+            Future<InetAddress> future = Executors.newSingleThreadExecutor().submit(new Callable<InetAddress>() {
+                @Override
+                public InetAddress call() {
+                    try {
+                        return InetAddress.getByName("google.com");
+                    } catch (UnknownHostException e) {
+                        return null;
+                    }
+                }
+            });
+            inetAddress = future.get(timeOut, TimeUnit.MILLISECONDS);
+            future.cancel(true);
+        } catch (InterruptedException e) {
+            return false;
+        } catch (ExecutionException e) {
+            return false;
+        } catch (TimeoutException e) {
+            return false;
+        }
+        return inetAddress != null && !inetAddress.equals("");
     }
 
     private static Map<Character, Character> MAP_NORM;
@@ -384,5 +420,27 @@ public class Utils {
         } catch (Exception e) {
             return null;
         }
+    }
+
+    public static int setCounterBadge(Context context) {
+        int counter = getCounterBadge(context);
+        counter = counter + 1;
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.my_counter_id_shared), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(context.getString(R.string.counter_id), counter);
+        editor.commit();
+        return counter;
+    }
+
+    public static void resetCounterBadge(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.my_counter_id_shared), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putInt(context.getString(R.string.counter_id), 0);
+        editor.commit();
+    }
+
+    public static int getCounterBadge(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.my_counter_id_shared), Context.MODE_PRIVATE);
+        return sharedPreferences.getInt(context.getString(R.string.counter_id), 0);
     }
 }

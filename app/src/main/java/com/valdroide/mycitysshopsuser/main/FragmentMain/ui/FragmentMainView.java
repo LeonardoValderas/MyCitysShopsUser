@@ -13,6 +13,6 @@ public interface FragmentMainView {
     void setError(String mgs);
     void withoutChange();
     void callShops();
-    void setDateUserCity(DateUserCity dateUserCity);
+    void callMyShops();
     void isUpdate();
 }

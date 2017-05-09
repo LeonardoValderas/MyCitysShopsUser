@@ -28,6 +28,12 @@ public class Support extends BaseModel {
     public String PASS;
 
     @Column
+    @SerializedName("about")
+    public String ABOUT;
+    @Column
+    @SerializedName("legal")
+    public String LEGAL;
+    @Column
     @SerializedName("date_unique")
     public String DATE_UNIQUE;
 
@@ -64,6 +70,22 @@ public class Support extends BaseModel {
 
     public void setPASS(String PASS) {
         this.PASS = PASS;
+    }
+
+    public String getABOUT() {
+        return ABOUT;
+    }
+
+    public void setABOUT(String ABOUT) {
+        this.ABOUT = ABOUT;
+    }
+
+    public String getLEGAL() {
+        return LEGAL;
+    }
+
+    public void setLEGAL(String LEGAL) {
+        this.LEGAL = LEGAL;
     }
 
     public String getDATE_UNIQUE() {

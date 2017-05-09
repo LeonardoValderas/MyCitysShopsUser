@@ -12,6 +12,9 @@
     <string name="my_city_id_shared">my_city_id</string>
     <string name="id_city">id_city</string>
     <string name="log_date_shared">date_log_file</string>
+    <string name="my_counter_id_shared">my_counter_id</string>
+    <string name="counter_id">counter_id</string>
+
     <!--ERROR MSG-->
     <string name="error_fill_place">Problemas al cargar los datos. Cierre la aplicación y vuelva a intentarlo.</string>
     <string name="error_file_log">Problemas para generar el archivo Log.</string>
@@ -33,8 +36,6 @@
     <string name="my_favorites_shops_title">Mis Tiendas</string>
 
 
-
-
     <string name="insert_commentary">Ingrese un comentario</string>
     <string name="sent_email_text">Se envió un email automaticamente a soporte.</string>
     <string name="process">Procesando...</string>
@@ -52,6 +53,12 @@
     <string name="twitter">Twitter</string>
     <string name="snapchat">Snapchat</string>
 
-    <string name="data_copy">Copiado.</string>
-    <string name="data_empty">Vacio.</string>
+    <string name="data_copy">Dato copiado.</string>
+    <string name="data_empty">Campo vacio.</string>
+    <string name="url_invalid">Url invalida.</string>
+    <string name="position_not_found">Posición no encontrada.</string>
+    <string name="legal">Legal</string>
+    <string name="banner_fragment">ca-app-pub-5908373302541656/6575972523</string>
+    <string name="video_navigation">ca-app-pub-5908373302541656/8831434920</string>
+
 </resources>

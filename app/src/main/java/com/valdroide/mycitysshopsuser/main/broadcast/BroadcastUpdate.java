@@ -45,16 +45,13 @@ public class BroadcastUpdate extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Utils.writelogFile(context, "Se inicia onReceive(BroadcastUpdate)");
         try {
-            int badgeCount = 1;
-            ShortcutBadger.applyCount(context, badgeCount); //for 1.1.4+
-
             service = client.getAPIService();
             dateUserCity = SQLite.select().from(DateUserCity.class).querySingle();
             if (dateUserCity != null)
                 validateDateShop(context, dateUserCity);
             else
                 Utils.writelogFile(context, "dateUserCity null(BroadcastUpdate)");
-            Toast.makeText(context, "alarm started", Toast.LENGTH_SHORT).show();
+        //    Toast.makeText(context, "alarm started", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Utils.writelogFile(context, "onReceive error: " + e.getMessage() + "(BroadcastUpdate)");
         }
@@ -67,8 +64,8 @@ public class BroadcastUpdate extends BroadcastReceiver {
             try {
                 Utils.writelogFile(context, "Call validateDateUser(BroadcastUpdate)");
                 Call<ResultShop> validateDateUser = service.validateDateUser(Utils.getIdCity(context), dateUserCityWS.getCATEGORY_DATE(),
-                        dateUserCityWS.getSUBCATEGORY_DATE(), dateUserCityWS.getCAT_SUB_CITY_DATE(),
-                        dateUserCityWS.getSHOP_DATE(), dateUserCityWS.getOFFER_DATE(), dateUserCityWS.getDATE_USER_CITY());
+                        dateUserCityWS.getSUBCATEGORY_DATE(), dateUserCityWS.getCAT_SUB_CITY_DATE(), dateUserCityWS.getSHOP_DATE(),
+                        dateUserCityWS.getOFFER_DATE(), dateUserCityWS.getSUPPORT_DATE(), dateUserCityWS.getDATE_USER_CITY());
                 validateDateUser.enqueue(new Callback<ResultShop>() {
                     @Override
                     public void onResponse(Call<ResultShop> call, Response<ResultShop> response) {
@@ -149,6 +146,7 @@ public class BroadcastUpdate extends BroadcastReceiver {
                                                 shop.setIS_SHOP_UPDATE(1);
                                                 shop.save();
                                                 setUpdateCatSub(context, shop.getID_CAT_SUB_FOREIGN());
+                                                setCounterBadge(context);
                                             }
                                         } else {
                                             Utils.writelogFile(context, "shops.size() == 0 y delete Shop(BroadcastUpdate)");
@@ -266,5 +264,10 @@ public class BroadcastUpdate extends BroadcastReceiver {
             Utils.writelogFile(context, "catSubCity == null(BroadcastUpdate)");
             return false;
         }
+    }
+
+    private void setCounterBadge(Context context){
+        Utils.writelogFile(context, "setCounterBadge(BroadcastUpdate)");
+       ShortcutBadger.applyCount(context, Utils.setCounterBadge(context)); //for 1.1.4+
     }
 }

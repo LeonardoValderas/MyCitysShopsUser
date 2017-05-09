@@ -59,7 +59,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         ImageView imageView = (ImageView) convertView.findViewById(R.id.imageViewIcon);
         if (isUpdate == 1)
             imageView.setVisibility(View.VISIBLE);
-
+        else
+            imageView.setVisibility(View.GONE);
         try {
             textViewCategory.setTypeface(Utils.setFontGoodDogTextView(mContext));
         } finally {
@@ -83,6 +84,8 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         ImageView imageView = (ImageView) convertView.findViewById(R.id.imageViewIcon);
         if (expandedListText.getIS_UPDATE() == 1)
             imageView.setVisibility(View.VISIBLE);
+        else
+            imageView.setVisibility(View.GONE);
 
         try {
             textViewSubCategory.setTypeface(Utils.setFontGoodDogTextView((mContext)));
@@ -100,7 +103,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
 
     @Override
     public Object getGroup(int listPosition) {
-
         return mExpandableListTitle.get(listPosition);
     }
 
@@ -131,7 +133,11 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         notifyDataSetChanged();
     }
 
-    public int getUpdateCategory(String name) {
+    public void updateAdapter() {
+        notifyDataSetChanged();
+    }
+
+    private int getUpdateCategory(String name) {
         for (int i = 0; i < mExpandableListCategories.size(); i++) {
             if (mExpandableListCategories.get(i).getCATEGORY().equalsIgnoreCase(name)) {
                 return mExpandableListCategories.get(i).getIS_UPDATE();
