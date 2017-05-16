@@ -70,8 +70,10 @@ public class DialogMap implements OnMapReadyCallback {
             Utils.setPicasso(context, shop.getURL_LOGO(), R.drawable.ic_launcher, imageViewShop);
             // textViewName.setText(shop.getSHOP());
             if (shop.getLATITUD() != null && shop.getLONGITUD() != null) {
-                latitudExtra = Double.valueOf(shop.getLATITUD());
-                longitudExtra = Double.valueOf(shop.getLONGITUD());
+                if (!shop.getLATITUD().isEmpty() && !shop.getLONGITUD().isEmpty()) {
+                    latitudExtra = Double.valueOf(shop.getLATITUD());
+                    longitudExtra = Double.valueOf(shop.getLONGITUD());
+                }
             }
             if (mapFragment == null) {
                 mapFragment = (SupportMapFragment) fragment.getActivity().getSupportFragmentManager()

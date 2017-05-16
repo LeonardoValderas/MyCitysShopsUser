@@ -24,7 +24,7 @@
     <string name="error_id_device">Problemas al obtener el ID de su dispositivo.</string>
     <string name="error_internet">Verificar su conexión de Internet.</string>
     <!--GOOGLE MAP -->
-    <string name="google_maps_key">AIzaSyCJvouldRxod-_4soNKzBYOTs8tLr9bxyg</string>
+    <!--<string name="google_maps_key">AIzaSyCJvouldRxod-_4soNKzBYOTs8tLr9bxyg</string>-->
     <!--LOG-->
     <string name="log_file_name">LogMyCity.txt</string>
     <string name="log_date">log_date</string>

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.ui.FragmentMain;
@@ -41,7 +42,8 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
     public void onBindViewHolder(ViewHolder holder, int position) {
         Shop shop = shopsList.get(position);
         // holder.imageViewOfferNew.setVisibility(View.INVISIBLE); // ver si podemos individualizar los cambios de offer
-        Utils.setPicasso(fragment.getActivity(), shop.getURL_LOGO(), R.drawable.ic_launcher, holder.imageViewShop);
+        if (shop.getURL_LOGO() != null && !shop.getURL_LOGO().isEmpty())
+            Utils.setPicasso(fragment.getActivity(), shop.getURL_LOGO(), R.drawable.ic_launcher, holder.imageViewShop);
 
         holder.textViewDescription.setText(shop.getDESCRIPTION());
         holder.textViewDescription.setTypeface(Utils.setFontGoodDogTextView(fragment.getActivity()));

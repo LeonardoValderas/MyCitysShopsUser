@@ -404,8 +404,8 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                         if (response.isSuccessful()) {
                             Utils.writelogFile(context, "isSuccessful(Splash, Repository)");
                             responseWS = response.body();
-                            if (responseWS != null) {
-                                Utils.writelogFile(context, "responseWS != null(Splash, Repository)");
+                            if (responseWS != null && responseWS.getSuccess() != null) {
+                                Utils.writelogFile(context, "responseWS != null && responseWS.getSuccess() != null(Splash, Repository)");
                                 if (responseWS.getSuccess().equals("0")) {
                                     Utils.writelogFile(context, "responseWS.getSuccess().equals(0)(Splash, Repository)");
                                     if (isInsert) {
