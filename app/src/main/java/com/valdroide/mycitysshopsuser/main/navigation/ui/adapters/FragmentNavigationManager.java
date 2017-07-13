@@ -4,11 +4,14 @@ import android.annotation.SuppressLint;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+
 import com.valdroide.mycitysshopsuser.BuildConfig;
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.entities.category.SubCategory;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.ui.FragmentMain;
+import com.valdroide.mycitysshopsuser.main.draw.ui.DrawFragment;
 import com.valdroide.mycitysshopsuser.main.navigation.ui.NavigationActivity;
+import com.valdroide.mycitysshopsuser.main.offers.ui.OfferFragment;
 
 public class FragmentNavigationManager implements NavigationManager {
 
@@ -33,6 +36,16 @@ public class FragmentNavigationManager implements NavigationManager {
     @Override
     public void showFragmentAction(SubCategory subCategory, boolean isMyShops) {
         showFragment(FragmentMain.newInstance(subCategory, isMyShops), false);
+    }
+
+    @Override
+    public void showDrawFragment() {
+        showFragment(DrawFragment.newInstance(), false);
+    }
+
+    @Override
+    public void showOfferFragment() {
+        showFragment(OfferFragment.newInstance(), false);
     }
 
     private void showFragment(Fragment fragment, boolean allowStateLoss) {

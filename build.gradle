@@ -5,7 +5,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:2.3.1'
+        classpath 'com.android.tools.build:gradle:2.3.3'
         classpath 'com.neenbedankt.gradle.plugins:android-apt:1.8'
         classpath 'com.google.gms:google-services:3.0.0'
      //   classpath 'com.google.gms:google-services:3.0.0'
@@ -17,7 +17,7 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
-        maven { url "https://jitpack.io" }
+        maven { url "https://www.jitpack.io" }
     }
 }
 
@@ -26,9 +26,8 @@ task clean(type: Delete) {
 }
 
 ext{
-    dbflowVersion = '3.0.0-beta3'
+    dbflowVersion = '4.0.4'
     retrofitVersion = '2.0.0-beta4'
-    dbflowVersion = '3.0.0-beta3'
     butterknifeVersion = '7.0.1'
     eventbusVersion = '3.0.0'
     daggerVersion = '2.0.1'

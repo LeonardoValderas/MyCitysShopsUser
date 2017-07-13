@@ -10,8 +10,6 @@
     <color name="colorIcons">#FFFFFF</color>
     <color name="colorDivider">#BDBDBD</color>
 
-
-
     <color name="list_group_title">#808080</color>
     <color name="list_item_title">#AAAAAA</color>
     <color name="group_divider_color">#80CBC4</color>
@@ -24,4 +22,6 @@
     <color name="myWindowBackground">#DEDEDE</color>
     <color name="myNavigationColor">#000000</color>
 
+
+    <color name="colorTextViewSub">#3e7e8d</color>
 </resources>

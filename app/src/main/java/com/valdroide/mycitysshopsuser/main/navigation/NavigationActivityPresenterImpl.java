@@ -59,15 +59,18 @@ public class NavigationActivityPresenterImpl implements NavigationActivityPresen
             switch (event.getType()) {
                 case NavigationActivityEvent.GETCATEGORIESANDSUBCATEGORIES:
                     view.setListCategoriesAndSubCategories(event.getCategories(), event.getSubCategories());
+                    view.hideProgressDialog();
                     break;
                 case NavigationActivityEvent.CHANGEPLACE:
                     view.goToPlace();
                     break;
                 case NavigationActivityEvent.ERROR:
+                    view.hideProgressDialog();
                     view.setError(event.getError());
                     break;
                 case NavigationActivityEvent.CATEGORORYSUBCATEGORYUPDATE:
                     view.updateAdapter();
+                    view.hideProgressDialog();
                     break;
             }
         }

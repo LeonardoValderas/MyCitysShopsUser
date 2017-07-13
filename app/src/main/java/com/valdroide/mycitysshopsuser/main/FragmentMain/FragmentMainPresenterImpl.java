@@ -43,8 +43,8 @@ public class FragmentMainPresenterImpl implements FragmentMainPresenter {
     }
 
     @Override
-    public void refreshLayout(Context context, boolean isMyShop) {
-        interactor.refreshLayout(context, isMyShop);
+    public void refreshLayout(Context context, boolean isMyShop, boolean isFollow) {
+        interactor.refreshLayout(context, isMyShop, isFollow);
     }
 
     @Override
@@ -58,8 +58,18 @@ public class FragmentMainPresenterImpl implements FragmentMainPresenter {
     }
 
     @Override
-    public void onClickFollowOrUnFollow(Context context, Shop shop, boolean isFollow) {
-        interactor.onClickFollowOrUnFollow(context, shop, isFollow);
+    public void getShopsSearch(Context context, SubCategory subCategory, String letter) {
+        interactor.getShopsSearch(context, subCategory, letter);
+    }
+
+    @Override
+    public void getShopsSearchFavorites(Context context, String letter) {
+        interactor.getShopsSearchFavorites(context, letter);
+    }
+
+    @Override
+    public void onClickFollowOrUnFollow(Context context, Shop shop, boolean isMyShop, boolean isFollow) {
+        interactor.onClickFollowOrUnFollow(context, shop, isMyShop, isFollow);
     }
 
     @Override
@@ -69,12 +79,15 @@ public class FragmentMainPresenterImpl implements FragmentMainPresenter {
             switch (event.getType()) {
                 case FragmentMainEvent.GETLISTSHOPS:
                     view.setListShops(event.getShopsList());
+                    view.hideProgressDialog();
                     break;
                 case FragmentMainEvent.GETLISTOFFER:
+                    view.hideProgressDialog();
                     view.setListOffer(event.getOffers());
                     break;
                 case FragmentMainEvent.FOLLOWORUNFOLLOW:
                     view.followUnFollowSuccess(event.getShop());
+                    view.hideProgressDialog();
                     break;
                 case FragmentMainEvent.WITHOUTCHANGE:
                     view.withoutChange();
@@ -87,8 +100,10 @@ public class FragmentMainPresenterImpl implements FragmentMainPresenter {
                     break;
                 case FragmentMainEvent.ISUPDATE:
                     view.isUpdate();
+                    view.hideProgressDialog();
                     break;
                 case FragmentMainEvent.ERROR:
+                    view.hideProgressDialog();
                     view.setError(event.getError());
                     break;
             }

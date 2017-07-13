@@ -64,14 +64,12 @@
             <TextView
                 android:id="@+id/textViewTitle"
                 style="@style/TextView_Offer_Title"
-                android:textColor="@color/colorPrimaryText"
                 android:textSize="40dp" />
 
             <TextView
                 android:id="@+id/textViewOffer"
                 style="@style/TextView_Offer"
                 android:layout_marginTop="2dp"
-                android:textColor="@color/colorPrimaryDark"
                 android:textSize="38dp" />
 
         </LinearLayout>

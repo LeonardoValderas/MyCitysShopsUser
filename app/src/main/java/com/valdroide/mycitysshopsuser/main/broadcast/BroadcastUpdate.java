@@ -3,24 +3,35 @@ package com.valdroide.mycitysshopsuser.main.broadcast;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.widget.Toast;
 
-import com.raizlabs.android.dbflow.sql.language.Condition;
-import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
+import com.raizlabs.android.dbflow.config.DatabaseDefinition;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.Delete;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
+import com.raizlabs.android.dbflow.sql.language.Operator;
+import com.raizlabs.android.dbflow.sql.language.OperatorGroup;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.sql.language.Trigger;
+import com.raizlabs.android.dbflow.sql.language.Update;
+import com.raizlabs.android.dbflow.structure.database.transaction.FastStoreModelTransaction;
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.api.APIService;
 import com.valdroide.mycitysshopsuser.api.ShopClient;
-import com.valdroide.mycitysshopsuser.entities.category.CatSubCity;
+import com.valdroide.mycitysshopsuser.db.ShopsDatabase;
 import com.valdroide.mycitysshopsuser.entities.category.Category;
+import com.valdroide.mycitysshopsuser.entities.category.Category_Table;
 import com.valdroide.mycitysshopsuser.entities.category.SubCategory;
+import com.valdroide.mycitysshopsuser.entities.category.SubCategory_Table;
 import com.valdroide.mycitysshopsuser.entities.response.ResponseWS;
 import com.valdroide.mycitysshopsuser.entities.response.ResultShop;
 import com.valdroide.mycitysshopsuser.entities.shop.DateUserCity;
+import com.valdroide.mycitysshopsuser.entities.shop.Draw;
+import com.valdroide.mycitysshopsuser.entities.shop.DrawWinner;
+import com.valdroide.mycitysshopsuser.entities.shop.DrawWinner_Table;
 import com.valdroide.mycitysshopsuser.entities.shop.Offer;
+import com.valdroide.mycitysshopsuser.entities.shop.Offer_Table;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
+import com.valdroide.mycitysshopsuser.entities.shop.Shop_Table;
 import com.valdroide.mycitysshopsuser.utils.Utils;
 
 import java.util.List;
@@ -38,8 +49,13 @@ public class BroadcastUpdate extends BroadcastReceiver {
     private List<Shop> shops;
     private List<Category> categories;
     private List<SubCategory> subCategories;
-    private List<CatSubCity> catSubCities;
     private DateUserCity dateUserCity;
+    private DatabaseDefinition database = FlowManager.getDatabase(ShopsDatabase.class);
+    private FastStoreModelTransaction transaction;
+    private List<Draw> draws;
+    private List<Integer> idsShops;
+    private List<Integer> idsOffers;
+
 
     @Override
     public void onReceive(Context context, Intent intent) {
@@ -51,7 +67,7 @@ public class BroadcastUpdate extends BroadcastReceiver {
                 validateDateShop(context, dateUserCity);
             else
                 Utils.writelogFile(context, "dateUserCity null(BroadcastUpdate)");
-        //    Toast.makeText(context, "alarm started", Toast.LENGTH_SHORT).show();
+            //    Toast.makeText(context, "alarm started", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Utils.writelogFile(context, "onReceive error: " + e.getMessage() + "(BroadcastUpdate)");
         }
@@ -64,8 +80,8 @@ public class BroadcastUpdate extends BroadcastReceiver {
             try {
                 Utils.writelogFile(context, "Call validateDateUser(BroadcastUpdate)");
                 Call<ResultShop> validateDateUser = service.validateDateUser(Utils.getIdCity(context), dateUserCityWS.getCATEGORY_DATE(),
-                        dateUserCityWS.getSUBCATEGORY_DATE(), dateUserCityWS.getCAT_SUB_CITY_DATE(), dateUserCityWS.getSHOP_DATE(),
-                        dateUserCityWS.getOFFER_DATE(), dateUserCityWS.getSUPPORT_DATE(), dateUserCityWS.getDATE_USER_CITY());
+                        dateUserCityWS.getSUBCATEGORY_DATE(), dateUserCityWS.getSHOP_DATE(),
+                        dateUserCityWS.getOFFER_DATE(), dateUserCityWS.getDRAW_DATE(), dateUserCityWS.getSUPPORT_DATE(), dateUserCityWS.getDATE_USER_CITY());
                 validateDateUser.enqueue(new Callback<ResultShop>() {
                     @Override
                     public void onResponse(Call<ResultShop> call, Response<ResultShop> response) {
@@ -91,12 +107,12 @@ public class BroadcastUpdate extends BroadcastReceiver {
                                         if (categories.size() > 0) {
                                             Utils.writelogFile(context, "categories.size() > 0 y Delete.Category()(BroadcastUpdate)");
                                             Delete.table(Category.class);
-                                            Utils.writelogFile(context, "Delete.Category ok FOR category(BroadcastUpdate)");
-                                            for (Category category : categories) {
-                                                Utils.writelogFile(context, "save Category " + category.getID_CATEGORY_KEY() + "(BroadcastUpdate)");
-                                                category.save();
-                                            }
-                                        } else {
+                                            Utils.writelogFile(context, "Delete Category ok y transaction(BroadcastUpdate, BroadcastUpdate)");
+                                            transaction = FastStoreModelTransaction
+                                                    .saveBuilder(FlowManager.getModelAdapter(Category.class))
+                                                    .addAll(categories)
+                                                    .build();
+                                            database.executeTransaction(transaction);                                        } else {
                                             Utils.writelogFile(context, "categories.size() == 0 y delete Category(BroadcastUpdate)");
                                             Delete.table(Category.class);
                                         }
@@ -108,31 +124,15 @@ public class BroadcastUpdate extends BroadcastReceiver {
                                         if (subCategories.size() > 0) {
                                             Utils.writelogFile(context, "subCategories.size() > 0 y Delete.SubCategory()(BroadcastUpdate)");
                                             Delete.table(SubCategory.class);
-                                            Utils.writelogFile(context, " Delete.SubCategory ok FOR subCategories(BroadcastUpdate)");
-                                            for (SubCategory subCategory : subCategories) {
-                                                Utils.writelogFile(context, "save subCategory " + subCategory.getID_SUBCATEGORY_KEY() + "(BroadcastUpdate)");
-                                                subCategory.save();
-                                            }
+                                            Utils.writelogFile(context, "Delete SubCategory ok y transaction(Splash, BroadcastUpdate)");
+                                            transaction = FastStoreModelTransaction
+                                                    .insertBuilder(FlowManager.getModelAdapter(SubCategory.class))
+                                                    .addAll(subCategories)
+                                                    .build();
+                                            database.executeTransaction(transaction);
                                         } else {
                                             Utils.writelogFile(context, "subCategories.size() == 0 y delete SubCategory(BroadcastUpdate)");
                                             Delete.table(SubCategory.class);
-                                        }
-                                    }
-
-                                    catSubCities = response.body().getCatSubCities();
-                                    if (catSubCities != null) {
-                                        Utils.writelogFile(context, "catSubCities != null y catSubCities.size()(BroadcastUpdate)");
-                                        if (catSubCities.size() > 0) {
-                                            Utils.writelogFile(context, "catSubCities.size() > 0 y Delete.CatSubCity()(BroadcastUpdate)");
-                                            Delete.table(CatSubCity.class);
-                                            Utils.writelogFile(context, " Delete.CatSubCity ok FOR catSubCities(BroadcastUpdate)");
-                                            for (CatSubCity catSubCity : catSubCities) {
-                                                Utils.writelogFile(context, "save catSubCity " + catSubCity.getID_CAT_SUB_KEY() + "(BroadcastUpdate)");
-                                                catSubCity.save();
-                                            }
-                                        } else {
-                                            Utils.writelogFile(context, "catSubCities.size() == 0 y delete CatSubCity(BroadcastUpdate)");
-                                            Delete.table(CatSubCity.class);
                                         }
                                     }
 
@@ -140,14 +140,22 @@ public class BroadcastUpdate extends BroadcastReceiver {
                                     if (shops != null) {
                                         Utils.writelogFile(context, "shops != null y shops.size()(BroadcastUpdate)");
                                         if (shops.size() > 0) {
-                                            Utils.writelogFile(context, "shops.size() > 0 y FOR shops(BroadcastUpdate)");
+                                            Utils.writelogFile(context, "shops.size() > 0 for(Splash, BroadcastUpdate)");
                                             for (Shop shop : shops) {
-                                                Utils.writelogFile(context, "save shops " + shop.getID_SHOP_KEY() + "(BroadcastUpdate)");
-                                                shop.setIS_SHOP_UPDATE(1);
+                                                int count_offer_now = shop.getQUANTITY_OFFER();
+                                                List<Offer> offerList = getListOfferForShopId(shop.getID_SHOP_KEY());
+                                                if (offerList != null)
+                                                    if (offerList.size() > count_offer_now) {
+                                                        int diff = offerList.size() - count_offer_now;
+
+                                                        for (int i = 0; diff > i; i++) {
+                                                            deleteOffer(offerList.get(i).getID_OFFER_KEY());
+                                                        }
+                                                    }
                                                 shop.save();
-                                                setUpdateCatSub(context, shop.getID_CAT_SUB_FOREIGN());
-                                                setCounterBadge(context);
                                             }
+                                            setCounterBadge(context);
+
                                         } else {
                                             Utils.writelogFile(context, "shops.size() == 0 y delete Shop(BroadcastUpdate)");
                                             Delete.table(Shop.class);
@@ -158,24 +166,79 @@ public class BroadcastUpdate extends BroadcastReceiver {
                                     if (offers != null) {
                                         Utils.writelogFile(context, "offers != null y offers.size()(BroadcastUpdate)");
                                         if (offers.size() > 0) {
-                                            Utils.writelogFile(context, "offers.size() > 0 y FOR offers(BroadcastUpdate)");
+                                            Utils.writelogFile(context, "offers.size() > 0 y for(Splash, BroadcastUpdate)");
                                             for (Offer offer : offers) {
-                                                Utils.writelogFile(context, "save offer " + offer.getID_OFFER_KEY() + "(BroadcastUpdate)");
                                                 offer.save();
-                                                Utils.writelogFile(context, " getShop (BroadcastUpdate)");
-                                                Shop shop = getShop(context, offer.getID_SHOP_FOREIGN());
-                                                if (shop != null) {
-                                                    Utils.writelogFile(context, " shop != null y save (BroadcastUpdate)");
-                                                    shop.setIS_OFFER_UPDATE(1);
-                                                    shop.update();
-                                                    setUpdateCatSub(context, shop.getID_CAT_SUB_FOREIGN());
-                                                }
                                             }
                                         } else {
                                             Utils.writelogFile(context, "offers.size() == 0 y delete Offer(BroadcastUpdate)");
                                             Delete.table(Offer.class);
                                         }
                                     }
+
+                                    idsShops = response.body().getIdsShops();
+                                    if (idsShops != null) {
+                                        Utils.writelogFile(context, "idsShops != null y idsShops.size()(Splash, BroadcastUpdate)");
+                                        if (idsShops.size() > 0) {
+                                            Utils.writelogFile(context, "idsShops.size() > 0 y for idsShops(Splash, BroadcastUpdate)");
+                                            for (Integer i : idsShops) {
+                                                setUpdateCatSub(context, i);
+                                            }
+                                        }
+                                    }
+
+                                    idsOffers = response.body().getIdsOffers();
+                                    if (idsOffers != null) {
+                                        Utils.writelogFile(context, "idsOffers != null y idsOffers.size()(Splash, BroadcastUpdate)");
+                                        if (idsOffers.size() > 0) {
+                                            Utils.writelogFile(context, "idsOffers.size() > 0 y for idsOffers(Splash, BroadcastUpdate)");
+                                            for (Integer i : idsOffers) {
+                                                int id_sub = updateShopAndIdSub(context, i);
+                                                setUpdateCatSub(context, id_sub);
+                                            }
+                                        }
+                                    }
+
+                                    draws = response.body().getDraws();
+                                    if (draws != null) {
+                                        Utils.writelogFile(context, "draws != null y draws.size()(Splash, BroadcastUpdate)");
+                                        if (draws.size() > 0) {
+                                            Utils.writelogFile(context, "draws.size() > 0 y for draws(Splash, BroadcastUpdate)");
+                                            for (Draw draw : draws) {
+                                                if (draw.getIS_ACTIVE() == 0) {
+                                                    Utils.writelogFile(context, "draw.getIS_ACTIVE() == 0 (Splash, BroadcastUpdate)");
+                                                    if (isDrawWinner(draw.getID_DRAW_KEY())) {
+                                                        Utils.writelogFile(context, "isDrawWinner = true (Splash, BroadcastUpdate)");
+                                                        if (draw.getIS_TAKE() == 0) {
+                                                            Utils.writelogFile(context, "draw.getIS_TAKE() == 0 (Splash, BroadcastUpdate)");
+                                                            if (draw.getIS_LIMITE() == 0) {
+                                                                Utils.writelogFile(context, "draw.getIS_LIMITE() == 0(Splash, BroadcastUpdate)");
+                                                                draw.setIS_WINNER(1);
+                                                                draw.update();
+                                                            } else {
+                                                                Utils.writelogFile(context, "draw.getIS_LIMITE() == 1(Splash, BroadcastUpdate)");
+                                                                deleteDrawAndWinner(draw);
+                                                            }
+                                                        } else {
+                                                            Utils.writelogFile(context, "draw.getIS_TAKE() == 1 (Splash, BroadcastUpdate)");
+                                                            deleteDrawWinner(draw.getID_DRAW_KEY());
+                                                            draw.delete();
+                                                        }
+                                                    } else {
+                                                        Utils.writelogFile(context, "no winner delete (Splash, BroadcastUpdate)");
+                                                        draw.delete();
+                                                    }
+                                                } else {
+                                                    Utils.writelogFile(context, "save draw: " + draw.getID_DRAW_KEY() + "(Splash, BroadcastUpdate)");
+                                                    draw.save();
+                                                }
+                                            }
+                                        } else {
+                                            Utils.writelogFile(context, "draws.size()= 0 y DeleteDraw(Splash, BroadcastUpdate)");
+                                            Delete.table(Draw.class);
+                                        }
+                                    }
+
                                 } else if (responseWS.getSuccess().equals("4")) {
                                     Utils.writelogFile(context, "responseWS.getSuccess().equals(4) sin cambios(BroadcastUpdate)");
                                 } else {
@@ -200,74 +263,76 @@ public class BroadcastUpdate extends BroadcastReceiver {
         }
     }
 
-    public Shop getShop(Context context, int id_shop) {
-        ConditionGroup conditionGroup = ConditionGroup.clause();
-        conditionGroup.and(Condition.column(new NameAlias("Shop.ID_SHOP_KEY")).is(id_shop));
+    private List<Offer> getListOfferForShopId(int id) {
         try {
-            return SQLite.select().from(Shop.class).where(conditionGroup).querySingle();
-        } catch (Exception e) {
-            Utils.writelogFile(context, "catch: " + e.getMessage());
-            return null;
-        }
-    }
-
-    private CatSubCity getCatSubEntity(int id) {
-        ConditionGroup conditions = ConditionGroup.clause();
-        conditions.and(Condition.column(new NameAlias("CatSubCity.ID_CAT_SUB_KEY")).is(id));
-        try {
-            return SQLite.select().from(CatSubCity.class).where(conditions).querySingle();
+            return SQLite.select()
+                    .from(Offer.class)
+                    .where(OperatorGroup.clause().and(Offer_Table.ID_SHOP_FOREIGN.is(id)))
+                    .orderBy(Offer_Table.ID_OFFER_KEY, true).queryList();
         } catch (Exception e) {
             return null;
         }
     }
 
-    private Category getCategoryEntity(int id) {
-        ConditionGroup conditions = ConditionGroup.clause();
-        conditions.and(Condition.column(new NameAlias("Category.ID_CATEGORY_KEY")).is(id));
-        try {
-            return SQLite.select().from(Category.class).where(conditions).querySingle();
-        } catch (Exception e) {
-            return null;
-        }
+    private void deleteOffer(int id_offer) {
+        SQLite.delete(Offer.class)
+                .where(Offer_Table.ID_OFFER_KEY.is(id_offer))
+                .async()
+                .execute();
     }
 
-    private SubCategory getSubCategoryEntity(int id) {
-        ConditionGroup conditions = ConditionGroup.clause();
-        conditions.and(Condition.column(new NameAlias("SubCategory.ID_SUBCATEGORY_KEY")).is(id));
-        try {
-            return SQLite.select().from(SubCategory.class).where(conditions).querySingle();
-        } catch (Exception e) {
-            return null;
-        }
+    private boolean isDrawWinner(int id_draw) {
+        return SQLite.select().from(DrawWinner.class).where(DrawWinner_Table.ID_DRAW_FOREIGN.is(id_draw)).querySingle() != null;
+    }
+    private void deleteDrawWinner(int id_draw) {
+        SQLite.delete().from(DrawWinner.class).where(DrawWinner_Table.ID_DRAW_FOREIGN.is(id_draw)).querySingle();
     }
 
-    private boolean setUpdateCatSub(Context context, int id) {
-        Utils.writelogFile(context, "metodo setUpdateCatSub y getCatSubEntity(BroadcastUpdate)");
-        CatSubCity catSubCity = getCatSubEntity(id);
-        if (catSubCity != null) {
-            Utils.writelogFile(context, "catSubCity != null y getCategoryEntity y getSubCategoryEntity(BroadcastUpdate)");
-            Category category = getCategoryEntity(catSubCity.getID_CATEGORY_FOREIGN());
-            SubCategory subCategory = getSubCategoryEntity(catSubCity.getID_SUBCATEGORY_FOREIGN());
-            if (category != null && subCategory != null) {
-                Utils.writelogFile(context, "category != null && subCategory != null y update(BroadcastUpdate)");
-                category.setIS_UPDATE(1);
-                category.update();
+    private void deleteDrawAndWinner(Draw draw) {
+        deleteDrawWinner(draw.getID_DRAW_KEY());
+        draw.delete();
+    }
 
-                subCategory.setIS_UPDATE(1);
-                subCategory.update();
-            } else {
-                Utils.writelogFile(context, "category == null && subCategory == null(BroadcastUpdate)");
-                return false;
-            }
+    private int updateShopAndIdSub(Context context, int id_shop) {
+        Utils.writelogFile(context, "updateShopAndIdSub(OfferFragment, BroadcastUpdate)");
+        SQLite.update(Shop.class)
+                .set(Shop_Table.IS_OFFER_UPDATE.eq(1))
+                .where(Shop_Table.ID_SHOP_KEY.is(id_shop))
+                .async()
+                .execute();
+        return SQLite.select(Shop_Table.ID_SUBCATEGORY_FOREIGN).from(Shop.class).querySingle().getID_SUBCATEGORY_FOREIGN();
+    }
+
+    private boolean setUpdateCatSub(Context context, int id_sub) {
+
+        Utils.writelogFile(context, "metodo setUpdateCatSub(BroadcastUpdate)");
+
+        int id_cat = getIdCategory(id_sub);
+        if (id_cat > 0) {
+            SQLite.update(Category.class)
+                    .set(Category_Table.IS_UPDATE.eq(1))
+                    .where(Category_Table.ID_CATEGORY_KEY.is(id_cat))
+                    .async()
+                    .execute();
+
+            SQLite.update(SubCategory.class)
+                    .set(SubCategory_Table.IS_UPDATE.eq(1))
+                    .where(SubCategory_Table.ID_SUBCATEGORY_KEY.is(id_sub))
+                    .async()
+                    .execute();
             return true;
         } else {
-            Utils.writelogFile(context, "catSubCity == null(BroadcastUpdate)");
             return false;
         }
     }
 
-    private void setCounterBadge(Context context){
+    private int getIdCategory(int id_sub) {
+        return SQLite.select(SubCategory_Table.ID_CATEGORY_FOREIGN).from(SubCategory.class)
+                .where(SubCategory_Table.ID_SUBCATEGORY_KEY.is(id_sub)).querySingle().getID_CATEGORY_FOREIGN();
+    }
+
+    private void setCounterBadge(Context context) {
         Utils.writelogFile(context, "setCounterBadge(BroadcastUpdate)");
-       ShortcutBadger.applyCount(context, Utils.setCounterBadge(context)); //for 1.1.4+
+        ShortcutBadger.applyCount(context, Utils.setCounterBadge(context)); //for 1.1.4+
     }
 }

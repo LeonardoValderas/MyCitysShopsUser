@@ -14,7 +14,8 @@
     <string name="log_date_shared">date_log_file</string>
     <string name="my_counter_id_shared">my_counter_id</string>
     <string name="counter_id">counter_id</string>
-
+    <string name="is_first_shared">is_first_shared</string>
+    <string name="is_first">is_first</string>
     <!--ERROR MSG-->
     <string name="error_fill_place">Problemas al cargar los datos. Cierre la aplicación y vuelva a intentarlo.</string>
     <string name="error_file_log">Problemas para generar el archivo Log.</string>
@@ -60,5 +61,39 @@
     <string name="legal">Legal</string>
     <string name="banner_fragment">ca-app-pub-5908373302541656/6575972523</string>
     <string name="video_navigation">ca-app-pub-5908373302541656/8831434920</string>
+    <string name="enter_id">Ingrese su DNI</string>
+    <string name="enter_name_lastname">Ingrese su nombre y apellido.</string>
+    <string name="cancel_buttton">Cancelar</string>
+    <string name="send_button_draw">Enviar</string>
+    <string name="participate_draw_button">Participar</string>
+    <string name="text_participate_draw">Te invita a participar del sorteo por</string>
+    <string name="condition_text_draw">Condiciones:</string>
+    <string name="date_end_draw_text">Finaliza:</string>
+    <string name="draw_recycler">Sortea:</string>
+    <string name="end_date_recycler">Fecha de Finalización:</string>
+    <string name="draw_title_tool">Sorteos</string>
+    <string name="draw_participate_ok">Ya estás participando del sorteo!!!</string>
+    <string name="partipation_invited">Participa, todavía estás a tiempo!.</string>
+    <string name="participation_ok">Estas participando!</string>
+    <string name="draw_empty_participate">Ingrese todos los datos solicitados.</string>
+    <string name="is_participate_msg">Usted ya está participando.</string>
+    <string name="you_are_winner_adapter">Has ganado el sorteo!!!</string>
+    <string name="you_are_winner_adapter_limit">No te olvides de usar o retirar tu premio antes de la fecha límite:</string>
+    <string name="you_are_winner_click">Usted es el ganador del sorteo.</string>
+    <string name="errro_dni">Su DNI ya esta registrado en este sorteo.</string>
+    <string name="activities_menus">Cartelera</string>
+    <string name="offer_tool_title">Cartelera</string>
+    <string name="search_hint">Buscar por local</string>
+    <string name="search">Buscar</string>
+
+    <string name="dialog_first_title">BIENVENIDO A MY CITY\'S SHOPS.</string>
+    <string name="dialog_first_subtitle">Esta es una guía para que tengas una mejor experiencia.</string>
+    <string name="dialog_first_follow">Esta opción te permite seguir un establecimiento y recibir así sus notificaciones semanales. También podrás participar de todos los sorteos que se realicen.</string>
+    <string name="dialog_first_offer">Esta opción te permite visualizar la cartelera actual del establecimiento. Podrás enterarte de todos los eventos, las promociones y las actividades que el local tiene para vos.</string>
+    <string name="dialog_first_contact">Esta opción te permite visualizar los datos del establecimiento. Podrás acceder directamente a cada uno de ellos presionando sobre el dato deseado.</string>
+    <string name="dialog_first_map">Esta opción te permite visualizar la ubicación del establecimiento desde la herramienta Google Map.</string>
+    <string name="dialog_first_favorite">Esta opción te permite visualizar todos tus establecimientos favoritos ordenados por su cantidad de seguidores.</string>
+    <string name="dialog_first_offers">Esta opción te permite visualizar todas las carteleras ordenadas por la cantidad de seguidores del local.</string>
+    <string name="dialog_first_draw">Esta opción te permite visualizar todos los sorteos publicos y los sorteos privados de los locales que estes siguiendo. Recuerda que puedes participar de los mismos haciendo click sobre cualquiera de ellos.</string>
 
 </resources>

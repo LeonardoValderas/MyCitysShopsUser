@@ -5,15 +5,16 @@ import android.widget.Toast;
 
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.google.firebase.iid.FirebaseInstanceIdService;
-import com.raizlabs.android.dbflow.sql.language.Condition;
-import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
 import com.raizlabs.android.dbflow.sql.language.NameAlias;
+import com.raizlabs.android.dbflow.sql.language.Operator;
+import com.raizlabs.android.dbflow.sql.language.OperatorGroup;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.api.APIService;
 import com.valdroide.mycitysshopsuser.api.ShopClient;
 import com.valdroide.mycitysshopsuser.entities.response.ResponseWS;
 import com.valdroide.mycitysshopsuser.entities.shop.Token;
+import com.valdroide.mycitysshopsuser.entities.shop.Token_Table;
 import com.valdroide.mycitysshopsuser.utils.Utils;
 
 import retrofit2.Call;
@@ -77,9 +78,8 @@ public class FmcInstanceIdService extends FirebaseInstanceIdService {
 
     public Token getToken() {
         Utils.writelogFile(getApplicationContext(), "getToken(FmcInstanceIdService)");
-        ConditionGroup conditions = ConditionGroup.clause();
-        conditions.and(Condition.column(new NameAlias("Token.ID_CITY_FOREIGN")).is(Utils.getIdCity(getApplicationContext())));
-        return SQLite.select().from(Token.class).where(conditions).querySingle();
+        return SQLite.select().from(Token.class).where(OperatorGroup.clause()
+                .and(Token_Table.ID_CITY_FOREIGN.is(Utils.getIdCity(getApplicationContext())))).querySingle();
     }
 
     public void validateToken(final Context context, final Token token, final boolean isInsert) {
@@ -117,11 +117,11 @@ public class FmcInstanceIdService extends FirebaseInstanceIdService {
                                     Toast.makeText(getApplicationContext(), responseWS.getMessage(), Toast.LENGTH_LONG).show();
                                 }
                             } else {
-                                Utils.writelogFile(context, "responseWS == null: " + context.getString(R.string.error_data_base) + "(FmcInstanceIdService)");
+                                Utils.writelogFile(context, "responseWS == null(FmcInstanceIdService)");
                                 Toast.makeText(getApplicationContext(), context.getString(R.string.error_data_base), Toast.LENGTH_LONG).show();
                             }
                         } else {
-                            Utils.writelogFile(context, "!response.isSuccessful() " + context.getString(R.string.error_data_base) + "(FmcInstanceIdService)");
+                            Utils.writelogFile(context, "!response.isSuccessful()(FmcInstanceIdService)");
                             Toast.makeText(getApplicationContext(), context.getString(R.string.error_data_base), Toast.LENGTH_LONG).show();
                         }
                     }
@@ -137,7 +137,7 @@ public class FmcInstanceIdService extends FirebaseInstanceIdService {
                 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
         } else {
-            Utils.writelogFile(context, "internt error: " + context.getString(R.string.error_internet) + "(FmcInstanceIdService)");
+            Utils.writelogFile(context, "internt error(FmcInstanceIdService)");
             Toast.makeText(getApplicationContext(), context.getString(R.string.error_internet), Toast.LENGTH_LONG).show();
         }
     }

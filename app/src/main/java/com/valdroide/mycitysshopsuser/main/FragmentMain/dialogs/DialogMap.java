@@ -57,8 +57,14 @@ public class DialogMap implements OnMapReadyCallback {
         Utils.writelogFile(context, "DialogMap y AlertDialog(Map)");
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         Utils.writelogFile(context, "LayoutInflater(Map)");
-        LayoutInflater inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+
+
+//        LayoutInflater inflater = (LayoutInflater) context
+//                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = LayoutInflater.from(context);
+
+
         Utils.writelogFile(context, "inflater(Map)");
         View layout = inflater.inflate(R.layout.dialog_map, null);
         Utils.writelogFile(context, "builder.setView(layout)(Map)");

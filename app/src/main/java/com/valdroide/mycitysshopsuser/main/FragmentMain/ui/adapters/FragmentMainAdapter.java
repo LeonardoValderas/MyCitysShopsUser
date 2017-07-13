@@ -41,12 +41,17 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         Shop shop = shopsList.get(position);
-        // holder.imageViewOfferNew.setVisibility(View.INVISIBLE); // ver si podemos individualizar los cambios de offer
+        holder.textViewName.setText(shop.getSHOP());
+
+//        holder.textViewName.setTypeface(Utils.setFontGoodDogTextView(fragment.getActivity()));
+
         if (shop.getURL_LOGO() != null && !shop.getURL_LOGO().isEmpty())
             Utils.setPicasso(fragment.getActivity(), shop.getURL_LOGO(), R.drawable.ic_launcher, holder.imageViewShop);
+        else
+            Utils.setPicasso(fragment.getActivity(), "sin logo", R.drawable.ic_launcher, holder.imageViewShop);
 
         holder.textViewDescription.setText(shop.getDESCRIPTION());
-        holder.textViewDescription.setTypeface(Utils.setFontGoodDogTextView(fragment.getActivity()));
+       // holder.textViewDescription.setTypeface(Utils.setFontGoodDogTextView(fragment.getActivity()));
         if (shop.getWORKING_HOURS() != null)
             if (!shop.getWORKING_HOURS().equals("null"))
                 holder.textViewWorking.setText(shop.getWORKING_HOURS());
@@ -90,6 +95,8 @@ public class FragmentMainAdapter extends RecyclerView.Adapter<FragmentMainAdapte
     public static class ViewHolder extends RecyclerView.ViewHolder {
         @Bind(R.id.imageViewShop)
         ImageView imageViewShop;
+        @Bind(R.id.textViewName)
+        TextView textViewName;
         @Bind(R.id.textViewDescription)
         TextView textViewDescription;
         @Bind(R.id.textViewWorking)

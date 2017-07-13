@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/tools"
+    android:id="@+id/linearConteiner"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/textViewShopName"
+        style="@style/TextView_Offer_Title"
+        android:textSize="24dp" />
+
+    <android.support.v7.widget.CardView
+        android:id="@+id/card_view_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="1dp"
+        android:elevation="3dp"
+        android:orientation="vertical"
+        app:cardBackgroundColor="#66FFFFFF"
+        card_view:cardCornerRadius="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="5dp">
+
+            <ImageView
+                android:id="@+id/imageViewOffer"
+                android:layout_width="match_parent"
+                android:layout_height="144dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_launcher" />
+
+            <TextView
+                android:id="@+id/textViewTitle"
+                style="@style/TextView_Offer_Title"
+                android:textSize="20dp" />
+
+            <TextView
+                android:id="@+id/textViewOffer"
+                style="@style/TextView_Offer_SubTitle"
+                android:layout_marginTop="2dp"
+                android:textSize="22dp" />
+        </LinearLayout>
+    </android.support.v7.widget.CardView>
+</LinearLayout>

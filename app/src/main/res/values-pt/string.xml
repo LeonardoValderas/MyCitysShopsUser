@@ -54,4 +54,41 @@
     <string name="legal">Legal</string>
     <string name="banner_fragment">ca-app-pub-5908373302541656/6575972523</string>
     <string name="video_navigation">ca-app-pub-5908373302541656/8831434920</string>
+
+
+    <string name="enter_id">Ingrese seu ID</string>
+    <string name="enter_name_lastname">Ingrese seu nome e sobrenome.</string>
+    <string name="cancel_buttton">Cancelar</string>
+    <string name="send_button_draw">Enviar</string>
+    <string name="participate_draw_button">Participar</string>
+    <string name="text_participate_draw">Convida você a participar no sorteio por</string>
+    <string name="condition_text_draw">Condições:</string>
+    <string name="date_end_draw_text">Termina:</string>
+    <string name="draw_recycler">Sorteia:</string>
+    <string name="end_date_recycler">Data de finalização:</string>
+    <string name="draw_title_tool">Sorteios</string>
+    <string name="draw_participate_ok">Você agora está participando do sorteio!!!</string>
+    <string name="partipation_invited">Participa, você está no tovadía tempo!.</string>
+    <string name="participation_ok">Você está participando!</string>
+    <string name="draw_empty_participate">Ingrese todos los datos solicitados.</string>
+    <string name="is_participate_msg">Ingrese todos os dados solicitados.</string>
+    <string name="you_are_winner_adapter">Você ganhou o sorteio!!!</string>
+    <string name="you_are_winner_adapter_limit">Não se esqueça de utilizar ou retirar o seu prêmio antes do prazo:</string>
+    <string name="you_are_winner_click">Você é o vencedor do sorteio.</string>
+    <string name="errro_dni">ID já registrado neste sorteio.</string>
+    <string name="activities_menus">Cartelera</string>
+    <string name="offer_tool_title">Cartelera</string>
+    <string name="search_hint">Procurar por lojas</string>
+    <string name="search">Procurar</string>
+    <string name="is_first_shared">is_first_shared</string>
+    <string name="is_first">is_first</string>
+    <string name="dialog_first_title">BEM-VINDO A MY CITY\'S SHOPS.</string>
+    <string name="dialog_first_subtitle">Este é um guia para que você tenha uma melhor experiência.</string>
+    <string name="dialog_first_follow">Esta opção permite que você siga uma loja e receber notificações semanais. Você também pode participar em todos os sorteios feitos.</string>
+    <string name="dialog_first_offer">Esta opción te permite visualizar la cartelera actual del establecimiento. Podrás enterarte de todos los eventos, las promociones y las actividades que el local tiene para vos.</string>
+    <string name="dialog_first_contact">Esta opção permite visualizar a corrente cartelera da loja. Você pode descobrir todos os eventos, promoções e atividades que o local tem para você.</string>
+    <string name="dialog_first_map">Esta opção permite visualizar a localização da loja a partir da ferramenta Google Map.</string>
+    <string name="dialog_first_favorite">Esta opção permite que você visualize todas as suas lojas favoritas ordenadas pelo seu número de seguidores.</string>
+    <string name="dialog_first_offers">Esta opção permite que você visualize todas as carteleras ordenadas pelo número de seguidores loja.</string>
+    <string name="dialog_first_draw">EEsta opção permite que você visualize todas as loterias públicas e sorteia lojas privadas que você está seguindo. Lembre-se que você pode envolvê-los clicando em qualquer um deles.</string>
 </resources>

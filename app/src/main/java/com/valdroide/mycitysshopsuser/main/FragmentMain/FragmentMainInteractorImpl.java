@@ -24,8 +24,8 @@ public class FragmentMainInteractorImpl implements FragmentMainInteractor {
     }
 
     @Override
-    public void refreshLayout(Context context, boolean isMyShop) {
-        repository.refreshLayout(context, isMyShop);
+    public void refreshLayout(Context context, boolean isMyShop, boolean isFollow) {
+        repository.refreshLayout(context, isMyShop, isFollow);
     }
 
     @Override
@@ -39,7 +39,17 @@ public class FragmentMainInteractorImpl implements FragmentMainInteractor {
     }
 
     @Override
-    public void onClickFollowOrUnFollow(Context context, Shop shop, boolean isFollow) {
-        repository.onClickFollowOrUnFollow(context, shop, isFollow);
+    public void getShopsSearch(Context context, SubCategory subCategory, String letter) {
+        repository.getShopsSearch(context, subCategory, letter);
+    }
+
+    @Override
+    public void getShopsSearchFavorites(Context context, String letter) {
+        repository.getShopsSearchFavorites(context, letter);
+    }
+
+    @Override
+    public void onClickFollowOrUnFollow(Context context, Shop shop, boolean isMyShop, boolean isFollow) {
+        repository.onClickFollowOrUnFollow(context, shop, isMyShop, isFollow);
     }
 }

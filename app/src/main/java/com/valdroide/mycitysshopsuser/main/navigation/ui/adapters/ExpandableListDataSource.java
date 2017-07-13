@@ -15,7 +15,7 @@ public class ExpandableListDataSource {
         for (int i = 0; i < categories.size(); i++) {
             List<SubCategory> subCategoriesAux = new ArrayList<>();
             for (int j = 0; j < subCategories.size(); j++) {
-                if (categories.get(i).getID_CATEGORY_KEY() == subCategories.get(j).getID_CATEGORY())
+                if (categories.get(i).getID_CATEGORY_KEY() == subCategories.get(j).getID_CATEGORY_FOREIGN())
                     subCategoriesAux.add(subCategories.get(j));
             }
             expandableListData.put(categories.get(i).getCATEGORY(), subCategoriesAux);

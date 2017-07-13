@@ -48,6 +48,13 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_margin">1dp</item>
     </style>
+
+    <style name="CardView_Style_Draw">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_margin">1dp</item>
+    </style>
+
     <!--PLACE-->
     <style name="Spinner_Place">
         <item name="android:layout_width">match_parent</item>
@@ -71,6 +78,8 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:layout_marginTop">@dimen/top_contact_dialog</item>
         <item name="android:textSize">20dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#3e7e8d</item>
     </style>
     <!--OFFER-->
     <style name="TextView_Offer_Title">
@@ -78,17 +87,70 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">center</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#000000</item>
+        <item name="android:shadowColor">#ffffff</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">3</item>
     </style>
+
+    <style name="TextView_Offer_SubTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#0b4c5a</item>
+        <item name="android:shadowColor">#b6cfd4</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+
     <style name="TextView_Offer">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">top|center</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:textColor">#3e7e8d</item>
     </style>
+
     <style name="BannerStyle" parent="@android:style/TextAppearance.Medium">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_centerHorizontal">true</item>
     </style>
+
+    <style name="ButtonView_Draw">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_weight">50</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
+    <style name="AppearanceTextViewTitle">
+        <item name="android:textColor">#000000</item>
+        <item name="android:shadowColor">#ffffff</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">2</item>
+        <item name="android:shadowRadius">3</item>
+    </style>
+
+    <style name="AppearanceTextView">
+        <item name="android:textColor">#0b4c5a</item>
+        <item name="android:shadowColor">#b6cfd4</item>
+        <item name="android:shadowDx">1</item>
+        <item name="android:shadowDy">1</item>
+        <item name="android:shadowRadius">2</item>
+    </style>
+
+    <style name="AppearanceToolBarTitle">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">22sp</item>
+        <!--<item name="android:shadowColor">#000000</item>-->
+        <!--<item name="android:shadowDx">1</item>-->
+        <!--<item name="android:shadowDy">2</item>-->
+        <item name="android:textStyle">bold</item>
+        <!--<item name="android:shadowRadius">3</item>-->
+    </style>
+
 </resources>

@@ -90,20 +90,18 @@ public class SupportActivity extends AppCompatActivity implements SupportActivit
     public void sendEmailSuccess() {
         Utils.writelogFile(this, "sendEmailSuccess(support)");
         setText(editTextEmail, "");
-        if (pDialog.isShowing())
-            pDialog.dismiss();
+        validateDialog();
         setError(getString(R.string.email_success));
     }
 
     @Override
     public void setError(String error) {
         Utils.writelogFile(this, " setError " + error + "(support)");
-        if (pDialog.isShowing())
-            pDialog.dismiss();
+        validateDialog();
         Utils.showSnackBar(contentNavigation, error);
     }
 
-    private void setText(final EditText editText,final String value){
+    private void setText(final EditText editText, final String value) {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -116,7 +114,12 @@ public class SupportActivity extends AppCompatActivity implements SupportActivit
     protected void onDestroy() {
         Utils.writelogFile(this, "onDestroy(support)");
         presenter.onDestroy();
-        pDialog.dismiss();
+        validateDialog();
         super.onDestroy();
+    }
+
+    private void validateDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
     }
 }

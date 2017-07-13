@@ -41,9 +41,9 @@ public class DialogOfferAdapter extends RecyclerView.Adapter<DialogOfferAdapter.
         Offer offer = offerList.get(position);
         Utils.setPicasso(context, offer.getURL_IMAGE(), R.drawable.ic_launcher, holder.imageViewOffer);
         holder.textViewTitle.setText(offer.getTITLE());
-        holder.textViewTitle.setTypeface(Utils.setFontExoTextView(context));
+      //  holder.textViewTitle.setTypeface(Utils.setFontExoTextView(context));
         holder.textViewOffer.setText(offer.getOFFER());
-        holder.textViewOffer.setTypeface(Utils.setFontRalewatTextView(context));
+       // holder.textViewOffer.setTypeface(Utils.setFontRalewatTextView(context));
     }
 
     @Override

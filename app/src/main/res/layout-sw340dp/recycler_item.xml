@@ -6,12 +6,22 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <TextView
+        android:id="@+id/textViewName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginTop="3dp"
+        android:textSize="32dp"
+        style="@style/AppearanceTextViewTitle"
+        android:textStyle="bold" />
+
     <android.support.v7.widget.CardView
         android:id="@+id/card_view"
         style="@style/CardView_Style"
         android:layout_margin="5dp"
-        app:cardBackgroundColor="#66FFFFFF"
-        android:elevation="3dp">
+        android:elevation="3dp"
+        app:cardBackgroundColor="#66FFFFFF">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -25,7 +35,7 @@
                 <ImageView
                     android:id="@+id/imageViewShop"
                     android:layout_width="match_parent"
-                    android:layout_height="260dp"
+                    android:layout_height="230dp"
                     android:layout_margin="5dp"
                     app:srcCompat="@drawable/ic_launcher" />
 
@@ -36,6 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                style="@style/AppearanceTextView"
                 android:textSize="22dp"
                 android:textStyle="bold" />
 
@@ -44,14 +55,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
+                android:layout_margin="3dp"
+                android:textColor="#3e7e8d"
                 android:textSize="17dp"
-                android:textStyle="bold|italic" />
+                android:textStyle="bold" />
 
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
+                android:layout_marginBottom="5dp"
                 android:layout_marginLeft="5dp"
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="5dp"

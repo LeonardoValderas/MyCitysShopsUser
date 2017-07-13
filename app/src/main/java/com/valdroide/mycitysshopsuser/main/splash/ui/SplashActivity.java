@@ -53,7 +53,7 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
             isPlace = isPlace();
             if (!isPlace) {
                 Utils.writelogFile(this, "isPlace false y validateDatePlace(Splash)");
-                presenter.validateDatePlace(this, getNotificationExtra());
+                presenter.validateDatePlace(this, getIntentExtra());
             } else {
                 Utils.writelogFile(this, "isPlace true y validateDateShop(Splash)");
                 presenter.getToken(this);
@@ -78,21 +78,34 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
         return getIntent().getBooleanExtra("isPlace", false);
     }
 
-    public Intent getNotificationExtra() {
+    public Intent getIntentExtra() {
         Intent intent = null;
         try {
-            Utils.writelogFile(this, "getNotificationExtra(Splash)");
+            Utils.writelogFile(this, "getIntentExtra(Splash)");
             if (getIntent().getBooleanExtra("notification", false)) {
-                Utils.writelogFile(this, "getNotificationExtra is true(Splash)");
-                intent = new Intent(this, NavigationActivity.class);
-                intent.putExtra("notification", true);
-                intent.putExtra("messasge", getIntent().getStringExtra("messasge"));
-                intent.putExtra("url_shop", getIntent().getStringExtra("url_shop"));
+                Utils.writelogFile(this, "getBooleanExtra notification is true(Splash)");
+                intent = fillIntent(true);
+            } else if (getIntent().getBooleanExtra("draw", false)) {
+                Utils.writelogFile(this, "getBooleanExtra draw is true is true(Splash)");
+                intent = fillIntent(false);
             }
         } catch (Exception e) {
-            Utils.writelogFile(this, "getNotificationExtra error: " + e.getMessage() + "(Splash)");
+            Utils.writelogFile(this, "getNotificationOrDrawExtra error: " + e.getMessage() + "(Splash)");
             setError(e.getMessage());
         }
+        return intent;
+    }
+
+    private Intent fillIntent(boolean isNotificacion) {
+        Intent intent = new Intent(this, NavigationActivity.class);
+        if (isNotificacion) {
+            intent.putExtra("notification", true);
+            intent.putExtra("title", getIntent().getStringExtra("title"));
+            intent.putExtra("messasge", getIntent().getStringExtra("messasge"));
+            intent.putExtra("url_shop", getIntent().getStringExtra("url_shop"));
+        } else
+            intent.putExtra("draw", true);
+
         return intent;
     }
 
@@ -143,7 +156,7 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
 
     @Override
     public void tokenSuccess() {
-        presenter.validateDateShop(this, getNotificationExtra());
+        presenter.validateDateShop(this, getIntentExtra());
     }
 
     @Override

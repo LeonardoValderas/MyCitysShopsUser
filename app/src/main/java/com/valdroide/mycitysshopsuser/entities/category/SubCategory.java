@@ -18,7 +18,7 @@ public class SubCategory extends BaseModel {
     private String SUBCATEGORY;
     @Column
     @SerializedName("id_category")
-    private int ID_CATEGORY;
+    private int ID_CATEGORY_FOREIGN;
 
     private String CATEGORY;
 
@@ -34,7 +34,7 @@ public class SubCategory extends BaseModel {
     public SubCategory(int id, String subCategory, int id_category) {
         this.ID_SUBCATEGORY_KEY = id;
         this.SUBCATEGORY = subCategory;
-        this.ID_CATEGORY = id_category;
+        this.ID_CATEGORY_FOREIGN = id_category;
     }
     public int getID_SUBCATEGORY_KEY() {
         return ID_SUBCATEGORY_KEY;
@@ -63,12 +63,12 @@ public class SubCategory extends BaseModel {
         this.SUBCATEGORY = SUBCATEGORY;
     }
 
-    public int getID_CATEGORY() {
-        return ID_CATEGORY;
+    public int getID_CATEGORY_FOREIGN() {
+        return ID_CATEGORY_FOREIGN;
     }
 
-    public void setID_CATEGORY(int ID_CATEGORY) {
-        this.ID_CATEGORY = ID_CATEGORY;
+    public void setID_CATEGORY_FOREIGN(int ID_CATEGORY_FOREIGN) {
+        this.ID_CATEGORY_FOREIGN = ID_CATEGORY_FOREIGN;
     }
 
     public int getIS_UPDATE() {

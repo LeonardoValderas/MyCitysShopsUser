@@ -13,34 +13,48 @@ public class Offer extends BaseModel {
     @Column
     @PrimaryKey
     @SerializedName("id")
-    public int ID_OFFER_KEY;
+    private int ID_OFFER_KEY;
 
     @Column
     @SerializedName("id_shop")
-    public int ID_SHOP_FOREIGN;
+    private int ID_SHOP_FOREIGN;
 
     @Column
     @SerializedName("id_city")
-    public int ID_CITY_FOREIGN;
+    private int ID_CITY_FOREIGN;
     @Column
     @SerializedName("title")
-    public String TITLE;
+    private String TITLE;
 
     @Column
     @SerializedName("offer")
-    public String OFFER;
+    private String OFFER;
     @Column
     @SerializedName("url_image")
-    public String URL_IMAGE;
+    private String URL_IMAGE;
 
     @Column
     @SerializedName("is_active")
-    public int IS_ACTIVE;
+    private int IS_ACTIVE;
     @Column
     @SerializedName("date_unique")
-    public String DATE_UNIQUE;
-
+    private String DATE_UNIQUE;
+    @Column
+    private String SHOP;
     public Offer() {
+    }
+
+    public Offer(int ID_OFFER_KEY, int ID_SHOP_FOREIGN, int ID_CITY_FOREIGN, String TITLE, String OFFER,
+                 String URL_IMAGE, int IS_ACTIVE, String DATE_UNIQUE, String SHOP) {
+        this.ID_OFFER_KEY = ID_OFFER_KEY;
+        this.ID_SHOP_FOREIGN = ID_SHOP_FOREIGN;
+        this.ID_CITY_FOREIGN = ID_CITY_FOREIGN;
+        this.TITLE = TITLE;
+        this.OFFER = OFFER;
+        this.URL_IMAGE = URL_IMAGE;
+        this.IS_ACTIVE = IS_ACTIVE;
+        this.DATE_UNIQUE = DATE_UNIQUE;
+        this.SHOP = SHOP;
     }
 
     public int getID_OFFER_KEY() {
@@ -105,5 +119,13 @@ public class Offer extends BaseModel {
 
     public void setDATE_UNIQUE(String DATE_UNIQUE) {
         this.DATE_UNIQUE = DATE_UNIQUE;
+    }
+
+    public String getSHOP() {
+        return SHOP;
+    }
+
+    public void setSHOP(String SHOP) {
+        this.SHOP = SHOP;
     }
 }

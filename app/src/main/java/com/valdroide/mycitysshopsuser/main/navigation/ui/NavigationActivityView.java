@@ -9,4 +9,6 @@ public interface NavigationActivityView {
    void setError(String msg);
    void goToPlace();
    void updateAdapter();
+   void showProgressDialog();
+   void hideProgressDialog();
 }

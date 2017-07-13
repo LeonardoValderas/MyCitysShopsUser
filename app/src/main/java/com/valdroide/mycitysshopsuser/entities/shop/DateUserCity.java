@@ -13,31 +13,31 @@ public class DateUserCity extends BaseModel {
     @Column
     @PrimaryKey
     @SerializedName("id")
-    public int ID_DATE_KEY;
+    private int ID_DATE_KEY;
     @Column
     @SerializedName("id_city")
-    public int ID_CITY_FOREIGN;
+    private int ID_CITY_FOREIGN;
     @Column
     @SerializedName("category")
-    public String CATEGORY_DATE;
+    private String CATEGORY_DATE;
     @Column
     @SerializedName("subcategory")
-    public String SUBCATEGORY_DATE;
-    @Column
-    @SerializedName("cat_sub_city")
-    public String CAT_SUB_CITY_DATE;
+    private String SUBCATEGORY_DATE;
     @Column
     @SerializedName("shop")
-    public String SHOP_DATE;
+    private String SHOP_DATE;
     @Column
     @SerializedName("offer")
-    public String OFFER_DATE;
+    private String OFFER_DATE;
+    @Column
+    @SerializedName("draw")
+    private String DRAW_DATE;
     @Column
     @SerializedName("support")
-    public String SUPPORT_DATE;
+    private String SUPPORT_DATE;
     @Column
     @SerializedName("date_user")
-    public String DATE_USER_CITY;
+    private String DATE_USER_CITY;
 
     public DateUserCity() {
     }
@@ -74,14 +74,6 @@ public class DateUserCity extends BaseModel {
         this.SUBCATEGORY_DATE = SUBCATEGORY_DATE;
     }
 
-    public String getCAT_SUB_CITY_DATE() {
-        return CAT_SUB_CITY_DATE;
-    }
-
-    public void setCAT_SUB_CITY_DATE(String CAT_SUB_CITY_DATE) {
-        this.CAT_SUB_CITY_DATE = CAT_SUB_CITY_DATE;
-    }
-
     public String getSHOP_DATE() {
         return SHOP_DATE;
     }
@@ -112,5 +104,13 @@ public class DateUserCity extends BaseModel {
 
     public void setSUPPORT_DATE(String SUPPORT_DATE) {
         this.SUPPORT_DATE = SUPPORT_DATE;
+    }
+
+    public String getDRAW_DATE() {
+        return DRAW_DATE;
+    }
+
+    public void setDRAW_DATE(String DRAW_DATE) {
+        this.DRAW_DATE = DRAW_DATE;
     }
 }

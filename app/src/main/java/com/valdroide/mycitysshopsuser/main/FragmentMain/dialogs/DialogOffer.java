@@ -36,8 +36,6 @@ public class DialogOffer {
     ImageView imageViewShop;
     @Bind(R.id.recyclerViewOffer)
     RecyclerView recyclerViewOffer;
-    //    @Bind(R.id.textViewName)
-//    TextView textViewName;
     @Bind(R.id.textViewEmpty)
     TextView textViewEmpty;
 
@@ -63,7 +61,6 @@ public class DialogOffer {
         try {
             Utils.writelogFile(context, "fill componentes(Offer)");
             Utils.setPicasso(context, shop.getURL_LOGO(), R.drawable.ic_launcher, imageViewShop);
-            // textViewName.setText(shop.getSHOP());
             if (offers.size() > 0) {
                 textViewEmpty.setVisibility(View.GONE);
                 adapter = new DialogOfferAdapter(offers, context);

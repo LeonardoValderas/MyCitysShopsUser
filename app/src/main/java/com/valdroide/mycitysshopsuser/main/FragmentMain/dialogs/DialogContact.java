@@ -31,11 +31,8 @@ import butterknife.ButterKnife;
 
 public class DialogContact {
 
-    private static final int PERMISSION_OK = 123;
     @Bind(R.id.imageViewShop)
     ImageView imageViewShop;
-    //    @Bind(R.id.textViewName)
-//    TextView textViewName;
     @Bind(R.id.textViewPhone)
     TextView textViewPhone;
     @Bind(R.id.textViewWhat)
@@ -77,7 +74,6 @@ public class DialogContact {
         builder.setView(layout);
         Utils.writelogFile(fragment.getActivity(), "Se inicia ButterKnife(Contact)");
         ButterKnife.bind(this, layout);
-        //    initDialog();
         try {
             Utils.writelogFile(fragment.getActivity(), "fill componentes(Contact)");
             Utils.setPicasso(fragment.getActivity(), shop.getURL_LOGO(), R.drawable.ic_launcher, imageViewShop);
@@ -140,7 +136,7 @@ public class DialogContact {
 
     }
 
-    public void copyText(TextView textView) {
+    private void copyText(TextView textView) {
         if (textView.getText() != null)
             if (!textView.getText().toString().isEmpty()) {
                 setClipboard(fragment.getActivity(), textView.getText().toString());
@@ -192,7 +188,7 @@ public class DialogContact {
                             setError(fragment.getActivity().getString(R.string.data_empty));
                         break;
                     case R.id.textViewWeb:
-                        String web = "https://";
+                        String web = "http://";
                         data = replaceSpace(data);
                         web = web + data;
                         if (!web.isEmpty()) {
@@ -207,12 +203,12 @@ public class DialogContact {
                     case R.id.textViewFace:
                         if (!data.isEmpty()) {
                             String face = "https://www.facebook.com/";
-                            String faceApp = "fb://page/";
+                          //  String faceApp = "fb://page/";
                             data = replaceSpace(data);
-                            listener.onClickField(face + data, faceApp + data, 4);
+                            //listener.onClickField(face + data, face + data, 4);
                             if (URLUtil.isValidUrl(face + data)) {
                                 //      pDialog.show();
-                                listener.onClickField(face + data, faceApp + data, 4);
+                                listener.onClickField(face + data, face + data, 4);
                             } else
                                 setError(fragment.getActivity().getString(R.string.url_invalid));
                         } else

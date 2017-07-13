@@ -7,7 +7,10 @@ import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.os.Build;
 import android.support.design.widget.Snackbar;
+import android.support.v4.widget.TextViewCompat;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
+import android.text.Spanned;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -22,6 +25,7 @@ import java.io.FileOutputStream;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
@@ -49,6 +53,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+
 public class Utils {
 
     // public static String URL_IMAGE = "http://10.0.2.2:8080/my_citys_shops_adm/account/image_account/";
@@ -68,6 +73,22 @@ public class Utils {
         return sdf.format(dateOficial);
     }
 
+    //draw end yyyy-MM-dd HH:mm:ss
+    public static boolean validateExpirateCurrentTime(String dateExperate, String format) {
+        SimpleDateFormat sdf = new SimpleDateFormat(format);
+        Date strDate = null;
+        try {
+            strDate = sdf.parse(dateExperate);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        if (strDate != null)
+            if (System.currentTimeMillis() >= strDate.getTime()) {//si la fecha de hoy es mayor a la fecha dada, es true
+                return true;
+            }
+        return false;
+    }
+
     public static void showSnackBar(View conteiner, String msg) {
         Snackbar.make(conteiner, msg, Snackbar.LENGTH_LONG).show();
     }
@@ -77,19 +98,21 @@ public class Utils {
     }
 
     public static void setPicasso(Context context, String url, final int resource, final ImageView imageView) {
-        Picasso.with(context)
-                .load(url).fit()
-                .placeholder(resource)
-                .into(imageView, new Callback() {
-                    @Override
-                    public void onSuccess() {
-                    }
+        if (!url.isEmpty()) {
+            Picasso.with(context)
+                    .load(url).fit()
+                    .placeholder(resource)
+                    .into(imageView, new Callback() {
+                        @Override
+                        public void onSuccess() {
+                        }
 
-                    @Override
-                    public void onError() {
-                        imageView.setImageResource(resource);
-                    }
-                });
+                        @Override
+                        public void onError() {
+                            imageView.setImageResource(resource);
+                        }
+                    });
+        }
     }
 
     public static boolean oldPhones() {
@@ -107,7 +130,17 @@ public class Utils {
                 Typeface titleFont = Typeface.
                         createFromAsset(context.getAssets(), "fonts/antspan.ttf");
                 if (tv.getText() != null) {
-                    tv.setTypeface(titleFont);
+
+                    if (Build.VERSION.SDK_INT < 23) {
+                        TextViewCompat.setTextAppearance(tv, R.style.AppearanceToolBarTitle);
+                      //  tv.setTextAppearance(context, R.style.AppearanceTextViewTitle);
+                    } else{
+                        tv.setTextAppearance(R.style.AppearanceToolBarTitle);
+                    }
+
+               //     tv.setTextAppearance(R.style.AppearanceTextViewTitle);
+
+                 //   tv.setTypeface(titleFont);
                     break;
                 }
             }
@@ -138,7 +171,12 @@ public class Utils {
         try {
             ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
             if (cm.getActiveNetworkInfo() != null && cm.getActiveNetworkInfo().isConnectedOrConnecting()) {
-                return internetConnectionAvailable(5000);
+                for (int i = 0; i <= 3; i++) {
+                    if (internetConnectionAvailable(5000)) {
+                        return true;
+                    }
+                }
+                return false;
             } else {
                 return false;
             }
@@ -255,6 +293,18 @@ public class Utils {
     public static int getIdCity(Context context) {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.my_city_id_shared), Context.MODE_PRIVATE);
         return sharedPreferences.getInt(context.getString(R.string.id_city), 0);
+    }
+
+    public static void setIsFirst(Context context, boolean isFirst) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.is_first_shared), Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putBoolean(context.getString(R.string.is_first), isFirst);
+        editor.commit();
+    }
+
+    public static boolean getIsFirst(Context context) {
+        SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.is_first_shared), Context.MODE_PRIVATE);
+        return sharedPreferences.getBoolean(context.getString(R.string.is_first), false);
     }
 
     public static void resetIdCity(Context context) {
@@ -443,4 +493,14 @@ public class Utils {
         SharedPreferences sharedPreferences = context.getSharedPreferences(context.getString(R.string.my_counter_id_shared), Context.MODE_PRIVATE);
         return sharedPreferences.getInt(context.getString(R.string.counter_id), 0);
     }
+
+    @SuppressWarnings("deprecation")
+    public static Spanned fromHtml(String source) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            return Html.fromHtml(source, Html.FROM_HTML_MODE_LEGACY);
+        } else {
+            return Html.fromHtml(source);
+        }
+    }
+
 }

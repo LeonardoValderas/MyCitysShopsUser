@@ -18,7 +18,7 @@ public class Category extends BaseModel {
     @SerializedName("category")
     private String CATEGORY;
 
-    @Column
+    @Column(defaultValue = "0")
     private int IS_UPDATE;
 
     public Category() {

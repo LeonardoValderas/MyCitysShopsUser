@@ -22,7 +22,7 @@ android {
         }
     }
 }
-
+def dbflow_version = "4.0.0"
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -31,6 +31,10 @@ dependencies {
     apt "com.github.Raizlabs.DBFlow:dbflow-processor:$rootProject.ext.dbflowVersion"
     compile "com.github.Raizlabs.DBFlow:dbflow-core:$rootProject.ext.dbflowVersion"
     compile "com.github.Raizlabs.DBFlow:dbflow:$rootProject.ext.dbflowVersion"
+    //annotationProcessor "com.github.Raizlabs.DBFlow:dbflow-processor:${dbflow_version}"
+    //compile "com.github.Raizlabs.DBFlow:dbflow-core:${dbflow_version}"
+   // compile "com.github.Raizlabs.DBFlow:dbflow:${dbflow_version}"
+
     apt "com.google.dagger:dagger-compiler:$rootProject.ext.daggerVersion"
     compile "javax.annotation:jsr250-api:$rootProject.ext.jsr250Version"
     compile "com.google.dagger:dagger:$rootProject.ext.daggerVersion"
@@ -56,6 +60,8 @@ dependencies {
     compile 'com.github.arturogutierrez:badges:1.0.5@aar'
     compile 'com.github.bumptech.glide:glide:3.7.0'
     compile 'com.google.firebase:firebase-ads:10.2.1'
+    compile 'com.github.ittianyu:BottomNavigationViewEx:1.2.0'
     testCompile 'junit:junit:4.12'
 }
+
 apply plugin: 'com.google.gms.google-services'

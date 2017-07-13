@@ -163,12 +163,16 @@ public class PlaceActivity extends AppCompatActivity implements PlaceActivityVie
             adapterSpinnerCountry.clear();
             adapterSpinnerCountry.addAll(countries);
             adapterSpinnerCountry.notifyDataSetChanged();
-            if (pDialog.isShowing())
-                pDialog.dismiss();
+            validateDialog();
         } catch (Exception e) {
             setError(e.getMessage());
             Utils.writelogFile(this, " catch error " + e.getMessage() + "(Place)");
         }
+    }
+
+    private void validateDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
     }
 
     @Override
@@ -183,8 +187,7 @@ public class PlaceActivity extends AppCompatActivity implements PlaceActivityVie
                 id_state = states.get(0).getID_STATE_KEY();
                 presenter.getCitiesForState(PlaceActivity.this, id_state);
             }
-            if (pDialog.isShowing())
-                pDialog.dismiss();
+            validateDialog();
         } catch (Exception e) {
             setError(e.getMessage());
             Utils.writelogFile(this, " catch error " + e.getMessage() + "(Place)");
@@ -199,8 +202,7 @@ public class PlaceActivity extends AppCompatActivity implements PlaceActivityVie
             adapterSpinnerCity.clear();
             adapterSpinnerCity.addAll(cities);
             adapterSpinnerCity.notifyDataSetChanged();
-            if (pDialog.isShowing())
-                pDialog.hide();
+            validateDialog();
         } catch (Exception e) {
             setError(e.getMessage());
             Utils.writelogFile(this, " catch error " + e.getMessage() + "(Place)");
@@ -210,8 +212,7 @@ public class PlaceActivity extends AppCompatActivity implements PlaceActivityVie
     @Override
     public void setError(String mgs) {
         Utils.writelogFile(this, "setError: " + mgs + "(Place)");
-        if (pDialog.isShowing())
-            pDialog.dismiss();
+        validateDialog();
         Utils.showSnackBar(conteiner, mgs);
     }
 
@@ -246,8 +247,7 @@ public class PlaceActivity extends AppCompatActivity implements PlaceActivityVie
         Utils.writelogFile(this, "saveSuccess(Place)");
         try {
             Utils.setIdCity(this, place.getID_CITY_FOREIGN());
-            if (pDialog.isShowing())
-                pDialog.dismiss();
+            validateDialog();
             startActivitySplash();
         } catch (Exception e) {
             setError(e.getMessage());

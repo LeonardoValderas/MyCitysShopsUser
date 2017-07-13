@@ -2,18 +2,28 @@ package com.valdroide.mycitysshopsuser.main.FragmentMain.ui;
 
 import android.Manifest;
 import android.app.ProgressDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SearchViewCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -44,6 +54,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class FragmentMain extends Fragment implements FragmentMainView, OnItemClickListener, OnClickContact {
 
@@ -54,8 +65,9 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     FrameLayout conteiner;
     @Bind(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
-    @Bind(R.id.adView)
-    AdView mAdView;
+//    @Bind(R.id.adView)
+//    AdView mAdView;
+
 
     @Inject
     FragmentMainAdapter adapter;
@@ -68,7 +80,7 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     private int position = 0;
     private Shop shopDialog;
     private static boolean isMyShop = false;
-    private AdRequest adRequest;
+    // private AdRequest adRequest;
     //    private AdRequest adRequestVideo;
     static FragmentMain fragmentAction;
     private int permissionCheck;
@@ -109,25 +121,36 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     @Override
     public void onActivityCreated(Bundle state) {
         super.onActivityCreated(state);
-        Utils.writelogFile(getActivity(), "Se inicia Injection(FragmentMain)");
         setupInjection();
-        Utils.writelogFile(getActivity(), "Se inicia presenter Oncreate(FragmentMain)");
         register();
-        Utils.writelogFile(getActivity(), "Se inicia dialog Oncreate(FragmentMain)");
         initDialog();
         if (isMyShop) {
             Utils.writelogFile(getActivity(), "isMyShop true y getMyFavoriteShops(FragmentMain)");
-            presenter.getMyFavoriteShops(getActivity());
+            getMyFavoritesShops();
         } else {
             Utils.writelogFile(getActivity(), "isMyShop false(FragmentMain)");
             if (subCategoryExtra != null) {
                 Utils.writelogFile(getActivity(), "dialog show y getListShops(FragmentMain)");
-                pDialog.show();
-                presenter.getListShops(getActivity(), subCategoryExtra);
+                getListShops();
             }
         }
         initRecyclerViewAdapter();
-        BannerAd();
+    }
+
+    private void getMyFavoritesShops() {
+        showProgressDialog();
+        presenter.getMyFavoriteShops(getActivity());
+    }
+
+    private void getListShops() {
+        showProgressDialog();
+        presenter.getListShops(getActivity(), subCategoryExtra);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -137,11 +160,11 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
         Utils.writelogFile(getActivity(), "Se inicia ButterKnife(FragmentMain)");
         ButterKnife.bind(this, view);
         initSwipeRefreshLayout();
-        Utils.writelogFile(getActivity(), "return view(FragmentMain)");
         return view;
     }
 
     public void register() {
+        Utils.writelogFile(getActivity(), "register(FragmentMain)");
         if (!isRegister) {
             presenter.onCreate();
             isRegister = true;
@@ -149,6 +172,7 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     }
 
     public void unregister() {
+        Utils.writelogFile(getActivity(), "unregister(FragmentMain)");
         if (isRegister) {
             presenter.onDestroy();
             isRegister = false;
@@ -156,6 +180,7 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     }
 
     public void initDialog() {
+        Utils.writelogFile(getActivity(), "Se inicia dialog Oncreate(FragmentMain)");
         pDialog = new ProgressDialog(getActivity());
         pDialog.setMessage(getString(R.string.process));
         pDialog.setCancelable(false);
@@ -175,6 +200,7 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     }
 
     private void setupInjection() {
+        Utils.writelogFile(getActivity(), "Se inicia Injection(FragmentMain)");
         app = (MyCitysShopsUserApp) getActivity().getApplication();
         app.getFragmentMainComponent(this, this, this).inject(this);
     }
@@ -200,7 +226,7 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
                 @Override
                 public void onRefresh() {
                     Utils.writelogFile(getActivity(), "onRefresh(FragmentMain)");
-                    presenter.refreshLayout(getActivity(), isMyShop);
+                    presenter.refreshLayout(getActivity(), isMyShop, false);
 
                 }
             });
@@ -210,18 +236,9 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
         }
     }
 
-    public void BannerAd() {
-        adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .addTestDevice("B52960D9E6A2A5833E82FEA8ACD4B80C")
-                .build();
-        mAdView.loadAd(adRequest);
-    }
-
     @Override
     public void setListShops(List<Shop> shops) {
         Utils.writelogFile(getActivity(), "setListShops " + shops.size() + "(FragmentMain)");
-        dismissDialog();
         adapter.setShop(shops);
         verifySwipeRefresh();
     }
@@ -229,7 +246,6 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     @Override
     public void setError(String mgs) {
         Utils.writelogFile(getActivity(), "setError " + mgs + "(FragmentMain)");
-        dismissDialog();
         verifySwipeRefresh();
         Utils.showSnackBar(conteiner, mgs);
     }
@@ -262,28 +278,38 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     public void isUpdate() {
         Utils.writelogFile(getActivity(), "isUpdate(FragmentMain)");
         adapter.notifyDataSetChanged();
-        dismissDialog();
+    }
+
+    @Override
+    public void showProgressDialog() {
+        pDialog.show();
+    }
+
+    @Override
+    public void hideProgressDialog() {
+        if (pDialog != null)
+            if (pDialog.isShowing())
+                pDialog.dismiss();
     }
 
     @Override
     public void followUnFollowSuccess(Shop shop) {
         Utils.writelogFile(getActivity(), "followSuccessUnFollow(FragmentMain)");
         adapter.setUpdateShop(position, shop);
-        dismissDialog();
     }
 
     @Override
     public void onClickFollowOrUnFollow(int position, Shop shop, boolean isFollow) {
         Utils.writelogFile(getActivity(), "onClickFollow(FragmentMain)");
-        pDialog.show();
+        showProgressDialog();
         this.position = position;
-        presenter.onClickFollowOrUnFollow(getActivity(), shop, isFollow);
+        presenter.onClickFollowOrUnFollow(getActivity(), shop, isMyShop, isFollow);
     }
 
     @Override
     public void onClickOffer(int position, Shop shop) {
         Utils.writelogFile(getActivity(), "onClickUnFollow y getListOffer y setUpdateOffer(FragmentMain)");
-        pDialog.show();
+        showProgressDialog();
         shopDialog = shop;
         this.position = position;
         presenter.getListOffer(getActivity(), shop.getID_SHOP_KEY());
@@ -293,13 +319,7 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     @Override
     public void setListOffer(List<Offer> offers) {
         Utils.writelogFile(getActivity(), "setListOffer y DialogOffer(FragmentMain)");
-        dismissDialog();
         new DialogOffer(getActivity(), offers, shopDialog);
-    }
-
-    public void dismissDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
     }
 
     @Override
@@ -441,7 +461,6 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
             Utils.writelogFile(getActivity(), "catch: " + e.getMessage() + " (FragmentMain)");
             setError(e.getMessage());
         }
-
     }
 
     private String setPackageRed(int red) {
@@ -463,21 +482,65 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
         return pack;
     }
 
+    private void setSearch(String s) {
+        if (s != null && !s.equals("")) {
+            if (isMyShop) {
+                showProgressDialog();
+                presenter.getShopsSearchFavorites(getActivity(), s);
+            } else {
+                if (subCategoryExtra != null) {
+                    showProgressDialog();
+                    presenter.getShopsSearch(getActivity(), subCategoryExtra, s);
+                }
+            }
+        } else {
+            if (isMyShop) {
+                getMyFavoritesShops();
+            } else {
+                if (subCategoryExtra != null) {
+                    getListShops();
+                }
+            }
+        }
+    }
+
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_search, menu);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            SearchManager manager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+            SearchView search = (SearchView) menu.findItem(R.id.search).getActionView();
+            search.setInputType(InputType.TYPE_TEXT_FLAG_CAP_CHARACTERS);
+            search.setSearchableInfo(manager.getSearchableInfo(getActivity().getComponentName()));
+
+            search.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+
+                @Override
+                public boolean onQueryTextSubmit(String s) {
+
+                    setSearch(s);
+                    return false;
+                }
+
+                @Override
+                public boolean onQueryTextChange(String s) {
+
+                    setSearch(s);
+                    return false;
+                }
+            });
+        }
+    }
+
     @Override
     public void onResume() {
         super.onResume();
-        if (mAdView != null) {
-            mAdView.resume();
-        }
         register();
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (mAdView != null) {
-            mAdView.pause();
-        }
         unregister();
     }
 
@@ -491,9 +554,7 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     @Override
     public void onDestroy() {
         Utils.writelogFile(getActivity(), "onDestroy(FragmentMain)");
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-        presenter.onDestroy();
+        hideProgressDialog();
         unregister();
         super.onDestroy();
     }

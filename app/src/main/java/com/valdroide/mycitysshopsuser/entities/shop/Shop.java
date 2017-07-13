@@ -13,112 +13,120 @@ public class Shop extends BaseModel {
     @Column
     @PrimaryKey
     @SerializedName("id")
-    public int ID_SHOP_KEY;
+    private int ID_SHOP_KEY;
 
     @Column
     @SerializedName("shop")
-    public String SHOP;
+    private String SHOP;
 
     @Column
     @SerializedName("id_account")
-    public int ID_ACCOUNT_FOREIGN;
+    private int ID_ACCOUNT_FOREIGN;
 
     @Column
     @SerializedName("user")
-    public String USER;
+    private String USER;
 
     @Column
     @SerializedName("pass")
-    public String PASS;
+    private String PASS;
 
     @Column
     @SerializedName("id_city")
-    public int ID_CITY_FOREIGN;
+    private int ID_CITY_FOREIGN;
 
     @Column
-    @SerializedName("id_cat_sub")
-    public int ID_CAT_SUB_FOREIGN;
+    @SerializedName("id_subcategory")
+    private int ID_SUBCATEGORY_FOREIGN;
 
     @Column
     @SerializedName("is_active")
-    public int ISACTIVE;
+    private int ISACTIVE;
 
     @Column
     @SerializedName("url_logo")
-    public String URL_LOGO;
+    private String URL_LOGO;
 
     @Column
     @SerializedName("name_logo")
-    public String NAME_LOGO;
+    private String NAME_LOGO;
 
     @Column
     @SerializedName("description")
-    public String DESCRIPTION;
+    private String DESCRIPTION;
 
     @Column
     @SerializedName("phone")
-    public String PHONE;
+    private String PHONE;
 
     @Column
     @SerializedName("email")
-    public String EMAIL;
+    private String EMAIL;
 
     @Column
     @SerializedName("latitud")
-    public String LATITUD;
+    private String LATITUD;
 
     @Column
     @SerializedName("longitud")
-    public String LONGITUD;
+    private String LONGITUD;
 
     @Column
     @SerializedName("adrress")
-    public String ADDRESS;
+    private String ADDRESS;
 
     @Column
     @SerializedName("follow")
-    public int FOLLOW;
+    private int FOLLOW;
 
     @Column
     @SerializedName("is_follow")
-    public int IS_FOLLOW;
+    private int IS_FOLLOW;
 
     @Column
     @SerializedName("working_hours")
-    public String WORKING_HOURS;
+    private String WORKING_HOURS;
 
     @Column
     @SerializedName("web")
-    public String WEB;
+    private String WEB;
 
     @Column
     @SerializedName("whatsapp")
-    public String WHATSAAP;
+    private String WHATSAAP;
 
     @Column
     @SerializedName("facebook")
-    public String FACEBOOK;
+    private String FACEBOOK;
 
     @Column
     @SerializedName("instagram")
-    public String INSTAGRAM;
+    private String INSTAGRAM;
 
     @Column
     @SerializedName("twitter")
-    public String TWITTER;
+    private String TWITTER;
 
     @Column
     @SerializedName("snapchat")
-    public String SNAPCHAT;
+    private String SNAPCHAT;
 
     @Column
     @SerializedName("date_unique")
-    public String DATE_UNIQUE;
+    private String DATE_UNIQUE;
 
     @Column(defaultValue = "0")
-    public int IS_SHOP_UPDATE;
+    @SerializedName("is_shop_update")
+    private int IS_SHOP_UPDATE;
+
     @Column(defaultValue = "0")
-    public int IS_OFFER_UPDATE;
+    @SerializedName("is_offer_update")
+    private int IS_OFFER_UPDATE;
+
+    @Column
+    @SerializedName("quantity_offer")
+    private int QUANTITY_OFFER;
+
     public Shop() {
     }
 
@@ -178,12 +186,12 @@ public class Shop extends BaseModel {
         this.ID_CITY_FOREIGN = ID_CITY_FOREIGN;
     }
 
-    public int getID_CAT_SUB_FOREIGN() {
-        return ID_CAT_SUB_FOREIGN;
+    public int getID_SUBCATEGORY_FOREIGN() {
+        return ID_SUBCATEGORY_FOREIGN;
     }
 
-    public void setID_CAT_SUB_FOREIGN(int ID_CAT_SUB_FOREIGN) {
-        this.ID_CAT_SUB_FOREIGN = ID_CAT_SUB_FOREIGN;
+    public void setID_SUBCATEGORY_FOREIGN(int ID_SUBCATEGORY_FOREIGN) {
+        this.ID_SUBCATEGORY_FOREIGN = ID_SUBCATEGORY_FOREIGN;
     }
 
     public String getURL_LOGO() {
@@ -344,5 +352,13 @@ public class Shop extends BaseModel {
 
     public void setIS_OFFER_UPDATE(int IS_OFFER_UPDATE) {
         this.IS_OFFER_UPDATE = IS_OFFER_UPDATE;
+    }
+
+    public int getQUANTITY_OFFER() {
+        return QUANTITY_OFFER;
+    }
+
+    public void setQUANTITY_OFFER(int QUANTITY_OFFER) {
+        this.QUANTITY_OFFER = QUANTITY_OFFER;
     }
 }

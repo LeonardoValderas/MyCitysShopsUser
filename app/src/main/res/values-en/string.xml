@@ -54,4 +54,43 @@
     <string name="legal">Legal</string>
     <string name="banner_fragment">ca-app-pub-5908373302541656/6575972523</string>
     <string name="video_navigation">ca-app-pub-5908373302541656/8831434920</string>
-</resources>
+
+
+    <string name="enter_id">Enter your ID</string>
+    <string name="enter_name_lastname">Enter your name and last name.</string>
+    <string name="cancel_buttton">Cancel</string>
+    <string name="send_button_draw">Send</string>
+    <string name="participate_draw_button">Participate</string>
+    <string name="text_participate_draw">Invites you to participate in the draw for</string>
+    <string name="condition_text_draw">Terms:</string>
+    <string name="date_end_draw_text">Finalize:</string>
+    <string name="draw_recycler">Lucky:</string>
+    <string name="end_date_recycler">Finish Date:</string>
+    <string name="draw_title_tool">Draws</string>
+    <string name="draw_participate_ok">You are already participating in the draw!!!</string>
+    <string name="partipation_invited">Participate, you are still on time!</string>
+    <string name="participation_ok">Are you participating!</string>
+    <string name="draw_empty_participate">Enter all requested data.</string>
+    <string name="is_participate_msg">You are already participating.</string>
+    <string name="you_are_winner_adapter">You won the draw!!!</string>
+    <string name="you_are_winner_adapter_limit">Do not forget to use or withdraw your prize before the deadline:</string>
+    <string name="you_are_winner_click">You are the winner of the draw.</string>
+    <string name="errro_dni">Your ID is already registered in this drawing.</string>
+    <string name="activities_menus">Billboard</string>
+
+    <string name="offer_tool_title">Billboard</string>
+    <string name="search_hint">Search by store</string>
+    <string name="search">Search</string>
+    <string name="is_first_shared">is_first_shared</string>
+    <string name="is_first">is_first</string>
+    <string name="dialog_first_title">WELCOME TO MY CITY\'S SHOPS.</string>
+    <string name="dialog_first_subtitle">This is a guide for you to have a better experience.</string>
+    <string name="dialog_first_follow">This option allows you to follow a store and receive your weekly notifications. You can also participate in all raffles that take place.</string>
+    <string name="dialog_first_offer">This option allows you to view the current billboard of the store. You will be able to find out about all the events, promotions and activities that the store has for you.</string>
+    <string name="dialog_first_contact">Esta opción te permite visualizar los datos de la tienda. Podrás acceder directamente a cada uno de ellos presionando sobre el dato deseado.</string>
+    <string name="dialog_first_map">This option allows you to view the location of the store from the Google Map tool.</string>
+    <string name="dialog_first_favorite">This option allows you to view all your favorite stores ordered by their number of followers.</string>
+    <string name="dialog_first_offers">This option allows you to display all billboards ordered by the number of store followers.</string>
+    <string name="dialog_first_draw">This option allows you to view all the public draws and the private draws of the stores you are following. Remember that you can participate by clicking on any of them.</string>
+
+ </resources>

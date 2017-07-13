@@ -26,12 +26,14 @@ public class DialogNotification {
     ImageView buttonCerrar;
     @Bind(R.id.linearConteiner)
     LinearLayout linearConteiner;
+    @Bind(R.id.textViewTitle)
+    TextView textViewTitle;
     @Bind(R.id.textViewMessage)
     TextView textViewMessage;
     private Context context;
     public AlertDialog alertDialog;
 
-    public DialogNotification(final Context context, String url, String message) {
+    public DialogNotification(final Context context, String name, String url, String message) {
         this.context = context;
         Utils.writelogFile(context, "DialogNotification y AlertDialog(Notification)");
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -47,8 +49,9 @@ public class DialogNotification {
         try {
             Utils.writelogFile(context, "fill componentes(Notification)");
             Utils.setPicasso(context, url, R.drawable.ic_launcher, imageViewShop);
+            textViewTitle.setText(name);
             textViewMessage.setText(message);
-            textViewMessage.setTypeface(Utils.setFontExoTextView(context));
+          //  textViewMessage.setTypeface(Utils.setFontExoTextView(context));
             buttonCerrar.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

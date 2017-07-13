@@ -2,10 +2,10 @@ package com.valdroide.mycitysshopsuser.entities.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.valdroide.mycitysshopsuser.entities.category.CatSubCity;
 import com.valdroide.mycitysshopsuser.entities.category.Category;
 import com.valdroide.mycitysshopsuser.entities.category.SubCategory;
 import com.valdroide.mycitysshopsuser.entities.shop.DateUserCity;
+import com.valdroide.mycitysshopsuser.entities.shop.Draw;
 import com.valdroide.mycitysshopsuser.entities.shop.Offer;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
 import com.valdroide.mycitysshopsuser.entities.shop.Support;
@@ -25,18 +25,24 @@ public class ResultShop {
     @SerializedName("subcategory")
     @Expose
     List<SubCategory> subCategories;
-    @SerializedName("cat_sub_city")
-    @Expose
-    List<CatSubCity> catSubCities;
     @SerializedName("shop")
     @Expose
     List<Shop> shops;
     @SerializedName("offer")
     @Expose
     List<Offer> offers;
+    @SerializedName("draw")
+    @Expose
+    List<Draw> draws;
     @SerializedName("support")
     @Expose
     Support support;
+    @SerializedName("ids_shops")
+    @Expose
+    List<Integer> idsShops;
+    @SerializedName("ids_offers")
+    @Expose
+    List<Integer> idsOffers;
 
     public ResponseWS getResponseWS() {
         return responseWS;
@@ -86,19 +92,35 @@ public class ResultShop {
         this.subCategories = subCategories;
     }
 
-    public List<CatSubCity> getCatSubCities() {
-        return catSubCities;
-    }
-
-    public void setCatSubCities(List<CatSubCity> catSubCities) {
-        this.catSubCities = catSubCities;
-    }
-
     public Support getSupport() {
         return support;
     }
 
     public void setSupport(Support support) {
         this.support = support;
+    }
+
+    public List<Draw> getDraws() {
+        return draws;
+    }
+
+    public void setDraws(List<Draw> draws) {
+        this.draws = draws;
+    }
+
+    public List<Integer> getIdsShops() {
+        return idsShops;
+    }
+
+    public void setIdsShops(List<Integer> idsShops) {
+        this.idsShops = idsShops;
+    }
+
+    public List<Integer> getIdsOffers() {
+        return idsOffers;
+    }
+
+    public void setIdsOffers(List<Integer> idsOffers) {
+        this.idsOffers = idsOffers;
     }
 }

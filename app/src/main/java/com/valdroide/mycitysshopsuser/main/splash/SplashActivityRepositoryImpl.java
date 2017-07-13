@@ -4,16 +4,19 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.google.firebase.iid.FirebaseInstanceId;
-import com.raizlabs.android.dbflow.sql.language.Condition;
-import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
+import com.raizlabs.android.dbflow.config.DatabaseDefinition;
+import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.Delete;
-import com.raizlabs.android.dbflow.sql.language.NameAlias;
+import com.raizlabs.android.dbflow.sql.language.OperatorGroup;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.database.transaction.FastStoreModelTransaction;
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.api.APIService;
-import com.valdroide.mycitysshopsuser.entities.category.CatSubCity;
+import com.valdroide.mycitysshopsuser.db.ShopsDatabase;
 import com.valdroide.mycitysshopsuser.entities.category.Category;
+import com.valdroide.mycitysshopsuser.entities.category.Category_Table;
 import com.valdroide.mycitysshopsuser.entities.category.SubCategory;
+import com.valdroide.mycitysshopsuser.entities.category.SubCategory_Table;
 import com.valdroide.mycitysshopsuser.entities.place.City;
 import com.valdroide.mycitysshopsuser.entities.place.Country;
 import com.valdroide.mycitysshopsuser.entities.place.DatePlace;
@@ -23,10 +26,16 @@ import com.valdroide.mycitysshopsuser.entities.response.ResponseWS;
 import com.valdroide.mycitysshopsuser.entities.response.ResultPlace;
 import com.valdroide.mycitysshopsuser.entities.response.ResultShop;
 import com.valdroide.mycitysshopsuser.entities.shop.DateUserCity;
+import com.valdroide.mycitysshopsuser.entities.shop.Draw;
+import com.valdroide.mycitysshopsuser.entities.shop.DrawWinner;
+import com.valdroide.mycitysshopsuser.entities.shop.DrawWinner_Table;
 import com.valdroide.mycitysshopsuser.entities.shop.Offer;
+import com.valdroide.mycitysshopsuser.entities.shop.Offer_Table;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
+import com.valdroide.mycitysshopsuser.entities.shop.Shop_Table;
 import com.valdroide.mycitysshopsuser.entities.shop.Support;
 import com.valdroide.mycitysshopsuser.entities.shop.Token;
+import com.valdroide.mycitysshopsuser.entities.shop.Token_Table;
 import com.valdroide.mycitysshopsuser.lib.base.EventBus;
 import com.valdroide.mycitysshopsuser.main.splash.events.SplashActivityEvent;
 import com.valdroide.mycitysshopsuser.utils.Utils;
@@ -45,6 +54,8 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.raizlabs.android.dbflow.sql.language.SQLite.select;
+
 public class SplashActivityRepositoryImpl implements SplashActivityRepository {
     private EventBus eventBus;
     private APIService service;
@@ -59,9 +70,13 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
     private List<Shop> shops;
     private List<Category> categories;
     private List<SubCategory> subCategories;
-    private List<CatSubCity> catSubCities;
     private DateUserCity dateUserCity;
     private Support support;
+    private List<Draw> draws;
+    private List<Integer> idsShops;
+    private List<Integer> idsOffers;
+    private DatabaseDefinition database = FlowManager.getDatabase(ShopsDatabase.class);
+    private FastStoreModelTransaction transaction;
 
     public SplashActivityRepositoryImpl(EventBus eventBus, APIService service) {
         this.eventBus = eventBus;
@@ -72,10 +87,10 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
     public void validateDatePlace(Context context, Intent intent) {
         Utils.writelogFile(context, "validateDatePlace(Splash, Repository)");
         try {
-            place = SQLite.select().from(MyPlace.class).querySingle();
+            place = select().from(MyPlace.class).querySingle();
             if (place == null) { // es la primera vez que entra o quiere cambiar de lugar
                 Utils.writelogFile(context, "place==null(Splash, Repository)");
-                datePlace = SQLite.select().from(DatePlace.class).querySingle();
+                datePlace = select().from(DatePlace.class).querySingle();
                 if (datePlace != null) {
                     Utils.writelogFile(context, "datePlace != null y validateDatePlace(Splash, Repository)");
                     validateDatePlace(context, datePlace.getTABLE_DATE(), datePlace.getCOUNTRY_DATE(),
@@ -83,6 +98,7 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                 } else { // traemos los datos sin validar fechas
                     Utils.writelogFile(context, "datePlace == null y getPlace(Splash, Repository)");
                     getPlace(context);
+                    Utils.setIsFirst(context, true);
                 }
             } else {
                 Utils.writelogFile(context, "place != null y validateDateShop(Splash, Repository)");
@@ -94,7 +110,7 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
         }
     }
 
-    public void validateDatePlace(final Context context, String date, String cou, String sta, String ci) {
+    private void validateDatePlace(final Context context, String date, String cou, String sta, String ci) {
         Utils.writelogFile(context, "Metodo validateDatePlace y Se valida conexion a internet(Splash, Repository)");
         if (Utils.isNetworkAvailable(context)) {
             try {
@@ -122,34 +138,34 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                     if (countries != null) {
                                         Utils.writelogFile(context, "countries != null y delete Country(Splash, Repository)");
                                         Delete.table(Country.class);
-                                        Utils.writelogFile(context, "delete Country ok y For countries(Splash, Repository)");
-                                        for (Country country : countries) {
-                                            Utils.writelogFile(context, "save country: " + country.getID_COUNTRY_KEY() + " (Splash, Repository)");
-                                            country.save();
-                                        }
-                                        Utils.writelogFile(context, "fin FOR countries y getStates (Splash, Repository)");
+                                        Utils.writelogFile(context, "delete Country ok y transaction(Splash, Repository)");
+                                        transaction = FastStoreModelTransaction
+                                                .saveBuilder(FlowManager.getModelAdapter(Country.class))
+                                                .addAll(countries)
+                                                .build();
+                                        database.executeTransaction(transaction);
                                     }
                                     states = response.body().getStates();
                                     if (states != null) {
                                         Utils.writelogFile(context, "states != null y delete State(Splash, Repository)");
                                         Delete.table(State.class);
-                                        Utils.writelogFile(context, "delete State ok y For states(Splash, Repository)");
-                                        for (State state : states) {
-                                            Utils.writelogFile(context, "save state: " + state.getID_STATE_KEY() + " (Splash, Repository)");
-                                            state.save();
-                                        }
-                                        Utils.writelogFile(context, "fin FOR state y getCities(Splash, Repository)");
+                                        Utils.writelogFile(context, "delete State ok y transaction(Splash, Repository)");
+                                        transaction = FastStoreModelTransaction
+                                                .saveBuilder(FlowManager.getModelAdapter(State.class))
+                                                .addAll(states)
+                                                .build();
+                                        database.executeTransaction(transaction);
                                     }
                                     cities = response.body().getCities();
                                     if (cities != null) {
                                         Utils.writelogFile(context, "cities != null y delete City(Splash, Repository)");
                                         Delete.table(City.class);
-                                        Utils.writelogFile(context, "delete City ok y For cities(Splash, Repository)");
-                                        for (City city : cities) {
-                                            Utils.writelogFile(context, "save city: " + city.getID_CITY_KEY() + " (Splash, Repository)");
-                                            city.save();
-                                        }
-                                        Utils.writelogFile(context, "fin FOR cities(Splash, Repository)");
+                                        Utils.writelogFile(context, "delete City ok y transaction(Splash, Repository)");
+                                        transaction = FastStoreModelTransaction
+                                                .saveBuilder(FlowManager.getModelAdapter(City.class))
+                                                .addAll(cities)
+                                                .build();
+                                        database.executeTransaction(transaction);
                                     }
                                     Utils.writelogFile(context, "post GOTOPLACE (Splash, Repository)");
                                     post(SplashActivityEvent.GOTOPLACE);
@@ -157,37 +173,37 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                     Utils.writelogFile(context, "responseWS.getSuccess().equals(4)(Splash, Repository)");
                                     post(SplashActivityEvent.GOTOPLACE);
                                 } else {
-                                    Utils.writelogFile(context, " getSuccess = error " + responseWS.getMessage() + "(Splash, Repository)");
+                                    Utils.writelogFile(context, "getSuccess = error " + responseWS.getMessage() + "(Splash, Repository)");
                                     post(SplashActivityEvent.ERROR, responseWS.getMessage());
                                 }
                             }
                         } else {
-                            Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(Splash, Repository)");
+                            Utils.writelogFile(context, "Base de datos error(Splash, Repository)");
                             post(SplashActivityEvent.ERROR, context.getString(R.string.error_data_base));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResultPlace> call, Throwable t) {
-                        Utils.writelogFile(context, " Call error " + t.getMessage() + "(Splash, Repository)");
+                        Utils.writelogFile(context, "Call error " + t.getMessage() + "(Splash, Repository)");
                         post(SplashActivityEvent.ERROR, t.getMessage());
                     }
                 });
             } catch (Exception e) {
-                Utils.writelogFile(context, " catch error " + e.getMessage() + "(Splash, Repository)");
+                Utils.writelogFile(context, "catch error " + e.getMessage() + "(Splash, Repository)");
                 post(SplashActivityEvent.ERROR, e.getMessage());
             }
         } else {
-            Utils.writelogFile(context, " Internet error " + context.getString(R.string.error_internet) + "(Splash, Repository)");
+            Utils.writelogFile(context, "Internet error(Splash, Repository)");
             post(SplashActivityEvent.ERROR, context.getString(R.string.error_internet));
         }
     }
 
-    public void getPlace(final Context context) {
-        Utils.writelogFile(context, "Metodo validateDatePlace y Se valida conexion a internet(Splash, Repository)");
+    private void getPlace(final Context context) {
+        Utils.writelogFile(context, "Metodo getPlace y Se valida conexion a internet(Splash, Repository)");
         if (Utils.isNetworkAvailable(context)) {
             try {
-                Utils.writelogFile(context, "Call validateDatePlace(Splash, Repository)");
+                Utils.writelogFile(context, "Call getPlace(Splash, Repository)");
                 Call<ResultPlace> getPlace = service.getPlace();
                 getPlace.enqueue(new Callback<ResultPlace>() {
                     @Override
@@ -211,35 +227,36 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                     if (countries != null) {
                                         Utils.writelogFile(context, "countries != null y delete Country(Splash, Repository)");
                                         Delete.table(Country.class);
-                                        Utils.writelogFile(context, "delete Country ok y save countries(Splash, Repository)");
-                                        for (Country country : countries) {
-                                            Utils.writelogFile(context, "save country: " + country.getID_COUNTRY_KEY() + " (Splash, Repository)");
-                                            country.save();
-                                        }
-                                        Utils.writelogFile(context, "fin FOR country y getStates (Splash, Repository)");
+                                        Utils.writelogFile(context, "delete Country ok y transaction(Splash, Repository)");
+                                        transaction = FastStoreModelTransaction
+                                                .saveBuilder(FlowManager.getModelAdapter(Country.class))
+                                                .addAll(countries)
+                                                .build();
+                                        database.executeTransaction(transaction);
                                     }
                                     states = response.body().getStates();
                                     if (states != null) {
                                         Utils.writelogFile(context, "states != null y delete State(Splash, Repository)");
                                         Delete.table(State.class);
-                                        Utils.writelogFile(context, "delete State ok y save states(Splash, Repository)");
-                                        for (State state : states) {
-                                            Utils.writelogFile(context, "save state: " + state.getID_STATE_KEY() + " (Splash, Repository)");
-                                            state.save();
-                                        }
-                                        Utils.writelogFile(context, "fin FOR state y getCities (Splash, Repository)");
+                                        Utils.writelogFile(context, "delete State ok y transaction(Splash, Repository)");
+                                        transaction = FastStoreModelTransaction
+                                                .saveBuilder(FlowManager.getModelAdapter(State.class))
+                                                .addAll(states)
+                                                .build();
+                                        database.executeTransaction(transaction);
+
                                     }
                                     cities = response.body().getCities();
                                     if (cities != null) {
                                         Utils.writelogFile(context, "cities != null y delete City(Splash, Repository)");
                                         Delete.table(City.class);
-                                        Utils.writelogFile(context, "delete City ok y save city(Splash, Repository)");
+                                        Utils.writelogFile(context, "delete City ok y transaction(Splash, Repository)");
 
-                                        for (City city : cities) {
-                                            Utils.writelogFile(context, "save city: " + city.getID_CITY_KEY() + " (Splash, Repository)");
-                                            city.save();
-                                        }
-                                        Utils.writelogFile(context, "fin FOR city(Splash, Repository)");
+                                        transaction = FastStoreModelTransaction
+                                                .saveBuilder(FlowManager.getModelAdapter(City.class))
+                                                .addAll(cities)
+                                                .build();
+                                        database.executeTransaction(transaction);
                                     }
                                     Utils.writelogFile(context, "post GOTOPLACE (Splash, Repository)");
                                     post(SplashActivityEvent.GOTOPLACE);
@@ -249,23 +266,23 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                 }
                             }
                         } else {
-                            Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(Splash, Repository)");
+                            Utils.writelogFile(context, "Base de datos error(Splash, Repository)");
                             post(SplashActivityEvent.ERROR, context.getString(R.string.error_data_base));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResultPlace> call, Throwable t) {
-                        Utils.writelogFile(context, " Call error " + t.getMessage() + "(Splash, Repository)");
+                        Utils.writelogFile(context, "Call error " + t.getMessage() + "(Splash, Repository)");
                         post(SplashActivityEvent.ERROR, t.getMessage());
                     }
                 });
             } catch (Exception e) {
-                Utils.writelogFile(context, " catch error " + e.getMessage() + "(Splash, Repository)");
+                Utils.writelogFile(context, "catch error " + e.getMessage() + "(Splash, Repository)");
                 post(SplashActivityEvent.ERROR, e.getMessage());
             }
         } else {
-            Utils.writelogFile(context, " Internet error " + context.getString(R.string.error_internet) + "(Splash, Repository)");
+            Utils.writelogFile(context, "Internet error(Splash, Repository)");
             post(SplashActivityEvent.ERROR, context.getString(R.string.error_internet));
         }
     }
@@ -274,7 +291,7 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
     public void validateDateShop(Context context, Intent intent) {
         Utils.writelogFile(context, "Metodo validateDateShop(Splash, Repository)");
         try {
-            dateUserCity = SQLite.select().from(DateUserCity.class).querySingle();
+            dateUserCity = select().from(DateUserCity.class).querySingle();
             if (dateUserCity != null) {
                 Utils.writelogFile(context, "dateUserCity != null y validateDateShop(Splash, Repository)");
                 validateDateShop(context, dateUserCity, intent);
@@ -283,7 +300,7 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                 getShop(context, Utils.getIdCity(context));
             }
         } catch (Exception e) {
-            Utils.writelogFile(context, " catch error " + e.getMessage() + "(Splash, Repository)");
+            Utils.writelogFile(context, "catch error " + e.getMessage() + "(Splash, Repository)");
             post(SplashActivityEvent.ERROR, e.getMessage());
         }
     }
@@ -366,31 +383,6 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
         return token;
     }
 
-//    private void validateToken(final Context context) {
-//        Utils.writelogFile(context, "validateToken y getTokenDB(Splash, Repository)");
-//        Token token = getTokenDB(context);
-//        if (token != null) {
-//            Utils.writelogFile(context, "token != null y token.getTOKEN()(Splash, Repository)");
-//            String current_token = token.getTOKEN();
-//            if (current_token != null) {
-//                Utils.writelogFile(context, "current_token != null y current_token.isEmpty()(Splash, Repository)");
-//                if (current_token.isEmpty()) {
-//                    Utils.writelogFile(context, "current_token.isEmpty() y post error(Splash, Repository)");
-//                    post(SplashActivityEvent.ERROR, context.getString(R.string.error_id_device));
-//                } else {
-//                    Utils.writelogFile(context, "!current_token.isEmpty() y post success(Splash, Repository)");
-//                    post(SplashActivityEvent.TOKENSUCCESS);
-//                }
-//            } else {
-//                Utils.writelogFile(context, "current_token == null y post error(Splash, Repository)");
-//                post(SplashActivityEvent.ERROR, context.getString(R.string.error_id_device));
-//            }
-//        } else {
-//            Utils.writelogFile(context, "token == null y post error(Splash, Repository)");
-//            post(SplashActivityEvent.ERROR, context.getString(R.string.error_id_device));
-//        }
-//    }
-
     private void validateToken(final Context context, final Token token, final boolean isInsert) {
         Utils.writelogFile(context, "Metodo validateToken y Se valida conexion a internet(Splash, Repository)");
         if (Utils.isNetworkAvailable(context)) {
@@ -415,7 +407,7 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                             token.setID_TOKEN_KEY(id);
                                             token.save();
                                         } else {
-                                            Utils.writelogFile(context, "id == 0 " + context.getString(R.string.error_data_base) + "(Splash, Repository)");
+                                            Utils.writelogFile(context, "id == 0(Splash, Repository)");
                                             post(SplashActivityEvent.ERROR, context.getString(R.string.error_data_base));
                                         }
                                     } else {
@@ -429,11 +421,11 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                     post(SplashActivityEvent.ERROR, responseWS.getMessage());
                                 }
                             } else {
-                                Utils.writelogFile(context, "responseWS == null: " + context.getString(R.string.error_data_base) + "(Splash, Repository)");
+                                Utils.writelogFile(context, "responseWS == null(Splash, Repository)");
                                 post(SplashActivityEvent.ERROR, context.getString(R.string.error_data_base));
                             }
                         } else {
-                            Utils.writelogFile(context, "!response.isSuccessful() " + context.getString(R.string.error_data_base) + "(Splash, Repository)");
+                            Utils.writelogFile(context, "!response.isSuccessful()(Splash, Repository)");
                             post(SplashActivityEvent.ERROR, context.getString(R.string.error_data_base));
                         }
                     }
@@ -445,20 +437,18 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                     }
                 });
             } catch (Exception e) {
-                Utils.writelogFile(context, " catch error " + e.getMessage() + "(Splash, Repository)");
+                Utils.writelogFile(context, "catch error " + e.getMessage() + "(Splash, Repository)");
                 post(SplashActivityEvent.ERROR, e.getMessage());
             }
         } else {
-            Utils.writelogFile(context, " Internet error " + context.getString(R.string.error_internet) + "(Splash, Repository)");
+            Utils.writelogFile(context, "Internet error(Splash, Repository)");
             post(SplashActivityEvent.ERROR, context.getString(R.string.error_internet));
         }
     }
 
-    public Token getTokenDB(Context context) {
-        Utils.writelogFile(context, "getToken(Splash, Repository)");
-        ConditionGroup conditions = ConditionGroup.clause();
-        conditions.and(Condition.column(new NameAlias("Token.ID_CITY_FOREIGN")).is(Utils.getIdCity(context)));
-        return SQLite.select().from(Token.class).where().querySingle();
+    private Token getTokenDB(Context context) {
+        Utils.writelogFile(context, "getTokenDB(Splash, Repository)");
+        return SQLite.select().from(Token.class).where(Token_Table.ID_CITY_FOREIGN.eq(Utils.getIdCity(context))).querySingle();
     }
 
     public Support getSupport() {
@@ -485,19 +475,19 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                 post(SplashActivityEvent.ERROR, ex.getMessage());
             }
         } else {
-            Utils.writelogFile(context, "sendEmail internet: " + context.getString(R.string.error_internet) + " (Splash, Repository)");
+            Utils.writelogFile(context, "sendEmail internet(Splash, Repository)");
             post(SplashActivityEvent.ERROR, context.getString(R.string.error_internet));
         }
     }
 
-    public void validateDateShop(final Context context, DateUserCity dateUserCityWS, final Intent intent) {
+    private void validateDateShop(final Context context, DateUserCity dateUserCityWS, final Intent intent) {
         Utils.writelogFile(context, "Metodo validateDateShop y Se valida conexion a internet(Splash, Repository)");
         if (Utils.isNetworkAvailable(context)) {
             try {
                 Utils.writelogFile(context, "Call validateDateUser(Splash, Repository)");
                 Call<ResultShop> validateDateUser = service.validateDateUser(Utils.getIdCity(context), dateUserCityWS.getCATEGORY_DATE(),
-                        dateUserCityWS.getSUBCATEGORY_DATE(), dateUserCityWS.getCAT_SUB_CITY_DATE(), dateUserCityWS.getSHOP_DATE(),
-                        dateUserCityWS.getOFFER_DATE(), dateUserCityWS.getSUPPORT_DATE(), dateUserCityWS.getDATE_USER_CITY());
+                        dateUserCityWS.getSUBCATEGORY_DATE(), dateUserCityWS.getSHOP_DATE(),
+                        dateUserCityWS.getOFFER_DATE(), dateUserCityWS.getDRAW_DATE(), dateUserCityWS.getSUPPORT_DATE(), dateUserCityWS.getDATE_USER_CITY());
                 validateDateUser.enqueue(new Callback<ResultShop>() {
                     @Override
                     public void onResponse(Call<ResultShop> call, Response<ResultShop> response) {
@@ -524,11 +514,12 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                         if (categories.size() > 0) {
                                             Utils.writelogFile(context, "categories.size() > 0 y Delete.Category(Splash, Repository)");
                                             Delete.table(Category.class);
-                                            Utils.writelogFile(context, "Delete Category ok y for categories(Splash, Repository)");
-                                            for (Category category : categories) {
-                                                Utils.writelogFile(context, "save category: " + category.getID_CATEGORY_KEY() + "(Splash, Repository)");
-                                                category.save();
-                                            }
+                                            Utils.writelogFile(context, "Delete Category ok y transaction(Splash, Repository)");
+                                            transaction = FastStoreModelTransaction
+                                                    .saveBuilder(FlowManager.getModelAdapter(Category.class))
+                                                    .addAll(categories)
+                                                    .build();
+                                            database.executeTransaction(transaction);
                                         } else {
                                             Utils.writelogFile(context, "categories.size() = 0 y Delete.Category(Splash, Repository)");
                                             Delete.table(Category.class);
@@ -541,31 +532,15 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                         if (subCategories.size() > 0) {
                                             Utils.writelogFile(context, "subCategories.size() > 0 y Delete SubCategory(Splash, Repository)");
                                             Delete.table(SubCategory.class);
-                                            Utils.writelogFile(context, "Delete SubCategory ok y for subCategories(Splash, Repository)");
-                                            for (SubCategory subCategory : subCategories) {
-                                                Utils.writelogFile(context, "save subCategory: " + subCategory.getID_SUBCATEGORY_KEY() + " (Splash, Repository)");
-                                                subCategory.save();
-                                            }
+                                            Utils.writelogFile(context, "Delete SubCategory ok y transaction(Splash, Repository)");
+                                            transaction = FastStoreModelTransaction
+                                                    .insertBuilder(FlowManager.getModelAdapter(SubCategory.class))
+                                                    .addAll(subCategories)
+                                                    .build();
+                                            database.executeTransaction(transaction);
                                         } else {
                                             Utils.writelogFile(context, "subCategories.size() = 0  y Delete.SubCategory(Splash, Repository)");
                                             Delete.table(SubCategory.class);
-                                        }
-                                    }
-
-                                    catSubCities = response.body().getCatSubCities();
-                                    if (catSubCities != null) {
-                                        Utils.writelogFile(context, "catSubCities != null y catSubCities.size()(Splash, Repository)");
-                                        if (catSubCities.size() > 0) {
-                                            Utils.writelogFile(context, "catSubCities.size() > 0 y Delete.CatSubCity(Splash, Repository)");
-                                            Delete.table(CatSubCity.class);
-                                            Utils.writelogFile(context, "Delete.CatSubCity ok  y for catSubCities(Splash, Repository)");
-                                            for (CatSubCity catSubCity : catSubCities) {
-                                                Utils.writelogFile(context, "save catSubCity: " + catSubCity.getID_CAT_SUB_KEY() + " (Splash, Repository)");
-                                                catSubCity.save();
-                                            }
-                                        } else {
-                                            Utils.writelogFile(context, "catSubCities.size() = 0 y delete CatSubCity(Splash, Repository)");
-                                            Delete.table(CatSubCity.class);
                                         }
                                     }
 
@@ -573,12 +548,19 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                     if (shops != null) {
                                         Utils.writelogFile(context, "shops != null y shops.size()(Splash, Repository)");
                                         if (shops.size() > 0) {
-                                            Utils.writelogFile(context, "shops.size() > 0 for shops (Splash, Repository)");
+                                            Utils.writelogFile(context, "shops.size() > 0 for(Splash, Repository)");
                                             for (Shop shop : shops) {
-                                                Utils.writelogFile(context, "fin FOR city y post GOTOPLACE (Splash, Repository)");
-                                                shop.setIS_SHOP_UPDATE(1);
+                                                int count_offer_now = shop.getQUANTITY_OFFER();
+                                                List<Offer> offerList = getListOfferForShopId(shop.getID_SHOP_KEY());
+                                                if (offerList != null)
+                                                    if (offerList.size() > count_offer_now) {
+                                                        int diff = offerList.size() - count_offer_now;
+
+                                                        for (int i = 0; diff > i; i++) {
+                                                            deleteOffer(offerList.get(i).getID_OFFER_KEY());
+                                                        }
+                                                    }
                                                 shop.save();
-                                                setUpdateCatSub(context, shop.getID_CAT_SUB_FOREIGN());
                                             }
                                         } else {
                                             Utils.writelogFile(context, "shops.size() = 0 y deleteShop(Splash, Repository)");
@@ -590,24 +572,79 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                     if (offers != null) {
                                         Utils.writelogFile(context, "offers != null y offers.size()(Splash, Repository)");
                                         if (offers.size() > 0) {
-                                            Utils.writelogFile(context, "offers.size() > 0 y for offers(Splash, Repository)");
+                                            Utils.writelogFile(context, "offers.size() > 0 y for(Splash, Repository)");
                                             for (Offer offer : offers) {
-                                                Utils.writelogFile(context, "save offer: " + offer.getID_OFFER_KEY() + "(Splash, Repository)");
                                                 offer.save();
-                                                Utils.writelogFile(context, " getShop (Splash, Repository)");
-                                                Shop shop = getShop(offer.getID_SHOP_FOREIGN());
-                                                if (shop != null) {
-                                                    Utils.writelogFile(context, " shop != null y save (Splash, Repository)");
-                                                    shop.setIS_OFFER_UPDATE(1);
-                                                    shop.update();
-                                                    setUpdateCatSub(context, shop.getID_CAT_SUB_FOREIGN());
-                                                }
                                             }
                                         } else {
                                             Utils.writelogFile(context, "offers.size()= 0 y DeleteOffer(Splash, Repository)");
                                             Delete.table(Offer.class);
                                         }
                                     }
+
+                                    idsShops = response.body().getIdsShops();
+                                    if (idsShops != null) {
+                                        Utils.writelogFile(context, "idsShops != null y idsShops.size()(Splash, Repository)");
+                                        if (idsShops.size() > 0) {
+                                            Utils.writelogFile(context, "idsShops.size() > 0 y for idsShops(Splash, Repository)");
+                                            for (Integer i : idsShops) {
+                                                setUpdateCatSub(context, i);
+                                            }
+                                        }
+                                    }
+
+                                    idsOffers = response.body().getIdsOffers();
+                                    if (idsOffers != null) {
+                                        Utils.writelogFile(context, "idsOffers != null y idsOffers.size()(Splash, Repository)");
+                                        if (idsOffers.size() > 0) {
+                                            Utils.writelogFile(context, "idsOffers.size() > 0 y for idsOffers(Splash, Repository)");
+                                            for (Integer i : idsOffers) {
+                                                int id_sub = updateShopAndIdSub(context, i);
+                                                setUpdateCatSub(context, id_sub);
+                                            }
+                                        }
+                                    }
+
+                                    draws = response.body().getDraws();
+                                    if (draws != null) {
+                                        Utils.writelogFile(context, "draws != null y draws.size()(Splash, Repository)");
+                                        if (draws.size() > 0) {
+                                            Utils.writelogFile(context, "draws.size() > 0 y for draws(Splash, Repository)");
+                                            for (Draw draw : draws) {
+                                                if (draw.getIS_ACTIVE() == 0) {
+                                                    Utils.writelogFile(context, "draw.getIS_ACTIVE() == 0 (Splash, Repository)");
+                                                    if (isDrawWinner(draw.getID_DRAW_KEY())) {
+                                                        Utils.writelogFile(context, "isDrawWinner = true (Splash, Repository)");
+                                                        if (draw.getIS_TAKE() == 0) {
+                                                            Utils.writelogFile(context, "draw.getIS_TAKE() == 0 (Splash, Repository)");
+                                                            if (draw.getIS_LIMITE() == 0) {
+                                                                Utils.writelogFile(context, "draw.getIS_LIMITE() == 0(Splash, Repository)");
+                                                                draw.setIS_WINNER(1);
+                                                                draw.update();
+                                                            } else {
+                                                                Utils.writelogFile(context, "draw.getIS_LIMITE() == 1(Splash, Repository)");
+                                                                deleteDrawAndWinner(draw);
+                                                            }
+                                                        } else {
+                                                            Utils.writelogFile(context, "draw.getIS_TAKE() == 1 (Splash, Repository)");
+                                                            deleteDrawWinner(draw.getID_DRAW_KEY());
+                                                            draw.delete();
+                                                        }
+                                                    } else {
+                                                        Utils.writelogFile(context, "no winner delete (Splash, Repository)");
+                                                        draw.delete();
+                                                    }
+                                                } else {
+                                                    Utils.writelogFile(context, "save draw: " + draw.getID_DRAW_KEY() + "(Splash, Repository)");
+                                                    draw.save();
+                                                }
+                                            }
+                                        } else {
+                                            Utils.writelogFile(context, "draws.size()= 0 y DeleteDraw(Splash, Repository)");
+                                            Delete.table(Draw.class);
+                                        }
+                                    }
+
                                     support = response.body().getSupport();
                                     if (support != null) {
                                         Utils.writelogFile(context, "support != null y delete Support(Splash, Repository)");
@@ -616,6 +653,8 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                         support.save();
                                         Utils.writelogFile(context, "save Support ok y GOTONAV(Splash, Repository)");
                                     }
+
+
                                     Utils.writelogFile(context, "post GOTONAV(Splash, Repository)");
                                     if (intent != null) {
                                         Utils.writelogFile(context, "intent notification != null(Splash, Repository)");
@@ -634,33 +673,75 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                         post(SplashActivityEvent.GOTONAV);
                                     }
                                 } else {
-                                    Utils.writelogFile(context, " getSuccess = error " + responseWS.getMessage() + "(Splash, Repository)");
+                                    Utils.writelogFile(context, "getSuccess = error " + responseWS.getMessage() + "(Splash, Repository)");
                                     post(SplashActivityEvent.ERROR, responseWS.getMessage());
                                 }
                             }
                         } else {
-                            Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(Splash, Repository)");
+                            Utils.writelogFile(context, "Base de datos error(Splash, Repository)");
                             post(SplashActivityEvent.ERROR, context.getString(R.string.error_data_base));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResultShop> call, Throwable t) {
-                        Utils.writelogFile(context, " Call error " + t.getMessage() + "(Splash, Repository)");
+                        Utils.writelogFile(context, "Call error " + t.getMessage() + "(Splash, Repository)");
                         post(SplashActivityEvent.ERROR, t.getMessage());
                     }
                 });
             } catch (Exception e) {
-                Utils.writelogFile(context, " catch error " + e.getMessage() + "(Splash, Repository)");
+                Utils.writelogFile(context, "catch error " + e.getMessage() + "(Splash, Repository)");
                 post(SplashActivityEvent.ERROR, e.getMessage());
             }
         } else {
-            Utils.writelogFile(context, " Internet error " + context.getString(R.string.error_internet) + "(Splash, Repository)");
+            Utils.writelogFile(context, "Internet error(Splash, Repository)");
             post(SplashActivityEvent.ERROR, context.getString(R.string.error_internet));
         }
     }
 
-    public void getShop(final Context context, int id_city) {
+//    private int getQuantityForShopId(int id) {
+//        try {
+//            return SQLite.select(Shop_Table.QUANTITY_OFFER).from(Shop.class).where(Shop_Table.ID_SHOP_KEY.eq(id)).querySingle().getQUANTITY_OFFER();
+//        } catch (Exception e) {
+//            return 0;
+//        }
+//    }
+
+    private List<Offer> getListOfferForShopId(int id) {
+        try {
+            return SQLite.select()
+                    .from(Offer.class)
+                    .where(OperatorGroup.clause().and(Offer_Table.ID_SHOP_FOREIGN.is(id)))
+                    .orderBy(Offer_Table.ID_OFFER_KEY, true).queryList();
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private void deleteOffer(int id_offer) {
+        SQLite.delete(Offer.class)
+                .where(Offer_Table.ID_OFFER_KEY.is(id_offer))
+                .async()
+                .execute();
+    }
+
+    private boolean isDrawWinner(int id_draw) {
+        return SQLite.select().from(DrawWinner.class).where(DrawWinner_Table.ID_DRAW_FOREIGN.is(id_draw)).querySingle() != null;
+    }
+
+    private void deleteDrawWinner(int id_draw) {
+        SQLite.delete(DrawWinner.class)
+                .where(DrawWinner_Table.ID_DRAW_FOREIGN.is(id_draw))
+                .async()
+                .execute();
+    }
+
+    private void deleteDrawAndWinner(Draw draw) {
+        deleteDrawWinner(draw.getID_DRAW_KEY());
+        draw.delete();
+    }
+
+    private void getShop(final Context context, int id_city) {
         Utils.writelogFile(context, "Metodo getShop y Se valida conexion a internet(Splash, Repository)");
         if (Utils.isNetworkAvailable(context)) {
             try {
@@ -689,62 +770,74 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                         Utils.writelogFile(context, "categories != null y delete Category(Splash, Repository)");
                                         Delete.table(Category.class);
                                         Utils.writelogFile(context, "delete Category ok y for categories(Splash, Repository)");
-                                        for (Category category : categories) {
-                                            Utils.writelogFile(context, "save category: " + category.getID_CATEGORY_KEY() + " (Splash, Repository)");
-                                            category.save();
-                                        }
+
+                                        transaction = FastStoreModelTransaction
+                                                .saveBuilder(FlowManager.getModelAdapter(Category.class))
+                                                .addAll(categories)
+                                                .build();
+                                        database.executeTransaction(transaction);
                                     }
                                     subCategories = response.body().getSubCategories();
                                     if (subCategories != null) {
                                         Utils.writelogFile(context, "subCategories != null y delete SubCategory(Splash, Repository)");
                                         Delete.table(SubCategory.class);
                                         Utils.writelogFile(context, "delete SubCategory ok y for subCategories(Splash, Repository)");
-                                        for (SubCategory subCategory : subCategories) {
-                                            Utils.writelogFile(context, "save subCategory: " + subCategory.getID_SUBCATEGORY_KEY() + " (Splash, Repository)");
-                                            subCategory.save();
-                                        }
-                                    }
-                                    catSubCities = response.body().getCatSubCities();
-                                    if (catSubCities != null) {
-                                        Utils.writelogFile(context, "catSubCities != null y delete CatSubCity(Splash, Repository)");
-                                        Delete.table(CatSubCity.class);
-                                        Utils.writelogFile(context, "delete CatSubCity ok y for catSubCities(Splash, Repository)");
-                                        for (CatSubCity catSubCity : catSubCities) {
-                                            Utils.writelogFile(context, "catSubCity city: " + catSubCity.getID_CAT_SUB_KEY() + " (Splash, Repository)");
-                                            catSubCity.save();
-                                        }
-                                    }
 
+                                        transaction = FastStoreModelTransaction
+                                                .insertBuilder(FlowManager.getModelAdapter(SubCategory.class))
+                                                .addAll(subCategories)
+                                                .build();
+                                        database.executeTransaction(transaction);
+                                    }
                                     shops = response.body().getShops();
                                     if (shops != null) {
                                         Utils.writelogFile(context, "shops != null y delete Shop(Splash, Repository)");
                                         Delete.table(Shop.class);
                                         Utils.writelogFile(context, "delete Shop ok y for shops(Splash, Repository)");
-                                        for (Shop shop : shops) {
-                                            Utils.writelogFile(context, "save shop: " + shop.getID_SHOP_KEY() + " (Splash, Repository)");
-                                            shop.setIS_SHOP_UPDATE(1);
-                                            shop.save();
-                                            setUpdateCatSub(context, shop.getID_CAT_SUB_FOREIGN());
-                                        }
+
+                                        transaction = FastStoreModelTransaction
+                                                .insertBuilder(FlowManager.getModelAdapter(Shop.class))
+                                                .addAll(shops)
+                                                .build();
+                                        database.executeTransaction(transaction);
                                     }
                                     offers = response.body().getOffers();
                                     if (offers != null) {
                                         Utils.writelogFile(context, "offers != null y delete Offer(Splash, Repository)");
                                         Delete.table(Offer.class);
                                         Utils.writelogFile(context, "delete Offer ok y for offers(Splash, Repository)");
-                                        for (Offer offer : offers) {
-                                            Utils.writelogFile(context, "save offer: " + offer.getID_OFFER_KEY() + " (Splash, Repository)");
-                                            offer.save();
-                                            Utils.writelogFile(context, " getShop (Splash, Repository)");
-                                            Shop shop = getShop(offer.getID_SHOP_FOREIGN());
-                                            if (shop != null) {
-                                                Utils.writelogFile(context, " shop != null y save (Splash, Repository)");
-                                                shop.setIS_OFFER_UPDATE(1);
-                                                shop.update();
-                                                setUpdateCatSub(context, shop.getID_CAT_SUB_FOREIGN());
+
+                                        transaction = FastStoreModelTransaction
+                                                .insertBuilder(FlowManager.getModelAdapter(Offer.class))
+                                                .addAll(offers)
+                                                .build();
+                                        database.executeTransaction(transaction);
+                                    }
+
+                                    idsShops = response.body().getIdsShops();
+                                    if (idsShops != null) {
+                                        Utils.writelogFile(context, "idsShops != null y idsShops.size()(Splash, Repository)");
+                                        if (idsShops.size() > 0) {
+                                            Utils.writelogFile(context, "idsShops.size() > 0 y for idsShops(Splash, Repository)");
+                                            for (Integer i : idsShops) {
+                                                setUpdateCatSub(context, i);
                                             }
                                         }
                                     }
+
+                                    draws = response.body().getDraws();
+                                    if (draws != null) {
+                                        Utils.writelogFile(context, "draws != null y draws.size()(Splash, Repository)");
+                                        if (draws.size() > 0) {
+                                            Utils.writelogFile(context, "draws.size() > 0 y for draws(Splash, Repository)");
+                                            transaction = FastStoreModelTransaction
+                                                    .insertBuilder(FlowManager.getModelAdapter(Draw.class))
+                                                    .addAll(draws)
+                                                    .build();
+                                            database.executeTransaction(transaction);
+                                        }
+                                    }
+
                                     support = response.body().getSupport();
                                     if (support != null) {
                                         Utils.writelogFile(context, "support != null y delete Support(Splash, Repository)");
@@ -756,98 +849,81 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                     Utils.writelogFile(context, "post GOTONAV(Splash, Repository)");
                                     post(SplashActivityEvent.GOTONAV);
                                 } else {
-                                    Utils.writelogFile(context, " getSuccess = error " + responseWS.getMessage() + "(Splash, Repository)");
+                                    Utils.writelogFile(context, "getSuccess = error " + responseWS.getMessage() + "(Splash, Repository)");
                                     post(SplashActivityEvent.ERROR, responseWS.getMessage());
                                 }
                             }
                         } else {
-                            Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(Splash, Repository)");
+                            Utils.writelogFile(context, "Base de datos error(Splash, Repository)");
                             post(SplashActivityEvent.ERROR, context.getString(R.string.error_data_base));
                         }
                     }
 
                     @Override
                     public void onFailure(Call<ResultShop> call, Throwable t) {
-                        Utils.writelogFile(context, " Call error " + t.getMessage() + "(Splash, Repository)");
+                        Utils.writelogFile(context, "Call error " + t.getMessage() + "(Splash, Repository)");
                         post(SplashActivityEvent.ERROR, t.getMessage());
                     }
                 });
             } catch (Exception e) {
-                Utils.writelogFile(context, " catch error " + e.getMessage() + "(Splash, Repository)");
+                Utils.writelogFile(context, "catch error " + e.getMessage() + "(Splash, Repository)");
                 post(SplashActivityEvent.ERROR, e.getMessage());
             }
         } else {
-            Utils.writelogFile(context, " Internet error " + context.getString(R.string.error_internet) + "(Splash, Repository)");
+            Utils.writelogFile(context, "Internet error(Splash, Repository)");
             post(SplashActivityEvent.ERROR, context.getString(R.string.error_internet));
         }
     }
 
-    private CatSubCity getCatSubEntity(int id) {
-        ConditionGroup conditions = ConditionGroup.clause();
-        conditions.and(Condition.column(new NameAlias("CatSubCity.ID_CAT_SUB_KEY")).is(id));
-        try {
-            return SQLite.select().from(CatSubCity.class).where(conditions).querySingle();
-        } catch (Exception e) {
-            return null;
-        }
-    }
+    private boolean setUpdateCatSub(Context context, int id_sub) {
+        Utils.writelogFile(context, "metodo setUpdateCatSub(Splash, Repository)");
 
-    private Category getCategoryEntity(int id) {
-        ConditionGroup conditions = ConditionGroup.clause();
-        conditions.and(Condition.column(new NameAlias("Category.ID_CATEGORY_KEY")).is(id));
-        try {
-            return SQLite.select().from(Category.class).where(conditions).querySingle();
-        } catch (Exception e) {
-            return null;
-        }
-    }
+        int id_cat = getIdCategory(id_sub);
+        if (id_cat > 0) {
+            SQLite.update(Category.class)
+                    .set(Category_Table.IS_UPDATE.eq(1))
+                    .where(Category_Table.ID_CATEGORY_KEY.is(id_cat))
+                    .async()
+                    .execute();
 
-    private SubCategory getSubCategoryEntity(int id) {
-        ConditionGroup conditions = ConditionGroup.clause();
-        conditions.and(Condition.column(new NameAlias("SubCategory.ID_SUBCATEGORY_KEY")).is(id));
-        try {
-            return SQLite.select().from(SubCategory.class).where(conditions).querySingle();
-        } catch (Exception e) {
-            return null;
-        }
-    }
-
-    private boolean setUpdateCatSub(Context context, int id) {
-        Utils.writelogFile(context, "metodo setUpdateCatSub y getCatSubEntity(Splash, Repository)");
-        CatSubCity catSubCity = getCatSubEntity(id);
-        if (catSubCity != null) {
-            Utils.writelogFile(context, "catSubCity != null y getCategoryEntity y getSubCategoryEntity(Splash, Repository)");
-            Category category = getCategoryEntity(catSubCity.getID_CATEGORY_FOREIGN());
-            SubCategory subCategory = getSubCategoryEntity(catSubCity.getID_SUBCATEGORY_FOREIGN());
-            if (category != null && subCategory != null) {
-                Utils.writelogFile(context, "category != null && subCategory != null y update(Splash, Repository)");
-                category.setIS_UPDATE(1);
-                category.update();
-
-                subCategory.setIS_UPDATE(1);
-                subCategory.update();
-            } else {
-                Utils.writelogFile(context, "category == null && subCategory == null(Splash, Repository)");
-                return false;
-            }
+            SQLite.update(SubCategory.class)
+                    .set(SubCategory_Table.IS_UPDATE.eq(1))
+                    .where(SubCategory_Table.ID_SUBCATEGORY_KEY.is(id_sub))
+                    .async()
+                    .execute();
             return true;
         } else {
-            Utils.writelogFile(context, "catSubCity == null(Splash, Repository)");
             return false;
         }
     }
 
-    public Shop getShop(int id_shop) {
-        ConditionGroup conditionGroup = ConditionGroup.clause();
-        conditionGroup.and(Condition.column(new NameAlias("Shop.ID_SHOP_KEY")).is(id_shop));
-        return SQLite.select().from(Shop.class).where(conditionGroup).querySingle();
+    private int getIdCategory(int id_sub) {
+        return SQLite.select(SubCategory_Table.ID_CATEGORY_FOREIGN).from(SubCategory.class)
+                .where(SubCategory_Table.ID_SUBCATEGORY_KEY.is(id_sub)).querySingle().getID_CATEGORY_FOREIGN();
     }
 
-    public void post(int type) {
+    private int updateShopAndIdSub(Context context, int id_shop) {
+        Utils.writelogFile(context, "updateShopAndIdSub(OfferFragment, Repository)");
+        SQLite.update(Shop.class)
+                .set(Shop_Table.IS_OFFER_UPDATE.eq(1))
+                .where(Shop_Table.ID_SHOP_KEY.is(id_shop))
+                .async()
+                .execute();
+        return SQLite.select(Shop_Table.ID_SUBCATEGORY_FOREIGN).from(Shop.class).querySingle().getID_SUBCATEGORY_FOREIGN();
+    }
+
+//    private FastStoreModelTransaction setFastStoreModelTransaction(Class entityClass, List<Object> objects) {
+//        return FastStoreModelTransaction
+//                .insertBuilder(FlowManager.getModelAdapter(entityClass))
+//                .addAll(objects)
+//                .build();
+//    }
+
+    private void post(int type) {
         post(type, null);
     }
 
-    public void post(int type, String error) {
+    private void post(int type, String error) {
         SplashActivityEvent event = new SplashActivityEvent();
         event.setType(type);
         event.setError(error);

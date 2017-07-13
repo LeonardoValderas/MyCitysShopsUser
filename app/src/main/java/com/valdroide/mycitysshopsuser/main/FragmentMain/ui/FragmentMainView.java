@@ -15,4 +15,6 @@ public interface FragmentMainView {
     void callShops();
     void callMyShops();
     void isUpdate();
+    void showProgressDialog();
+    void hideProgressDialog();
 }

@@ -13,6 +13,10 @@ import com.valdroide.mycitysshopsuser.main.FragmentMain.di.FragmentMainComponent
 import com.valdroide.mycitysshopsuser.main.FragmentMain.di.FragmentMainModule;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.ui.FragmentMainView;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.ui.adapters.OnItemClickListener;
+import com.valdroide.mycitysshopsuser.main.draw.di.DaggerDrawFragmentComponent;
+import com.valdroide.mycitysshopsuser.main.draw.di.DrawFragmentComponent;
+import com.valdroide.mycitysshopsuser.main.draw.di.DrawFragmentModule;
+import com.valdroide.mycitysshopsuser.main.draw.ui.DrawFragmentView;
 import com.valdroide.mycitysshopsuser.main.legal.di.DaggerLegalActivityComponent;
 import com.valdroide.mycitysshopsuser.main.legal.di.LegalActivityComponent;
 import com.valdroide.mycitysshopsuser.main.legal.di.LegalActivityModule;
@@ -21,6 +25,10 @@ import com.valdroide.mycitysshopsuser.main.navigation.di.DaggerNavigationActivit
 import com.valdroide.mycitysshopsuser.main.navigation.di.NavigationActivityComponent;
 import com.valdroide.mycitysshopsuser.main.navigation.di.NavigationActivityModule;
 import com.valdroide.mycitysshopsuser.main.navigation.ui.NavigationActivityView;
+import com.valdroide.mycitysshopsuser.main.offers.di.DaggerOfferFragmentComponent;
+import com.valdroide.mycitysshopsuser.main.offers.di.OfferFragmentComponent;
+import com.valdroide.mycitysshopsuser.main.offers.di.OfferFragmentModule;
+import com.valdroide.mycitysshopsuser.main.offers.ui.OfferFragmentView;
 import com.valdroide.mycitysshopsuser.main.place.di.DaggerPlaceActivityComponent;
 import com.valdroide.mycitysshopsuser.main.place.di.PlaceActivityComponent;
 import com.valdroide.mycitysshopsuser.main.place.di.PlaceActivityModule;
@@ -64,6 +72,24 @@ public class MyCitysShopsUserApp extends Application {
     private void initModules() {
         libsModule = new LibsModule();
         myCitysShopsUserAppModule = new MyCitysShopsUserAppModule(this);
+    }
+
+    public OfferFragmentComponent getOfferFragmentComponent(OfferFragmentView view, Fragment fragment, com.valdroide.mycitysshopsuser.main.offers.ui.adapters.OnItemClickListener onItemClickListener) {
+        return DaggerOfferFragmentComponent
+                .builder()
+                .myCitysShopsUserAppModule(myCitysShopsUserAppModule)
+                .libsModule(new LibsModule(fragment))
+                .offerFragmentModule(new OfferFragmentModule(view, fragment, onItemClickListener))
+                .build();
+    }
+
+    public DrawFragmentComponent getDrawFragmentComponent(DrawFragmentView view, Fragment fragment, com.valdroide.mycitysshopsuser.main.draw.ui.adapters.OnItemClickListener onItemClickListener) {
+        return DaggerDrawFragmentComponent
+                .builder()
+                .myCitysShopsUserAppModule(myCitysShopsUserAppModule)
+                .libsModule(new LibsModule(fragment))
+                .drawFragmentModule(new DrawFragmentModule(view, fragment, onItemClickListener))
+                .build();
     }
 
     public LegalActivityComponent getLegalActivityComponent(LegalActivityView view, Activity activity) {

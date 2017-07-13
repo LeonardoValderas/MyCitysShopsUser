@@ -2,15 +2,15 @@ package com.valdroide.mycitysshopsuser.main.place;
 
 import android.content.Context;
 
-import com.raizlabs.android.dbflow.sql.language.Condition;
-import com.raizlabs.android.dbflow.sql.language.ConditionGroup;
-import com.raizlabs.android.dbflow.sql.language.NameAlias;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.entities.place.City;
+import com.valdroide.mycitysshopsuser.entities.place.City_Table;
 import com.valdroide.mycitysshopsuser.entities.place.Country;
+import com.valdroide.mycitysshopsuser.entities.place.Country_Table;
 import com.valdroide.mycitysshopsuser.entities.place.MyPlace;
 import com.valdroide.mycitysshopsuser.entities.place.State;
+import com.valdroide.mycitysshopsuser.entities.place.State_Table;
 import com.valdroide.mycitysshopsuser.lib.base.EventBus;
 import com.valdroide.mycitysshopsuser.main.place.events.PlaceActivityEvent;
 import com.valdroide.mycitysshopsuser.utils.Utils;
@@ -32,16 +32,16 @@ public class PlaceActivityRepositoryImpl implements PlaceActivityRepository {
     public void getCountries(Context context) {
         Utils.writelogFile(context, "getCountries(Place, Repository)");
         try {
-            countries = SQLite.select().from(Country.class).where().orderBy(new NameAlias("COUNTRY"), true).queryList();
+            countries = SQLite.select().from(Country.class).where().orderBy(Country_Table.COUNTRY, true).queryList();
             if (countries != null) {
-                Utils.writelogFile(context, " countries != null(Place, Repository)");
+                Utils.writelogFile(context, "countries != null(Place, Repository)");
                 post(PlaceActivityEvent.GETCOUNTRIES, countries);
             } else {
-                Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(Place, Repository)");
+                Utils.writelogFile(context, "Base de datos error(Place, Repository)");
                 post(PlaceActivityEvent.ERROR, context.getString(R.string.error_data_base));
             }
         } catch (Exception e) {
-            Utils.writelogFile(context, " catch error " + e.getMessage() + "(Place, Repository)");
+            Utils.writelogFile(context, "catch error " + e.getMessage() + "(Place, Repository)");
             post(PlaceActivityEvent.ERROR, e.getMessage());
         }
     }
@@ -49,16 +49,15 @@ public class PlaceActivityRepositoryImpl implements PlaceActivityRepository {
     @Override
     public void getStateForCountry(Context context, int id_country) {
         Utils.writelogFile(context, "getStateForCountry(Place, Repository)");
-        ConditionGroup conditionGroup = ConditionGroup.clause();
-        conditionGroup.and(Condition.column(new NameAlias("ID_COUNTRY_FOREIGN")).is(id_country));
         try {
-            states = SQLite.select().from(State.class).where(conditionGroup).orderBy(new NameAlias("STATE"), true).queryList();
+            states = SQLite.select().from(State.class).where(State_Table.ID_COUNTRY_FOREIGN.is(id_country))
+                    .orderBy(State_Table.STATE, true).queryList();
 
             if (states != null) {
-                Utils.writelogFile(context, " states != null(Place, Repository)");
+                Utils.writelogFile(context, "states != null(Place, Repository)");
                 post(PlaceActivityEvent.GETSTATES, states, true);
             } else {
-                Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(Place, Repository)");
+                Utils.writelogFile(context, "Base de datos error(Place, Repository)");
                 post(PlaceActivityEvent.ERROR, context.getString(R.string.error_data_base));
             }
         } catch (Exception e) {
@@ -70,19 +69,18 @@ public class PlaceActivityRepositoryImpl implements PlaceActivityRepository {
     @Override
     public void getCitiesForState(Context context, int id_state) {
         Utils.writelogFile(context, "getCitiesForState(Place, Repository)");
-        ConditionGroup conditionGroup = ConditionGroup.clause();
-        conditionGroup.and(Condition.column(new NameAlias("ID_STATE_FOREIGN")).is(id_state));
         try {
-            cities = SQLite.select().from(City.class).where(conditionGroup).orderBy(new NameAlias("CITY"), true).queryList();
+            cities = SQLite.select().from(City.class).where(City_Table.ID_STATE_FOREIGN.is(id_state))
+                    .orderBy(City_Table.CITY, true).queryList();
             if (cities != null) {
-                Utils.writelogFile(context, " cities != null(Place, Repository)");
+                Utils.writelogFile(context, "cities != null(Place, Repository)");
                 post(PlaceActivityEvent.GETCITIES, 0, cities);
             } else {
-                Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(Place, Repository)");
+                Utils.writelogFile(context, "Base de datos error(Place, Repository)");
                 post(PlaceActivityEvent.ERROR, context.getString(R.string.error_data_base));
             }
         } catch (Exception e) {
-            Utils.writelogFile(context, " catch error " + e.getMessage() + "(Place, Repository)");
+            Utils.writelogFile(context, "catch error " + e.getMessage() + "(Place, Repository)");
             post(PlaceActivityEvent.ERROR, e.getMessage());
         }
     }
@@ -97,11 +95,11 @@ public class PlaceActivityRepositoryImpl implements PlaceActivityRepository {
                 Utils.setIdCity(context, place.getID_CITY_FOREIGN());
                 post(PlaceActivityEvent.SAVE, place);
             } else {
-                Utils.writelogFile(context, " Base de datos error " + context.getString(R.string.error_data_base) + "(Place, Repository)");
+                Utils.writelogFile(context, "Base de datos error(Place, Repository)");
                 post(PlaceActivityEvent.ERROR, context.getString(R.string.error_data_base));
             }
         } catch (Exception e) {
-            Utils.writelogFile(context, " catch error " + e.getMessage() + "(Place, Repository)");
+            Utils.writelogFile(context, "catch error " + e.getMessage() + "(Place, Repository)");
             post(PlaceActivityEvent.ERROR, e.getMessage());
         }
     }
