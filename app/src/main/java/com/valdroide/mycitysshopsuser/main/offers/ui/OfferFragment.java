@@ -11,6 +11,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -44,6 +45,7 @@ public class OfferFragment extends Fragment implements OfferFragmentView, OnItem
     FrameLayout conteiner;
     private boolean isRegister = false;
     private ProgressDialog pDialog;
+    private StaggeredGridLayoutManager gaggeredGridLayoutManager;
 
     @Inject
     OfferFragmentAdapter adapter;
@@ -114,9 +116,9 @@ public class OfferFragment extends Fragment implements OfferFragmentView, OnItem
     private void initRecyclerView() {
         Utils.writelogFile(getActivity(), "initRecyclerView(DrawFragment)");
         try {
-            recyclerView.setLayoutManager(new GridLayoutManager(getActivity(), 2));
+            gaggeredGridLayoutManager = new StaggeredGridLayoutManager(2, 1);
             recyclerView.setHasFixedSize(true);
-            //    recyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL));
+            recyclerView.setLayoutManager(gaggeredGridLayoutManager);
             recyclerView.setAdapter(adapter);
         } catch (Exception e) {
             setError(e.getMessage());
@@ -157,11 +159,6 @@ public class OfferFragment extends Fragment implements OfferFragmentView, OnItem
     @Override
     public void setOffers(List<Offer> offers) {
         adapter.setDraw(offers);
-    }
-
-    @Override
-    public void onClickToolBar() {
-
     }
 
     @Override
@@ -245,7 +242,6 @@ public class OfferFragment extends Fragment implements OfferFragmentView, OnItem
             });
         }
     }
-
 
     @Override
     public void onResume() {

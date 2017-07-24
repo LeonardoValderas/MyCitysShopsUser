@@ -57,48 +57,56 @@
                     android:id="@+id/textViewPhone"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_phone"
+                    android:textSize="18sp"
                     android:text="@string/phone" />
 
                 <TextView
                     android:id="@+id/textViewWhat"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_whatsapp"
+                    android:textSize="18sp"
                     android:text="@string/whatsapp" />
 
                 <TextView
                     android:id="@+id/textViewEmail"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_mail"
+                    android:textSize="18sp"
                     android:text="@string/email" />
 
                 <TextView
                     android:id="@+id/textViewWeb"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_internet"
+                    android:textSize="18sp"
                     android:text="@string/web" />
 
                 <TextView
                     android:id="@+id/textViewFace"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_facebook"
+                    android:textSize="18sp"
                     android:text="@string/facebook" />
 
                 <TextView
                     android:id="@+id/textViewInsta"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_instagram"
+                    android:textSize="18sp"
                     android:text="@string/instagram" />
 
                 <TextView
                     android:id="@+id/textViewTwi"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_twitter"
+                    android:textSize="18sp"
                     android:text="@string/twitter" />
 
                 <TextView
                     android:id="@+id/textViewSna"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_snapchat"
+                    android:textSize="18sp"
                     android:text="@string/snapchat" />
 
                 <TextView

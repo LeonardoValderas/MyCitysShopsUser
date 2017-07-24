@@ -22,7 +22,7 @@
             <ImageView
                 android:id="@+id/imageViewShop"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="350dp"
                 android:src="@drawable/ic_launcher" />
 
             <ImageView
@@ -58,62 +58,62 @@
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_phone"
                     android:text="@string/phone"
-                    android:textSize="35dp" />
+                    android:textSize="40dp" />
 
                 <TextView
                     android:id="@+id/textViewWhat"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_whatsapp"
                     android:text="@string/whatsapp"
-                    android:textSize="35dp" />
+                    android:textSize="40dp" />
 
                 <TextView
                     android:id="@+id/textViewEmail"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_mail"
                     android:text="@string/email"
-                    android:textSize="35dp" />
+                    android:textSize="40dp" />
 
                 <TextView
                     android:id="@+id/textViewWeb"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_internet"
                     android:text="@string/web"
-                    android:textSize="35dp" />
+                    android:textSize="40dp" />
 
                 <TextView
                     android:id="@+id/textViewFace"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_facebook"
                     android:text="@string/facebook"
-                    android:textSize="35dp" />
+                    android:textSize="40dp" />
 
                 <TextView
                     android:id="@+id/textViewInsta"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_instagram"
                     android:text="@string/instagram"
-                    android:textSize="35dp" />
+                    android:textSize="40dp" />
 
                 <TextView
                     android:id="@+id/textViewTwi"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_twitter"
                     android:text="@string/twitter"
-                    android:textSize="35dp" />
+                    android:textSize="40dp" />
 
                 <TextView
                     android:id="@+id/textViewSna"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_snapchat"
                     android:text="@string/snapchat"
-                    android:textSize="35dp" />
+                    android:textSize="40dp" />
 
                 <TextView
                     style="@style/TextViewContact_Style"
                     android:layout_gravity="bottom|right"
                     android:text="Icon by MarkHawkinsDesigns"
-                    android:textSize="18dp" />
+                    android:textSize="20dp" />
 
             </LinearLayout>
         </ScrollView>

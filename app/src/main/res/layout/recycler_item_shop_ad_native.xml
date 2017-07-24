@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/card_view_ad_native"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="265dp"
+    android:layout_margin="5dp"
+    android:gravity="center_horizontal"
+    android:padding="5dp"
+    app:cardBackgroundColor="#66FFFFFF">
+
+</android.support.v7.widget.CardView>

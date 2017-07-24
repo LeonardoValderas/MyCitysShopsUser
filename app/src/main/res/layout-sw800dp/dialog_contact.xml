@@ -58,56 +58,63 @@
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_phone"
                     android:text="@string/phone"
-                    android:textSize="38dp" />
+                    android:textSize="42dp" />
 
                 <TextView
                     android:id="@+id/textViewWhat"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_whatsapp"
                     android:text="@string/whatsapp"
-                    android:textSize="38dp" />
+                    android:layout_marginTop="20dp"
+                    android:textSize="42dp" />
 
                 <TextView
                     android:id="@+id/textViewEmail"
                     style="@style/TextViewContact_Style"
-                    android:drawableLeft="@drawable/ic_mail"
                     android:text="@string/email"
-                    android:textSize="38dp" />
+                    android:drawableLeft="@drawable/ic_mail"
+                    android:layout_marginTop="20dp"
+                    android:textSize="42dp" />
 
                 <TextView
                     android:id="@+id/textViewWeb"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_internet"
                     android:text="@string/web"
-                    android:textSize="38dp" />
+                    android:layout_marginTop="20dp"
+                    android:textSize="42dp" />
 
                 <TextView
                     android:id="@+id/textViewFace"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_facebook"
                     android:text="@string/facebook"
-                    android:textSize="38dp" />
+                    android:layout_marginTop="20dp"
+                    android:textSize="42dp" />
 
                 <TextView
                     android:id="@+id/textViewInsta"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_instagram"
                     android:text="@string/instagram"
-                    android:textSize="38dp" />
+                    android:layout_marginTop="20dp"
+                    android:textSize="42dp"/>
 
                 <TextView
                     android:id="@+id/textViewTwi"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_twitter"
                     android:text="@string/twitter"
-                    android:textSize="38dp" />
+                    android:layout_marginTop="20dp"
+                    android:textSize="42dp" />
 
                 <TextView
                     android:id="@+id/textViewSna"
                     style="@style/TextViewContact_Style"
                     android:drawableLeft="@drawable/ic_snapchat"
                     android:text="@string/snapchat"
-                    android:textSize="38dp" />
+                    android:layout_marginTop="20dp"
+                    android:textSize="42dp"/>
 
                 <TextView
                     style="@style/TextViewContact_Style"

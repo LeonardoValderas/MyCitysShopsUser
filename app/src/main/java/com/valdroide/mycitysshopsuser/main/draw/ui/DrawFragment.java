@@ -1,6 +1,5 @@
 package com.valdroide.mycitysshopsuser.main.draw.ui;
 
-
 import android.app.ProgressDialog;
 import android.app.SearchManager;
 import android.content.Context;
@@ -37,7 +36,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class DrawFragment extends Fragment implements DrawFragmentView, OnItemClickListener {
-
 
     @Bind(R.id.recyclerView)
     RecyclerView recyclerView;
@@ -175,15 +173,6 @@ public class DrawFragment extends Fragment implements DrawFragmentView, OnItemCl
     @Override
     public void setDraws(List<Draw> draws) {
         adapter.setDraw(draws);
-    }
-
-    @Override
-    public void onClickToolBar() {
-        Utils.writelogFile(getActivity(), "initToolBar(DrawActivity)");
-//        setSupportActionBar(toolbar);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-//        getSupportActionBar().setTitle(R.string.draw_title_tool);
-//        Utils.applyFontForToolbarTitle(this, toolbar);
     }
 
     @Override

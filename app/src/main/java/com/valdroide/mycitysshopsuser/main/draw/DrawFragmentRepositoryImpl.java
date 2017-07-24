@@ -86,28 +86,7 @@ public class DrawFragmentRepositoryImpl implements DrawFragmentRepository {
                         }
                     }
                 }
-//
-//
-//                    int cursor = 0;
-//                    do {
-//                        if (Utils.validateExpirateCurrentTime(draws.get(cursor).getEND_DATE(), "yyyy-MM-dd HH:mm:ss")) {
-//                            if (draws.get(cursor).getIS_WINNER() == 0) {
-//                                draws.remove(cursor);
-//                            }
-//
-//                        } else
-//                            cursor++;
-//                    } while (cursor != draws.size());
             }
-
-//            for (int i = 1; i <= draws.size(); i++) {
-//                if (Utils.validateExpirateCurrentTime(draws.get(i).getEND_DATE(), "yyyy-MM-dd HH:mm:ss")) {
-//                    if (draws.get(i).getIS_WINNER() == 0) {
-//                        draws.remove(i);
-//                    }
-//                }
-//            }
-
             post(DrawFragmentEvent.DRAWS, draws);
         } catch (Exception e) {
             Utils.writelogFile(context, "getListShops(DrawFragment, Repository)");

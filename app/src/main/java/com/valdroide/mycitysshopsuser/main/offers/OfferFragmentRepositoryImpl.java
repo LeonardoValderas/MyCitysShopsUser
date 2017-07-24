@@ -44,7 +44,7 @@ public class OfferFragmentRepositoryImpl implements OfferFragmentRepository {
     private ResponseWS responseWS;
     private List<Draw> draws;
     private List<Offer> offers;
-    private List<Shop> shops;
+     private List<Shop> shops;
     private List<Category> categories;
     private List<SubCategory> subCategories;
     private DateUserCity dateUserCity;
@@ -72,7 +72,6 @@ public class OfferFragmentRepositoryImpl implements OfferFragmentRepository {
                     .on(Shop_Table.ID_SHOP_KEY.eq(Offer_Table.ID_SHOP_FOREIGN.withTable()))
                     .where(Offer_Table.IS_ACTIVE.is(1))
                     .orderBy(Shop_Table.FOLLOW, false).orderBy(Offer_Table.ID_OFFER_KEY, false).queryList();
-
             post(OfferFragmentEvent.OFFERS, offers);
         } catch (Exception e) {
             Utils.writelogFile(context, "catch: " + e.getMessage() + "(OfferFragment, Repository)");
@@ -403,7 +402,6 @@ public class OfferFragmentRepositoryImpl implements OfferFragmentRepository {
                     .on(Shop_Table.ID_SHOP_KEY.eq(Offer_Table.ID_SHOP_FOREIGN.withTable()))
                     .where(OperatorGroup.clause().and(Shop_Table.SHOP.withTable().like("%" + letter + "%")))
                     .orderBy(Shop_Table.FOLLOW, false).queryList();
-
             post(OfferFragmentEvent.OFFERS, offers);
         } catch (Exception e) {
             Utils.writelogFile(context, "catch: " + e.getMessage() + "(OfferFragment, Repository)");

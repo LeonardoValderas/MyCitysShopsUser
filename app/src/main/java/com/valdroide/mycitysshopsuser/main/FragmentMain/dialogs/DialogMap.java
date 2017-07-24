@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -39,6 +41,7 @@ public class DialogMap implements OnMapReadyCallback {
     ImageView buttonCerrar;
     @Bind(R.id.linearConteiner)
     LinearLayout linearConteiner;
+
     private Context context;
     public AlertDialog alertDialog;
     private SupportMapFragment mapFragment;
@@ -57,24 +60,17 @@ public class DialogMap implements OnMapReadyCallback {
         Utils.writelogFile(context, "DialogMap y AlertDialog(Map)");
         final AlertDialog.Builder builder = new AlertDialog.Builder(context);
         Utils.writelogFile(context, "LayoutInflater(Map)");
-
-
-
-//        LayoutInflater inflater = (LayoutInflater) context
-//                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LayoutInflater inflater = LayoutInflater.from(context);
-
-
         Utils.writelogFile(context, "inflater(Map)");
         View layout = inflater.inflate(R.layout.dialog_map, null);
         Utils.writelogFile(context, "builder.setView(layout)(Map)");
         builder.setView(layout);
         Utils.writelogFile(context, "Se inicia ButterKnife(Map)");
         ButterKnife.bind(this, layout);
+        YoYo.with(Techniques.Landing).playOn(linearConteiner);
         try {
             Utils.writelogFile(context, "fill componentes(Map)");
             Utils.setPicasso(context, shop.getURL_LOGO(), R.drawable.ic_launcher, imageViewShop);
-            // textViewName.setText(shop.getSHOP());
             if (shop.getLATITUD() != null && shop.getLONGITUD() != null) {
                 if (!shop.getLATITUD().isEmpty() && !shop.getLONGITUD().isEmpty()) {
                     latitudExtra = Double.valueOf(shop.getLATITUD());

@@ -22,9 +22,8 @@
             <ImageView
                 android:id="@+id/imageViewShop"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/height_dialog_image"
+                android:layout_height="@dimen/height_dialog_image_320"
                 android:src="@drawable/ic_launcher" />
-
 
             <ImageView
                 android:id="@+id/buttonCerrar"

@@ -56,6 +56,7 @@
                 <TextView
                     android:id="@+id/textViewPhone"
                     style="@style/TextViewContact_Style"
+                    android:textSize="18sp"
                     android:clickable="true"
                     android:drawableLeft="@drawable/ic_phone"
                     android:text="@string/phone" />
@@ -63,6 +64,7 @@
                 <TextView
                     android:id="@+id/textViewWhat"
                     style="@style/TextViewContact_Style"
+                    android:textSize="18sp"
                     android:clickable="true"
                     android:drawableLeft="@drawable/ic_whatsapp"
                     android:text="@string/whatsapp" />
@@ -70,6 +72,7 @@
                 <TextView
                     android:id="@+id/textViewEmail"
                     style="@style/TextViewContact_Style"
+                    android:textSize="18sp"
                     android:clickable="true"
                     android:drawableLeft="@drawable/ic_mail"
                     android:text="@string/email" />
@@ -77,6 +80,7 @@
                 <TextView
                     android:id="@+id/textViewWeb"
                     style="@style/TextViewContact_Style"
+                    android:textSize="18sp"
                     android:clickable="true"
                     android:drawableLeft="@drawable/ic_internet"
                     android:text="@string/web" />
@@ -84,6 +88,7 @@
                 <TextView
                     android:id="@+id/textViewFace"
                     style="@style/TextViewContact_Style"
+                    android:textSize="18sp"
                     android:clickable="true"
                     android:drawableLeft="@drawable/ic_facebook"
                     android:text="@string/facebook" />
@@ -91,6 +96,7 @@
                 <TextView
                     android:id="@+id/textViewInsta"
                     style="@style/TextViewContact_Style"
+                    android:textSize="18sp"
                     android:clickable="true"
                     android:drawableLeft="@drawable/ic_instagram"
                     android:text="@string/instagram" />
@@ -98,6 +104,7 @@
                 <TextView
                     android:id="@+id/textViewTwi"
                     style="@style/TextViewContact_Style"
+                    android:textSize="18sp"
                     android:clickable="true"
                     android:drawableLeft="@drawable/ic_twitter"
                     android:text="@string/twitter" />
@@ -105,6 +112,7 @@
                 <TextView
                     android:id="@+id/textViewSna"
                     style="@style/TextViewContact_Style"
+                    android:textSize="18sp"
                     android:clickable="true"
                     android:drawableLeft="@drawable/ic_snapchat"
                     android:text="@string/snapchat" />

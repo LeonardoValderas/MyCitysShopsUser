@@ -81,7 +81,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center|center_horizontal"
                         android:text="XXXXX."
-                        android:textSize="43dp"
+                        android:textSize="42sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -91,7 +91,7 @@
                         android:gravity="center|center_horizontal"
                         android:text="te invita a particitar del sorte de."
                         android:textColor="#3e7e8d"
-                        android:textSize="37dp"
+                        android:textSize="38sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -101,7 +101,7 @@
                         android:layout_height="wrap_content"
                         android:gravity="center|center_horizontal"
                         android:text="XXXXXX."
-                        android:textSize="36dp"
+                        android:textSize="40sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -119,117 +119,116 @@
                     android:orientation="vertical"
                     android:padding="5dp">
 
-                    <TextView
-                        android:id="@+id/textViewCondition"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center|center_horizontal"
-                        android:text="La condiciones: El premios es valido para los días Lunes, Miercoles o Viernes. Podrá ser retirado solo por el ganador con DNI en mano dentro de los 7 días terminado el sorteo."
-                        android:textColor="#3e7e8d"
-                        android:textSize="38dp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/textViewEndDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:gravity="center|center_horizontal"
-                        android:text="Fecha finalización: 22/09/2017 12:00."
-                        android:textSize="35dp"
-                        android:textStyle="bold" />
-
                     <LinearLayout
+                        android:id="@+id/linearbuttons"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp"
-                        android:orientation="horizontal"
-                        android:padding="5dp">
+                        android:orientation="vertical">
 
-                        <Button
-                            android:id="@+id/buttonCancel"
-                            style="@style/ButtonView_Draw"
-                            android:layout_height="90dp"
-                            android:background="@drawable/background_oval_button"
-                            android:text="@string/cancel_buttton"
-                            android:textSize="32dp" />
+                        <TextView
+                            android:id="@+id/textViewCondition"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center|center_horizontal"
+                            android:text="La condiciones: El premios es valido para los días Lunes, Miercoles o Viernes. Podrá ser retirado solo por el ganador con DNI en mano dentro de los 7 días terminado el sorteo."
+                            android:textColor="#3e7e8d"
+                            android:textSize="40dp"
+                            android:textStyle="bold" />
 
-                        <Button
-                            android:id="@+id/buttonOK"
-                            style="@style/ButtonView_Draw"
-                            android:layout_height="90dp"
-                            android:background="@drawable/background_oval_button"
-                            android:text="@string/participate_draw_button"
-                            android:textSize="32dp" />
+                        <TextView
+                            android:id="@+id/textViewEndDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="20dp"
+                            android:gravity="center|center_horizontal"
+                            android:text="Fecha finalización: 22/09/2017 12:00."
+                            android:textSize="36dp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="30dp"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <Button
+                                android:id="@+id/buttonCancel"
+                                style="@style/ButtonView_Draw"
+                                android:layout_height="98dp"
+                                android:background="@drawable/background_oval_button"
+                                android:text="@string/cancel_buttton"
+                                android:textSize="33sp" />
+
+                            <Button
+                                android:id="@+id/buttonOK"
+                                style="@style/ButtonView_Draw"
+                                android:layout_height="98dp"
+                                android:background="@drawable/background_oval_button"
+                                android:text="@string/participate_draw_button"
+                                android:textSize="33sp" />
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
-            </ScrollView>
-
-            <ScrollView
-                android:id="@+id/scrollInscription"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:id="@+id/linearInscription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/editTextDNIHint"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="30dp">
-
-                        <EditText
-                            android:id="@+id/editTextDNI"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/enter_id"
-                            android:inputType="number"
-                            android:maxLength="10"
-                            android:textSize="25dp" />
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/editTextNamesHint"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="15dp">
-
-                        <EditText
-                            android:id="@+id/editTextNames"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/enter_name_lastname"
-                            android:maxLength="20"
-                            android:textSize="25dp" />
-                    </android.support.design.widget.TextInputLayout>
 
                     <LinearLayout
+                        android:id="@+id/linearInscription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="5dp">
+                        android:orientation="vertical"
+                        android:padding="5dp"
+                        android:visibility="gone">
 
-                        <Button
-                            android:id="@+id/buttonCancelSub"
-                            style="@style/ButtonView_Draw"
-                            android:layout_height="90dp"
-                            android:background="@drawable/background_oval_button"
-                            android:text="@string/cancel_buttton"
-                            android:textSize="32dp" />
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/editTextDNIHint"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                        <Button
-                            android:id="@+id/buttonOKSub"
-                            style="@style/ButtonView_Draw"
-                            android:layout_height="90dp"
-                            android:background="@drawable/background_oval_button"
-                            android:text="@string/send_button_draw"
-                            android:textSize="32dp" />
+                            <EditText
+                                android:id="@+id/editTextDNI"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_id"
+                                android:inputType="number"
+                                android:maxLength="10"
+                                android:textSize="26sp" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/editTextNamesHint"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:id="@+id/editTextNames"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_name_lastname"
+                                android:maxLength="20"
+                                android:textSize="26sp" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <Button
+                                android:id="@+id/buttonCancelSub"
+                                style="@style/ButtonView_Draw"
+                                android:layout_height="98dp"
+                                android:background="@drawable/background_oval_button"
+                                android:text="@string/cancel_buttton"
+                                android:textSize="33sp" />
+
+                            <Button
+                                android:id="@+id/buttonOKSub"
+                                style="@style/ButtonView_Draw"
+                                android:layout_height="98dp"
+                                android:background="@drawable/background_oval_button"
+                                android:text="@string/send_button_draw"
+                                android:textSize="33sp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>

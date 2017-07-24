@@ -1,16 +1,9 @@
 package com.valdroide.mycitysshopsuser.main.FragmentMain.dialogs;
 
-import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.net.Uri;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,9 +12,9 @@ import android.webkit.URLUtil;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.facebook.stetho.common.android.FragmentCompat;
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
 import com.valdroide.mycitysshopsuser.utils.Utils;
@@ -74,6 +67,7 @@ public class DialogContact {
         builder.setView(layout);
         Utils.writelogFile(fragment.getActivity(), "Se inicia ButterKnife(Contact)");
         ButterKnife.bind(this, layout);
+        YoYo.with(Techniques.Landing).playOn(conteiner);
         try {
             Utils.writelogFile(fragment.getActivity(), "fill componentes(Contact)");
             Utils.setPicasso(fragment.getActivity(), shop.getURL_LOGO(), R.drawable.ic_launcher, imageViewShop);
@@ -203,11 +197,8 @@ public class DialogContact {
                     case R.id.textViewFace:
                         if (!data.isEmpty()) {
                             String face = "https://www.facebook.com/";
-                          //  String faceApp = "fb://page/";
                             data = replaceSpace(data);
-                            //listener.onClickField(face + data, face + data, 4);
                             if (URLUtil.isValidUrl(face + data)) {
-                                //      pDialog.show();
                                 listener.onClickField(face + data, face + data, 4);
                             } else
                                 setError(fragment.getActivity().getString(R.string.url_invalid));
@@ -218,7 +209,6 @@ public class DialogContact {
                         if (!data.isEmpty()) {
                             String insta = "https://www.instagram.com/_u/";
                             if (URLUtil.isValidUrl(insta + data)) {
-                                //        pDialog.show();
                                 listener.onClickField(insta + data, insta + data, 5);
                             } else
                                 setError(fragment.getActivity().getString(R.string.url_invalid));
@@ -232,7 +222,6 @@ public class DialogContact {
                             data = replaceAt(data);
                             String url = twiWeb + data;
                             if (URLUtil.isValidUrl(url)) {
-                                //         pDialog.show();
                                 listener.onClickField(url, twiApp + data, 6);
                             } else
                                 setError(fragment.getActivity().getString(R.string.url_invalid));
@@ -246,7 +235,6 @@ public class DialogContact {
                             data = replaceAt(data);
                             String url = snapWeb + data;
                             if (URLUtil.isValidUrl(url)) {
-                                //         pDialog.show();
                                 listener.onClickField(url, snapWeb + data, 6);
                             } else
                                 setError(fragment.getActivity().getString(R.string.url_invalid));
@@ -271,16 +259,4 @@ public class DialogContact {
     private String replaceSpace(String user) {
         return user = user.trim();
     }
-
-    private void initDialog() {
-        pDialog = new ProgressDialog(fragment.getActivity());
-        pDialog.setMessage(fragment.getActivity().getString(R.string.process));
-        pDialog.setCancelable(false);
-    }
-
-    public void dismissDialog() {
-        if (pDialog.isShowing())
-            pDialog.dismiss();
-    }
-
 }

@@ -24,19 +24,19 @@
             android:layout_above="@+id/linearAdView"
             android:background="@drawable/back" />
 
-        <LinearLayout
-            android:id="@+id/linearAdView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:visibility="gone"
-            android:layout_above="@+id/bottom_menu">
+        <!--<LinearLayout-->
+            <!--android:id="@+id/linearAdView"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:visibility="gone"-->
+            <!--android:layout_above="@+id/bottom_menu">-->
 
-            <com.google.android.gms.ads.AdView
-                android:id="@+id/adView"
-                style="@style/BannerStyle"
-                ads:adSize="SMART_BANNER"
-                ads:adUnitId="@string/banner_fragment" />
-        </LinearLayout>
+            <!--<com.google.android.gms.ads.AdView-->
+                <!--android:id="@+id/adView"-->
+                <!--style="@style/BannerStyle"-->
+                <!--ads:adSize="SMART_BANNER"-->
+                <!--ads:adUnitId="@string/banner_fragment" />-->
+        <!--</LinearLayout>-->
 
         <com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx
             android:id="@+id/bottom_menu"

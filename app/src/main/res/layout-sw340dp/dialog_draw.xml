@@ -8,7 +8,9 @@
     android:background="@drawable/back"
     android:orientation="vertical">
 
-    <android.support.v7.widget.CardView
+    <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:card_view="http://schemas.android.com/tools"
         android:id="@+id/card_view"
         style="@style/CardView_Style"
         android:elevation="3dp"
@@ -61,47 +63,48 @@
                 <ImageView
                     android:id="@+id/imageViewImage"
                     android:layout_width="0dp"
-                    android:layout_height="150dp"
+                    android:layout_height="140dp"
                     android:layout_gravity="left"
-                    android:layout_weight="40"
+                    android:layout_weight="45"
                     android:clickable="true"
                     android:src="@drawable/ic_present" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="60"
+                    android:layout_weight="55"
                     android:orientation="vertical"
                     android:padding="8dp">
 
                     <TextView
                         android:id="@+id/textViewName"
-                        style="@style/AppearanceTextViewTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center|center_horizontal"
                         android:text="XXXXX."
-                        android:textSize="21dp"
+                        android:textAppearance="?android:attr/textAppearanceLarge"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textViewInvited"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
                         android:gravity="center|center_horizontal"
                         android:text="te invita a particitar del sorte de."
+                        android:textAppearance="?android:attr/textAppearanceSmall"
                         android:textColor="#3e7e8d"
-                        android:textSize="18dp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textViewDescription"
-                        style="@style/AppearanceTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
                         android:gravity="center|center_horizontal"
                         android:text="XXXXXX."
-                        android:textSize="19dp"
+                        android:textAppearance="?android:attr/textAppearanceMedium"
+                        android:textColor="#000000"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -119,119 +122,128 @@
                     android:orientation="vertical"
                     android:padding="5dp">
 
-                    <TextView
-                        android:id="@+id/textViewCondition"
+                    <LinearLayout
+                        android:id="@+id/linearbuttons"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="center|center_horizontal"
-                        android:text="La condiciones: El premios es valido para los días Lunes, Miercoles o Viernes. Podrá ser retirado solo por el ganador con DNI en mano dentro de los 7 días terminado el sorteo."
-                        android:textColor="#3e7e8d"
-                        android:textSize="19dp"
-                        android:textStyle="bold" />
+                        android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textViewEndDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="5dp"
-                        android:gravity="center|center_horizontal"
-                        android:text="Fecha finalización: 22/09/2017 12:00."
-                        android:textSize="19dp"
-                        android:textStyle="bold" />
+                        <TextView
+                            android:id="@+id/textViewCondition"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center|center_horizontal"
+                            android:text="La condiciones: El premios es valido para los días Lunes, Miercoles o Viernes. Podrá ser retirado solo por el ganador con DNI en mano dentro de los 7 días terminado el sorteo."
+                            android:textColor="#3e7e8d"
+                            android:textSize="19dp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/textViewEndDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="5dp"
+                            android:gravity="center|center_horizontal"
+                            android:text="Fecha finalización: 22/09/2017 12:00."
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <Button
+                                android:id="@+id/buttonCancel"
+                                style="@style/ButtonView_Draw"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/background_oval_button"
+                                android:text="@string/cancel_buttton"
+                                android:textSize="16dp" />
+
+                            <Button
+                                android:id="@+id/buttonOK"
+                                style="@style/ButtonView_Draw"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/background_oval_button"
+                                android:text="@string/participate_draw_button"
+                                android:textSize="16dp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/linearInscription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="5dp">
+                        android:orientation="vertical"
+                        android:padding="5dp"
+                        android:visibility="gone">
 
-                        <Button
-                            android:id="@+id/buttonCancel"
-                            style="@style/ButtonView_Draw"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/background_oval_button"
-                            android:text="@string/cancel_buttton"
-                            android:textSize="16dp" />
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/editTextDNIHint"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                        <Button
-                            android:id="@+id/buttonOK"
-                            style="@style/ButtonView_Draw"
+                            <EditText
+                                android:id="@+id/editTextDNI"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_id"
+                                android:inputType="number"
+                                android:maxLength="10"
+                                android:textSize="20sp" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/editTextNamesHint"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:id="@+id/editTextNames"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_name_lastname"
+                                android:maxLength="20"
+                                android:textSize="20sp" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/background_oval_button"
-                            android:text="@string/participate_draw_button"
-                            android:textSize="16dp" />
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <Button
+                                android:id="@+id/buttonCancelSub"
+                                style="@style/ButtonView_Draw"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/background_oval_button"
+                                android:text="@string/cancel_buttton"
+                                android:textSize="16dp" />
+
+                            <Button
+                                android:id="@+id/buttonOKSub"
+                                style="@style/ButtonView_Draw"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/background_oval_button"
+                                android:text="@string/send_button_draw"
+                                android:textSize="16dp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>
 
-            <ScrollView
-                android:id="@+id/scrollInscription"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone">
+            <!--<ScrollView-->
+            <!--android:id="@+id/scrollInscription"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--android:visibility="visible">-->
 
-                <LinearLayout
-                    android:id="@+id/linearInscription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/editTextDNIHint"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp">
-
-                        <EditText
-                            android:id="@+id/editTextDNI"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/enter_id"
-                            android:inputType="number"
-                            android:maxLength="10"
-                            android:textSize="18dp" />
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/editTextNamesHint"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp">
-
-                        <EditText
-                            android:id="@+id/editTextNames"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/enter_name_lastname"
-                            android:maxLength="20"
-                            android:textSize="18dp" />
-                    </android.support.design.widget.TextInputLayout>
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="5dp">
-
-                        <Button
-                            android:id="@+id/buttonCancelSub"
-                            style="@style/ButtonView_Draw"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/background_oval_button"
-                            android:text="@string/cancel_buttton"
-                            android:textSize="16dp" />
-
-                        <Button
-                            android:id="@+id/buttonOKSub"
-                            style="@style/ButtonView_Draw"
-                            android:layout_height="wrap_content"
-                            android:background="@drawable/background_oval_button"
-                            android:text="@string/send_button_draw"
-                            android:textSize="16dp" />
-                    </LinearLayout>
-                </LinearLayout>
-            </ScrollView>
+            <!---->
+            <!--</ScrollView>-->
         </LinearLayout>
     </android.support.v7.widget.CardView>
 </LinearLayout>

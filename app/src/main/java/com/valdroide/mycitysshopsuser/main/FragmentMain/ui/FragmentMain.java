@@ -1,7 +1,7 @@
 package com.valdroide.mycitysshopsuser.main.FragmentMain.ui;
 
-import android.Manifest;
 import android.app.ProgressDialog;
+import android.Manifest;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
@@ -10,29 +10,27 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SearchViewCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.text.InputFilter;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.google.ads.mediation.admob.AdMobAdapter;
+import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.AdSize;
+import com.google.android.gms.ads.NativeExpressAdView;
 import com.valdroide.mycitysshopsuser.MyCitysShopsUserApp;
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.entities.category.SubCategory;
@@ -54,7 +52,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+
 
 public class FragmentMain extends Fragment implements FragmentMainView, OnItemClickListener, OnClickContact {
 
@@ -65,9 +63,6 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     FrameLayout conteiner;
     @Bind(R.id.swipeRefreshLayout)
     SwipeRefreshLayout mSwipeRefreshLayout;
-//    @Bind(R.id.adView)
-//    AdView mAdView;
-
 
     @Inject
     FragmentMainAdapter adapter;
@@ -80,15 +75,12 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     private int position = 0;
     private Shop shopDialog;
     private static boolean isMyShop = false;
-    // private AdRequest adRequest;
-    //    private AdRequest adRequestVideo;
     static FragmentMain fragmentAction;
     private int permissionCheck;
     private String dateContact;
     private boolean isRegister = false;
-//    private RewardedVideoAd mAd;
-//    private boolean mIsRewardedVideoLoading;
-//    private final Object mLock = new Object();
+    private List<Object> shops;
+    public boolean isSearch = false;
 
     public FragmentMain() {
     }
@@ -179,6 +171,76 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
         }
     }
 
+    private void initAdNavite() {
+        int listSize = shops.size();
+
+        final NativeExpressAdView adView = new NativeExpressAdView(getActivity());
+        adView.setAdUnitId("ca-app-pub-5908373302541656/3360157527");
+        if (listSize > 0 && listSize < 4) {
+            shops.add(listSize, adView);
+        } else {
+            shops.add(4, adView);
+        }
+
+        recyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                final float scale = getActivity().getResources().getDisplayMetrics().density;
+                int listSize = shops.size();
+
+                if (listSize > 0 && listSize < 4) {
+                    final NativeExpressAdView adView =
+                            (NativeExpressAdView) shops.get(listSize - 1);
+                    final AdSize adSize = new AdSize((int) ((recyclerView.getWidth() / scale) - 20), 250);
+                    if (adSize != null)
+                        adView.setAdSize(adSize);
+                    else
+                        adView.setAdSize(new AdSize(300, 250));
+
+                    loadNativeExpressAd(adView);
+                    adView.loadAd(setAdRequest());
+                    shops.remove(listSize - 1);
+                    shops.add(listSize - 1, adView);
+                } else {
+
+                    final NativeExpressAdView adView =
+                            (NativeExpressAdView) shops.get(3);
+                    final AdSize adSize = new AdSize((int) ((recyclerView.getWidth() / scale) - 20), 250);
+                    if (adSize != null)
+                        adView.setAdSize(adSize);
+                    else
+                        adView.setAdSize(new AdSize(300, 250));
+
+                    loadNativeExpressAd(adView);
+                    adView.loadAd(setAdRequest());
+                    shops.remove(3);
+                    shops.add(3, adView);
+                }
+            }
+        });
+    }
+
+    private AdRequest setAdRequest() {
+        return new AdRequest.Builder()
+                //   .addNetworkExtrasBundle(AdMobAdapter.class, extras)
+             //   .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+              //  .addTestDevice("B52960D9E6A2A5833E82FEA8ACD4B80C")
+                .build();
+    }
+
+    private void loadNativeExpressAd(NativeExpressAdView adView) {
+        adView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+            }
+        });
+    }
+
     public void initDialog() {
         Utils.writelogFile(getActivity(), "Se inicia dialog Oncreate(FragmentMain)");
         pDialog = new ProgressDialog(getActivity());
@@ -237,9 +299,15 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     }
 
     @Override
-    public void setListShops(List<Shop> shops) {
+    public void setListShops(List<Object> shops) {
         Utils.writelogFile(getActivity(), "setListShops " + shops.size() + "(FragmentMain)");
-        adapter.setShop(shops);
+        this.shops = shops;
+        if (!isSearch)
+            if (shops.size() != 0)
+                initAdNavite();
+
+        adapter.setShop(this.shops);
+
         verifySwipeRefresh();
     }
 
@@ -483,6 +551,7 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
     }
 
     private void setSearch(String s) {
+        isSearch = true;
         if (s != null && !s.equals("")) {
             if (isMyShop) {
                 showProgressDialog();
@@ -494,6 +563,7 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
                 }
             }
         } else {
+            isSearch = false;
             if (isMyShop) {
                 getMyFavoritesShops();
             } else {
@@ -519,17 +589,29 @@ public class FragmentMain extends Fragment implements FragmentMainView, OnItemCl
                 public boolean onQueryTextSubmit(String s) {
 
                     setSearch(s);
-                    return false;
+                    return true;
                 }
 
                 @Override
                 public boolean onQueryTextChange(String s) {
 
                     setSearch(s);
-                    return false;
+                    return true;
                 }
             });
         }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        register();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        unregister();
     }
 
     @Override

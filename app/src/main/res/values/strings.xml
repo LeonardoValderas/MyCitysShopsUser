@@ -70,7 +70,7 @@
     <string name="condition_text_draw">Condiciones:</string>
     <string name="date_end_draw_text">Finaliza:</string>
     <string name="draw_recycler">Sortea:</string>
-    <string name="end_date_recycler">Fecha de Finalización:</string>
+    <string name="end_date_recycler">Fecha de Finalización</string>
     <string name="draw_title_tool">Sorteos</string>
     <string name="draw_participate_ok">Ya estás participando del sorteo!!!</string>
     <string name="partipation_invited">Participa, todavía estás a tiempo!.</string>

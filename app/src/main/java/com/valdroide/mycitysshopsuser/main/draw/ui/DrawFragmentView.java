@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface DrawFragmentView {
     void setDraws(List<Draw> draws);
-    void onClickToolBar();
     void setError(String error);
     void participationSuccess();
     void withoutChange();

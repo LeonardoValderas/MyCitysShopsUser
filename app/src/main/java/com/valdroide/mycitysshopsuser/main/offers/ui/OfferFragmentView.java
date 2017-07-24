@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface OfferFragmentView {
     void setOffers(List<Offer> offers);
-    void onClickToolBar();
     void setError(String error);
     void withoutChange();
     void setOffersRefresh();

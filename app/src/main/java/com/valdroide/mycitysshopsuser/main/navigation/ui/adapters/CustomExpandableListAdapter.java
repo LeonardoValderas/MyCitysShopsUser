@@ -54,19 +54,12 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
         }
         TextView textViewCategory = (TextView) convertView
                 .findViewById(R.id.listTitle);
-        //textViewCategory.setTypeface(null, Typeface.BOLD);
         textViewCategory.setText(categoty);
         ImageView imageView = (ImageView) convertView.findViewById(R.id.imageViewIcon);
         if (isUpdate == 1)
             imageView.setVisibility(View.VISIBLE);
         else
             imageView.setVisibility(View.GONE);
-//        try {
-//            textViewCategory.setTypeface(Utils.setFontGoodDogTextView(mContext));
-//        } finally {
-//
-//        }
-
         return convertView;
     }
 
@@ -86,12 +79,6 @@ public class CustomExpandableListAdapter extends BaseExpandableListAdapter {
             imageView.setVisibility(View.VISIBLE);
         else
             imageView.setVisibility(View.GONE);
-
-//        try {
-//            textViewSubCategory.setTypeface(Utils.setFontGoodDogTextView((mContext)));
-//        } finally {
-//
-//        }
         return convertView;
     }
 

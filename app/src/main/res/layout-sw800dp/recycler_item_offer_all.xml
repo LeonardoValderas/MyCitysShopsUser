@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/tools"
-    android:id="@+id/linearConteiner"
+    android:id="@+id/card_view_body"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:layout_margin="1dp"
+    android:elevation="3dp"
+    android:orientation="vertical"
+    app:cardBackgroundColor="@color/colorCardViewBackground"
+    card_view:cardCornerRadius="5dp">
 
-    <TextView
-        android:id="@+id/textViewShopName"
-        style="@style/TextView_Offer_Title"
-        android:textSize="32dp" />
-
-    <android.support.v7.widget.CardView
-        android:id="@+id/card_view_body"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="1dp"
-        android:elevation="3dp"
+        android:layout_height="match_parent"
         android:orientation="vertical"
-        app:cardBackgroundColor="#66FFFFFF"
-        card_view:cardCornerRadius="0dp">
+        android:padding="5dp">
 
-        <LinearLayout
+        <!--<TextView-->
+        <!--android:id="@+id/textViewShopName"-->
+        <!--style="@style/TextView_Offer_Title"-->
+        <!--android:textSize="32dp" />-->
+        <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:padding="5dp">
+            android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/imageViewOffer"
@@ -36,15 +33,39 @@
                 android:src="@drawable/ic_launcher" />
 
             <TextView
-                android:id="@+id/textViewTitle"
-                style="@style/TextView_Offer_Title"
-                android:textSize="28dp" />
+                android:id="@+id/textViewShopName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:background="@color/colorTransparet"
+                android:gravity="center"
+                android:text="El GRAN G"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:textColor="@color/white"
+                android:textSize="30sp"
+                android:textStyle="bold" />
+        </FrameLayout>
 
-            <TextView
-                android:id="@+id/textViewOffer"
-                style="@style/TextView_Offer_SubTitle"
-                android:layout_marginTop="2dp"
-                android:textSize="30dp" />
-        </LinearLayout>
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="DDD"
+            android:textSize="22sp" />
+
+        <TextView
+            android:id="@+id/textViewOffer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="#3e7e8d"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:text="Dessss"
+            android:textSize="22sp" />
+    </LinearLayout>
+</android.support.v7.widget.CardView>

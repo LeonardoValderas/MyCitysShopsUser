@@ -2,6 +2,7 @@ package com.valdroide.mycitysshopsuser.main.offers.ui.adapters;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,11 +11,14 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.entities.shop.Offer;
 import com.valdroide.mycitysshopsuser.main.offers.ui.OfferFragment;
 import com.valdroide.mycitysshopsuser.utils.Utils;
 
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.Bind;
@@ -41,17 +45,17 @@ public class OfferFragmentAdapter extends RecyclerView.Adapter<OfferFragmentAdap
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        Offer offer = offerList.get(position);
+        Offer offer = (Offer)offerList.get(position);
+        YoYo.with(Techniques.Landing).playOn(holder.card_view_body);
+
+
         holder.textViewShopName.setText(offer.getSHOP());
-       // holder.textViewShopName.setTypeface(Utils.setFontGoodDogTextView(fragment.getActivity()));
         if (offer.getURL_IMAGE() != null)
             Utils.setPicasso(fragment.getActivity(), offer.getURL_IMAGE(), R.drawable.ic_launcher, holder.imageViewOffer);
         else
             Utils.setPicasso(fragment.getActivity(), "", R.drawable.ic_launcher, holder.imageViewOffer);
         holder.textViewTitle.setText(offer.getTITLE());
-       // holder.textViewTitle.setTypeface(Utils.setFontExoTextView(fragment.getActivity()));
         holder.textViewOffer.setText(offer.getOFFER());
-      //  holder.textViewOffer.setTypeface(Utils.setFontRalewatTextView(fragment.getActivity()));
         holder.setOnItemClickListener(onItemClickListener, position, offer);
     }
 
@@ -74,8 +78,8 @@ public class OfferFragmentAdapter extends RecyclerView.Adapter<OfferFragmentAdap
         TextView textViewTitle;
         @Bind(R.id.textViewOffer)
         TextView textViewOffer;
-        @Bind(R.id.linearConteiner)
-        LinearLayout linearConteiner;
+        @Bind(R.id.card_view_body)
+        CardView card_view_body;
 
         private View v;
 

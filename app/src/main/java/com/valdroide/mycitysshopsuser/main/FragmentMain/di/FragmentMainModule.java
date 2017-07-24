@@ -1,11 +1,9 @@
 package com.valdroide.mycitysshopsuser.main.FragmentMain.di;
 
-import android.content.Context;
 import android.support.v4.app.Fragment;
 
 import com.valdroide.mycitysshopsuser.api.APIService;
 import com.valdroide.mycitysshopsuser.api.ShopClient;
-import com.valdroide.mycitysshopsuser.entities.shop.Shop;
 import com.valdroide.mycitysshopsuser.lib.base.EventBus;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.FragmentMainInteractor;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.FragmentMainInteractorImpl;
@@ -61,13 +59,13 @@ public class FragmentMainModule {
 
     @Provides
     @Singleton
-    List<Shop> provideShopList() {
-        return new ArrayList<Shop>();
+    List<Object> provideShopList() {
+        return new ArrayList<>();
     }
 
     @Provides
     @Singleton
-    FragmentMainAdapter providesFragmentMainAdapter(List<Shop> shopList, OnItemClickListener onItemClickListener, Fragment fragment) {
+    FragmentMainAdapter providesFragmentMainAdapter(List<Object> shopList, OnItemClickListener onItemClickListener, Fragment fragment) {
         return new FragmentMainAdapter(shopList, onItemClickListener, fragment);
     }
 

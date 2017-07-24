@@ -1,6 +1,5 @@
 package com.valdroide.mycitysshopsuser.main.draw;
 
-
 import android.content.Context;
 
 import com.valdroide.mycitysshopsuser.entities.shop.Draw;

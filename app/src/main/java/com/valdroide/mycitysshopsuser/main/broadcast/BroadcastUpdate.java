@@ -7,12 +7,8 @@ import android.content.Intent;
 import com.raizlabs.android.dbflow.config.DatabaseDefinition;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.Delete;
-import com.raizlabs.android.dbflow.sql.language.NameAlias;
-import com.raizlabs.android.dbflow.sql.language.Operator;
 import com.raizlabs.android.dbflow.sql.language.OperatorGroup;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.sql.language.Trigger;
-import com.raizlabs.android.dbflow.sql.language.Update;
 import com.raizlabs.android.dbflow.structure.database.transaction.FastStoreModelTransaction;
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.api.APIService;
@@ -67,7 +63,6 @@ public class BroadcastUpdate extends BroadcastReceiver {
                 validateDateShop(context, dateUserCity);
             else
                 Utils.writelogFile(context, "dateUserCity null(BroadcastUpdate)");
-            //    Toast.makeText(context, "alarm started", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Utils.writelogFile(context, "onReceive error: " + e.getMessage() + "(BroadcastUpdate)");
         }

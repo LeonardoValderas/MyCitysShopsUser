@@ -37,6 +37,7 @@ import com.valdroide.mycitysshopsuser.lib.base.EventBus;
 import com.valdroide.mycitysshopsuser.main.FragmentMain.events.FragmentMainEvent;
 import com.valdroide.mycitysshopsuser.utils.Utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -52,6 +53,7 @@ public class FragmentMainRepositoryImpl implements FragmentMainRepository {
     private ResponseWS responseWS;
     private List<Offer> offers;
     private List<Shop> shops;
+    private List<Object> objectList = new ArrayList<>();
     private List<Category> categories;
     private List<SubCategory> subCategories;
     private DateUserCity dateUserCity;
@@ -85,7 +87,9 @@ public class FragmentMainRepositoryImpl implements FragmentMainRepository {
                     .orderBy(Shop_Table.FOLLOW, false).queryList();
             if (shopsList != null) {
                 Utils.writelogFile(context, "shopsList != null y post GETLISTSHOPS(Fragmentmain, Repository)");
-                post(FragmentMainEvent.GETLISTSHOPS, shopsList);
+                objectList.clear();
+                objectList.addAll(shopsList);
+                post(FragmentMainEvent.GETLISTSHOPS, objectList);
             } else {
                 Utils.writelogFile(context, "shopsList == null y post ERROR(Fragmentmain, Repository)");
                 post(FragmentMainEvent.ERROR, context.getString(R.string.error_data_base));
@@ -146,7 +150,9 @@ public class FragmentMainRepositoryImpl implements FragmentMainRepository {
                     .orderBy(Shop_Table.FOLLOW, false).queryList();
             if (shopsList != null) {
                 Utils.writelogFile(context, "shopsList != null y post GETLISTSHOPS (Fragmentmain, Repository)");
-                post(FragmentMainEvent.GETLISTSHOPS, shopsList);
+                objectList.clear();
+                objectList.addAll(shopsList);
+                post(FragmentMainEvent.GETLISTSHOPS, objectList);
             } else {
                 Utils.writelogFile(context, "shopsList == null y post ERROR (Fragmentmain, Repository)");
                 post(FragmentMainEvent.ERROR, context.getString(R.string.error_data_base));
@@ -191,7 +197,9 @@ public class FragmentMainRepositoryImpl implements FragmentMainRepository {
                     .orderBy(Shop_Table.FOLLOW, false).queryList();
             if (shopsList != null) {
                 Utils.writelogFile(context, "shopsList != null y post GETLISTSHOPS(Fragmentmain, Repository)");
-                post(FragmentMainEvent.GETLISTSHOPS, shopsList);
+                objectList.clear();
+                objectList.addAll(shopsList);
+                post(FragmentMainEvent.GETLISTSHOPS, objectList);
             } else {
                 Utils.writelogFile(context, "shopsList == null y post ERROR(Fragmentmain, Repository)");
                 post(FragmentMainEvent.ERROR, context.getString(R.string.error_data_base));
@@ -219,7 +227,9 @@ public class FragmentMainRepositoryImpl implements FragmentMainRepository {
                     .orderBy(Shop_Table.FOLLOW, false).queryList();
             if (shopsList != null) {
                 Utils.writelogFile(context, "shopsList != null y post GETLISTSHOPS (Fragmentmain, Repository)");
-                post(FragmentMainEvent.GETLISTSHOPS, shopsList);
+                objectList.clear();
+                objectList.addAll(shopsList);
+                post(FragmentMainEvent.GETLISTSHOPS, objectList);
             } else {
                 Utils.writelogFile(context, "shopsList == null y post ERROR (Fragmentmain, Repository)");
                 post(FragmentMainEvent.ERROR, context.getString(R.string.error_data_base));
@@ -645,7 +655,7 @@ public class FragmentMainRepositoryImpl implements FragmentMainRepository {
         post(type, null, null, null, null, null);
     }
 
-    private void post(int type, List<Shop> shopsList) {
+    private void post(int type,  List<Object>  shopsList) {
         post(type, shopsList, null, null, null, null);
     }
 
@@ -661,7 +671,7 @@ public class FragmentMainRepositoryImpl implements FragmentMainRepository {
         post(type, null, null, null, null, error);
     }
 
-    private void post(int type, List<Shop> shopsList, List<Offer> offers, Shop shop, DateUserCity dateUserCity, String error) {
+    private void post(int type, List<Object> shopsList, List<Offer> offers, Shop shop, DateUserCity dateUserCity, String error) {
         FragmentMainEvent event = new FragmentMainEvent();
         event.setType(type);
         event.setShopsList(shopsList);

@@ -1,6 +1,5 @@
 package com.valdroide.mycitysshopsuser.main.navigation.ui;
 
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -47,7 +46,6 @@ import com.valdroide.mycitysshopsuser.main.navigation.ui.adapters.CustomExpandab
 import com.valdroide.mycitysshopsuser.main.navigation.ui.adapters.ExpandableListDataSource;
 import com.valdroide.mycitysshopsuser.main.navigation.ui.adapters.FragmentNavigationManager;
 import com.valdroide.mycitysshopsuser.main.navigation.ui.adapters.NavigationManager;
-import com.valdroide.mycitysshopsuser.main.place.ui.PlaceActivity;
 import com.valdroide.mycitysshopsuser.main.splash.ui.SplashActivity;
 import com.valdroide.mycitysshopsuser.main.support.ui.SupportActivity;
 import com.valdroide.mycitysshopsuser.utils.Utils;
@@ -70,8 +68,6 @@ public class NavigationActivity extends AppCompatActivity
     DrawerLayout drawer;
     @Bind(R.id.navList)
     ExpandableListView mExpandableListView;
-    //    @Bind(R.id.bottom_menu)
-//    BottomNavigationView bottomNavigationView;
     @Bind(R.id.bottom_menu)
     BottomNavigationViewEx bottomNavigationView;
     @Bind(R.id.adView)
@@ -103,8 +99,6 @@ public class NavigationActivity extends AppCompatActivity
     private ProgressDialog pDialog;
     private LayoutInflater mLayoutInflater;
     private RewardedVideoAd mAd;
-    // private boolean mIsRewardedVideoLoading;
-    private final Object mLock = new Object();
     private int clickMenu = 0;
     private AdRequest adRequest;
     private String textTool = "";
@@ -170,10 +164,11 @@ public class NavigationActivity extends AppCompatActivity
 
     public void BannerAd() {
         adRequest = new AdRequest.Builder()
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .addTestDevice("B52960D9E6A2A5833E82FEA8ACD4B80C")
+                //    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                //  .addTestDevice("B52960D9E6A2A5833E82FEA8ACD4B80C")
                 .build();
         mAdView.loadAd(adRequest);
+
     }
 
     public void initAdsVideo() {
@@ -195,19 +190,12 @@ public class NavigationActivity extends AppCompatActivity
     }
 
     private void loadRewardedVideoAd() {
-//        synchronized (mLock) {
-//            if (!mIsRewardedVideoLoading) {
-//                mIsRewardedVideoLoading = true;
-//                Bundle extras = new Bundle();
-//                extras.putBoolean("_noRefresh", true);
+
         AdRequest adRequest = new AdRequest.Builder()
-                //   .addNetworkExtrasBundle(AdMobAdapter.class, extras)
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
-                .addTestDevice("B52960D9E6A2A5833E82FEA8ACD4B80C")
+                //              .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                //              .addTestDevice("B52960D9E6A2A5833E82FEA8ACD4B80C")
                 .build();
         mAd.loadAd(getString(R.string.video_navigation), adRequest);
-//            }
-//        }
     }
 
     public void getNotificationOrDrawExtra() {
@@ -305,10 +293,6 @@ public class NavigationActivity extends AppCompatActivity
                 public void onDrawerClosed(View view) {
                     super.onDrawerClosed(view);
                     getSupportActionBar().setTitle(textTool);
-                    //     if (value != null)
-
-//                        if (value.get(positionChild) != null)
-//                            getSupportActionBar().setTitle(value.get(positionChild).getSUBCATEGORY());
                     invalidateOptionsMenu();
                 }
             };
@@ -622,12 +606,17 @@ public class NavigationActivity extends AppCompatActivity
     private void deleteFragmentId() {
         Utils.writelogFile(this, "deleteFragmentId(Navigation)");
         try {
-            FragmentTransaction fragmentTransaction = getSupportFragmentManager()
-                    .beginTransaction();
 
-            fragmentTransaction.remove(getSupportFragmentManager()
-                    .findFragmentById(R.id.container));
-            fragmentTransaction.commit();
+            if (getSupportFragmentManager()
+                    .findFragmentById(R.id.container) != null) {
+
+                FragmentTransaction fragmentTransaction = getSupportFragmentManager()
+                        .beginTransaction();
+
+                fragmentTransaction.remove(getSupportFragmentManager()
+                        .findFragmentById(R.id.container));
+                fragmentTransaction.commit();
+            }
         } catch (Exception e) {
             Utils.writelogFile(this, " catch error " + e.getMessage() + "(Navigation)");
             Utils.showSnackBar(drawer, e.getMessage());

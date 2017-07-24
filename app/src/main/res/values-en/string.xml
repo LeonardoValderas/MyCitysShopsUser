@@ -65,7 +65,7 @@
     <string name="condition_text_draw">Terms:</string>
     <string name="date_end_draw_text">Finalize:</string>
     <string name="draw_recycler">Lucky:</string>
-    <string name="end_date_recycler">Finish Date:</string>
+    <string name="end_date_recycler">Finish Date</string>
     <string name="draw_title_tool">Draws</string>
     <string name="draw_participate_ok">You are already participating in the draw!!!</string>
     <string name="partipation_invited">Participate, you are still on time!</string>

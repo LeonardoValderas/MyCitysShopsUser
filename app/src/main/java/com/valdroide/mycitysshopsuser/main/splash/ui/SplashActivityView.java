@@ -5,4 +5,5 @@ public interface SplashActivityView {
     void goToNav();
     void setError(String msg);
     void tokenSuccess();
+    void hideProgressBar();
 }

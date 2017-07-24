@@ -10,8 +10,8 @@
     <android.support.v7.widget.CardView
         android:id="@+id/card_view_body"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="1dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:elevation="3dp"
         android:orientation="vertical"
         app:cardBackgroundColor="#66FFFFFF"
@@ -26,13 +26,13 @@
             <ImageView
                 android:id="@+id/imageViewOffer"
                 android:layout_width="match_parent"
-                android:layout_height="140dp"
+                android:layout_height="130dp"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_launcher" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="25dp"
+                android:layout_height="wrap_content"
                 android:gravity="left">
 
                 <LinearLayout
@@ -42,6 +42,7 @@
                     android:orientation="horizontal">
 
                     <ImageView
+                        android:id="@+id/imageView_arraw_left"
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@drawable/ic_arrow_left" />
@@ -54,6 +55,7 @@
                     android:gravity="right">
 
                     <ImageView
+                        android:id="@+id/imageView_arraw_right"
                         android:layout_width="18dp"
                         android:layout_height="18dp"
                         android:src="@drawable/ic_arrow_right" />
@@ -62,14 +64,24 @@
 
             <TextView
                 android:id="@+id/textViewTitle"
-                style="@style/TextView_Offer_Title"
-                android:textSize="20dp" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textColor="#000000"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="20sp" />
 
             <TextView
                 android:id="@+id/textViewOffer"
-                style="@style/TextView_Offer"
-                android:layout_marginTop="2dp"
-                android:textSize="20dp" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall"
+                android:textColor="#3e7e8d"
+                android:textStyle="bold"
+                android:gravity="center"
+                android:textSize="20sp" />
         </LinearLayout>
+
     </android.support.v7.widget.CardView>
 </LinearLayout>

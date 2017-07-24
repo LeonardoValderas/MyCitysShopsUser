@@ -1,6 +1,5 @@
 package com.valdroide.mycitysshopsuser.main.draw.di;
 
-import android.app.Activity;
 import android.support.v4.app.Fragment;
 
 import com.valdroide.mycitysshopsuser.api.APIService;

@@ -60,9 +60,11 @@ public class SplashActivityPresenterImpl implements SplashActivityPresenter {
         if (this.view != null) {
             switch (event.getType()) {
                 case SplashActivityEvent.GOTONAV:
+                    view.hideProgressBar();
                     view.goToNav();
                     break;
                 case SplashActivityEvent.GOTOPLACE:
+                    view.hideProgressBar();
                     view.goToPlace();
                     break;
                 case SplashActivityEvent.TOKENSUCCESS:

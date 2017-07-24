@@ -17,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.valdroide.mycitysshopsuser.R;
 import com.valdroide.mycitysshopsuser.entities.shop.Offer;
 import com.valdroide.mycitysshopsuser.entities.shop.Shop;
@@ -38,7 +40,8 @@ public class DialogOffer {
     RecyclerView recyclerViewOffer;
     @Bind(R.id.textViewEmpty)
     TextView textViewEmpty;
-
+    @Bind(R.id.conteiner)
+    LinearLayout conteiner;
 
     private DialogOfferAdapter adapter;
     private Context context;
@@ -57,16 +60,15 @@ public class DialogOffer {
         builder.setView(layout);
         Utils.writelogFile(context, "Se inicia ButterKnife(Offer)");
         ButterKnife.bind(this, layout);
+        YoYo.with(Techniques.Landing).playOn(conteiner);
+
 
         try {
             Utils.writelogFile(context, "fill componentes(Offer)");
             Utils.setPicasso(context, shop.getURL_LOGO(), R.drawable.ic_launcher, imageViewShop);
             if (offers.size() > 0) {
                 textViewEmpty.setVisibility(View.GONE);
-                adapter = new DialogOfferAdapter(offers, context);
-                recyclerViewOffer.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
-                recyclerViewOffer.setHasFixedSize(true);
-                recyclerViewOffer.setAdapter(adapter);
+                initRecyclerApdater(offers);
             } else {
                 recyclerViewOffer.setVisibility(View.GONE);
                 textViewEmpty.setVisibility(View.VISIBLE);
@@ -96,4 +98,12 @@ public class DialogOffer {
             Utils.writelogFile(context, " catch error " + e.getMessage() + "(Offer)");
         }
     }
+
+    private void initRecyclerApdater(List<Offer> offers) {
+        adapter = new DialogOfferAdapter(offers, context);
+        recyclerViewOffer.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
+        recyclerViewOffer.setHasFixedSize(true);
+        recyclerViewOffer.setAdapter(adapter);
+    }
+
 }

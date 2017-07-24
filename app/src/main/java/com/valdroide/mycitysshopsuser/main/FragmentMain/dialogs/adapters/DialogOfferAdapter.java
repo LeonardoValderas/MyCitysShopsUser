@@ -38,12 +38,19 @@ public class DialogOfferAdapter extends RecyclerView.Adapter<DialogOfferAdapter.
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
+        if (position == 0)
+            holder.imageView_arraw_left.setVisibility(View.INVISIBLE);
+        else if (position == getItemCount() - 1)
+            holder.imageView_arraw_right.setVisibility(View.INVISIBLE);
+        else {
+            holder.imageView_arraw_left.setVisibility(View.VISIBLE);
+            holder.imageView_arraw_right.setVisibility(View.VISIBLE);
+        }
+
         Offer offer = offerList.get(position);
         Utils.setPicasso(context, offer.getURL_IMAGE(), R.drawable.ic_launcher, holder.imageViewOffer);
         holder.textViewTitle.setText(offer.getTITLE());
-      //  holder.textViewTitle.setTypeface(Utils.setFontExoTextView(context));
         holder.textViewOffer.setText(offer.getOFFER());
-       // holder.textViewOffer.setTypeface(Utils.setFontRalewatTextView(context));
     }
 
     @Override
@@ -64,8 +71,10 @@ public class DialogOfferAdapter extends RecyclerView.Adapter<DialogOfferAdapter.
         TextView textViewTitle;
         @Bind(R.id.textViewOffer)
         TextView textViewOffer;
-//        @Bind(R.id.linearConteiner)
-//        LinearLayout linearConteiner;
+        @Bind(R.id.imageView_arraw_left)
+        ImageView imageView_arraw_left;
+        @Bind(R.id.imageView_arraw_right)
+        ImageView imageView_arraw_right;
 
         public ViewHolder(View view) {
             super(view);

@@ -61,27 +61,28 @@
                 <ImageView
                     android:id="@+id/imageViewImage"
                     android:layout_width="0dp"
-                    android:layout_height="200dp"
+                    android:layout_height="250dp"
                     android:layout_gravity="left"
-                    android:layout_weight="40"
+                    android:layout_weight="45"
                     android:clickable="true"
                     android:src="@drawable/ic_present" />
 
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:layout_weight="60"
+                    android:layout_weight="55"
+                    android:layout_marginTop="10dp"
                     android:orientation="vertical"
-                    android:padding="8dp">
+                    android:padding="5dp">
 
                     <TextView
                         android:id="@+id/textViewName"
+                        style="@style/AppearanceTextViewTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/AppearanceTextViewTitle"
                         android:gravity="center|center_horizontal"
                         android:text="XXXXX."
-                        android:textSize="30dp"
+                        android:textSize="30sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -89,22 +90,21 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center|center_horizontal"
-                        android:textColor="#3e7e8d"
                         android:text="te invita a particitar del sorte de."
-                        android:textSize="22dp"
+                        android:textColor="#3e7e8d"
+                        android:textSize="26sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/textViewDescription"
+                        style="@style/AppearanceTextView"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        style="@style/AppearanceTextView"
                         android:gravity="center|center_horizontal"
                         android:text="XXXXXX."
-                        android:textSize="25dp"
+                        android:textSize="28sp"
                         android:textStyle="bold" />
                 </LinearLayout>
-
             </LinearLayout>
 
             <ScrollView
@@ -119,117 +119,116 @@
                     android:orientation="vertical"
                     android:padding="5dp">
 
-                    <TextView
-                        android:id="@+id/textViewCondition"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center|center_horizontal"
-                        android:textColor="#3e7e8d"
-                        android:text="La condiciones: El premios es valido para los días Lunes, Miercoles o Viernes. Podrá ser retirado solo por el ganador con DNI en mano dentro de los 7 días terminado el sorteo."
-                        android:textSize="30dp"
-                        android:textStyle="bold"/>
-
-                    <TextView
-                        android:id="@+id/textViewEndDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:gravity="center|center_horizontal"
-                        android:text="Fecha finalización: 22/09/2017 12:00."
-                        android:textSize="28dp"
-                        android:textStyle="bold" />
-
                     <LinearLayout
+                        android:id="@+id/linearbuttons"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp"
-                        android:orientation="horizontal"
-                        android:padding="5dp">
+                        android:orientation="vertical">
 
-                        <Button
-                            android:id="@+id/buttonCancel"
-                            style="@style/ButtonView_Draw"
-                            android:layout_height="75dp"
-                            android:background="@drawable/background_oval_button"
-                            android:text="@string/cancel_buttton"
-                            android:textSize="25dp" />
+                        <TextView
+                            android:id="@+id/textViewCondition"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center|center_horizontal"
+                            android:text="La condiciones: El premios es valido para los días Lunes, Miercoles o Viernes. Podrá ser retirado solo por el ganador con DNI en mano dentro de los 7 días terminado el sorteo."
+                            android:textColor="#3e7e8d"
+                            android:textSize="32sp"
+                            android:textStyle="bold" />
 
-                        <Button
-                            android:id="@+id/buttonOK"
-                            style="@style/ButtonView_Draw"
-                            android:layout_height="75dp"
-                            android:background="@drawable/background_oval_button"
-                            android:text="@string/participate_draw_button"
-                            android:textSize="25dp" />
+                        <TextView
+                            android:id="@+id/textViewEndDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center|center_horizontal"
+                            android:text="Fecha finalización: 22/09/2017 12:00."
+                            android:textSize="28sp"
+                            android:textStyle="bold" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="15dp"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <Button
+                                android:id="@+id/buttonCancel"
+                                style="@style/ButtonView_Draw"
+                                android:layout_height="75dp"
+                                android:background="@drawable/background_oval_button"
+                                android:text="@string/cancel_buttton"
+                                android:textSize="25dp" />
+
+                            <Button
+                                android:id="@+id/buttonOK"
+                                style="@style/ButtonView_Draw"
+                                android:layout_height="75dp"
+                                android:background="@drawable/background_oval_button"
+                                android:text="@string/participate_draw_button"
+                                android:textSize="25dp" />
+                        </LinearLayout>
                     </LinearLayout>
-                </LinearLayout>
-            </ScrollView>
-
-            <ScrollView
-                android:id="@+id/scrollInscription"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:visibility="gone">
-
-                <LinearLayout
-                    android:id="@+id/linearInscription"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="5dp">
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/editTextDNIHint"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="20dp">
-
-                        <EditText
-                            android:id="@+id/editTextDNI"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/enter_id"
-                            android:inputType="number"
-                            android:maxLength="10"
-                            android:textSize="18dp" />
-                    </android.support.design.widget.TextInputLayout>
-
-                    <android.support.design.widget.TextInputLayout
-                        android:id="@+id/editTextNamesHint"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp">
-
-                        <EditText
-                            android:id="@+id/editTextNames"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:hint="@string/enter_name_lastname"
-                            android:maxLength="20"
-                            android:textSize="18dp" />
-                    </android.support.design.widget.TextInputLayout>
 
                     <LinearLayout
+                        android:id="@+id/linearInscription"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
+                        android:orientation="vertical"
+                        android:visibility="gone"
                         android:padding="5dp">
 
-                        <Button
-                            android:id="@+id/buttonCancelSub"
-                            style="@style/ButtonView_Draw"
-                            android:layout_height="75dp"
-                            android:background="@drawable/background_oval_button"
-                            android:text="@string/cancel_buttton"
-                            android:textSize="25dp" />
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/editTextDNIHint"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
 
-                        <Button
-                            android:id="@+id/buttonOKSub"
-                            style="@style/ButtonView_Draw"
-                            android:layout_height="75dp"
-                            android:background="@drawable/background_oval_button"
-                            android:text="@string/send_button_draw"
-                            android:textSize="25dp" />
+                            <EditText
+                                android:id="@+id/editTextDNI"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_id"
+                                android:inputType="number"
+                                android:maxLength="10"
+                                android:textSize="25sp" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <android.support.design.widget.TextInputLayout
+                            android:id="@+id/editTextNamesHint"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <EditText
+                                android:id="@+id/editTextNames"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:hint="@string/enter_name_lastname"
+                                android:maxLength="20"
+                                android:textSize="25sp" />
+                        </android.support.design.widget.TextInputLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="5dp">
+
+                            <Button
+                                android:id="@+id/buttonCancelSub"
+                                style="@style/ButtonView_Draw"
+                                android:layout_height="75dp"
+                                android:background="@drawable/background_oval_button"
+                                android:text="@string/cancel_buttton"
+                                android:textSize="25dp" />
+
+                            <Button
+                                android:id="@+id/buttonOKSub"
+                                style="@style/ButtonView_Draw"
+                                android:layout_height="75dp"
+                                android:background="@drawable/background_oval_button"
+                                android:text="@string/send_button_draw"
+                                android:textSize="25dp" />
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
             </ScrollView>

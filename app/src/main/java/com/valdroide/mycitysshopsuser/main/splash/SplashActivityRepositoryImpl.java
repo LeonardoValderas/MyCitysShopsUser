@@ -769,7 +769,7 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                     if (categories != null) {
                                         Utils.writelogFile(context, "categories != null y delete Category(Splash, Repository)");
                                         Delete.table(Category.class);
-                                        Utils.writelogFile(context, "delete Category ok y for categories(Splash, Repository)");
+                                        Utils.writelogFile(context, "delete Category ok y save categories(Splash, Repository)");
 
                                         transaction = FastStoreModelTransaction
                                                 .saveBuilder(FlowManager.getModelAdapter(Category.class))
@@ -781,7 +781,7 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                     if (subCategories != null) {
                                         Utils.writelogFile(context, "subCategories != null y delete SubCategory(Splash, Repository)");
                                         Delete.table(SubCategory.class);
-                                        Utils.writelogFile(context, "delete SubCategory ok y for subCategories(Splash, Repository)");
+                                        Utils.writelogFile(context, "delete SubCategory ok y save subCategories(Splash, Repository)");
 
                                         transaction = FastStoreModelTransaction
                                                 .insertBuilder(FlowManager.getModelAdapter(SubCategory.class))
@@ -793,7 +793,7 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                     if (shops != null) {
                                         Utils.writelogFile(context, "shops != null y delete Shop(Splash, Repository)");
                                         Delete.table(Shop.class);
-                                        Utils.writelogFile(context, "delete Shop ok y for shops(Splash, Repository)");
+                                        Utils.writelogFile(context, "delete Shop ok y save shops(Splash, Repository)");
 
                                         transaction = FastStoreModelTransaction
                                                 .insertBuilder(FlowManager.getModelAdapter(Shop.class))
@@ -805,7 +805,7 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                     if (offers != null) {
                                         Utils.writelogFile(context, "offers != null y delete Offer(Splash, Repository)");
                                         Delete.table(Offer.class);
-                                        Utils.writelogFile(context, "delete Offer ok y for offers(Splash, Repository)");
+                                        Utils.writelogFile(context, "delete ok y save offer(Splash, Repository)");
 
                                         transaction = FastStoreModelTransaction
                                                 .insertBuilder(FlowManager.getModelAdapter(Offer.class))
@@ -829,7 +829,9 @@ public class SplashActivityRepositoryImpl implements SplashActivityRepository {
                                     if (draws != null) {
                                         Utils.writelogFile(context, "draws != null y draws.size()(Splash, Repository)");
                                         if (draws.size() > 0) {
-                                            Utils.writelogFile(context, "draws.size() > 0 y for draws(Splash, Repository)");
+                                            Utils.writelogFile(context, "draws.size() > 0 y delete Draw(Splash, Repository)");
+                                            Delete.table(Draw.class);
+                                            Utils.writelogFile(context, "save Draws(Splash, Repository)");
                                             transaction = FastStoreModelTransaction
                                                     .insertBuilder(FlowManager.getModelAdapter(Draw.class))
                                                     .addAll(draws)

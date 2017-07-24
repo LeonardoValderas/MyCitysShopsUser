@@ -17,7 +17,7 @@ public class FragmentMainEvent {
     public static final int ISUPDATE = 6;
     public static final int MYSHOPS = 7;
 
-    private List<Shop> shopsList;
+    private List<Object> shopsList;
     private List<Offer> offers;
     private Shop shop;
     private DateUserCity dateUserCity;
@@ -31,11 +31,11 @@ public class FragmentMainEvent {
         this.type = type;
     }
 
-    public List<Shop> getShopsList() {
+    public List<Object> getShopsList() {
         return shopsList;
     }
 
-    public void setShopsList(List<Shop> shopsList) {
+    public void setShopsList(List<Object> shopsList) {
         this.shopsList = shopsList;
     }
 

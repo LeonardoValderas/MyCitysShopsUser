@@ -23,7 +23,7 @@
             <ImageView
                 android:id="@+id/imageViewShop"
                 android:layout_width="match_parent"
-                android:layout_height="400dp"
+                android:layout_height="350dp"
                 app:srcCompat="@drawable/ic_launcher" />
 
             <ImageView

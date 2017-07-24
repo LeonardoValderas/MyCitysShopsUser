@@ -44,16 +44,16 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
         if (validateLogFile(this)) {
             Utils.writelogFile(this, "Se inicia ButterKnife(Splash)");
             ButterKnife.bind(this);
-            Utils.writelogFile(this, "Se inicia Injection(Splash)");
             setupInjection();
             Utils.writelogFile(this, "Se inicia presenter Oncreate(Splash)");
             presenter.onCreate();
-            Utils.writelogFile(this, "isPlace Oncreate(Splash)");
             resetBadge();
+            Utils.writelogFile(this, "isPlace Oncreate(Splash)");
             isPlace = isPlace();
             if (!isPlace) {
                 Utils.writelogFile(this, "isPlace false y validateDatePlace(Splash)");
-                presenter.validateDatePlace(this, getIntentExtra());
+                Intent intent = getIntentExtra();
+                presenter.validateDatePlace(this, intent);
             } else {
                 Utils.writelogFile(this, "isPlace true y validateDateShop(Splash)");
                 presenter.getToken(this);
@@ -110,6 +110,7 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
     }
 
     private void setupInjection() {
+        Utils.writelogFile(this, "Se inicia Injection(Splash)");
         MyCitysShopsUserApp app = (MyCitysShopsUserApp) getApplication();
         app.getSplashActivityComponent(this, this).inject(this);
     }
@@ -130,7 +131,6 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
     public void goToNav() {
         Utils.writelogFile(this, "goToNav(Splash)");
         try {
-            progressBar.setVisibility(View.INVISIBLE);
             startActivity(new Intent(this, NavigationActivity.class));
         } catch (Exception e) {
             setError(e.getMessage());
@@ -141,9 +141,9 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
     @Override
     public void setError(String msg) {
         Utils.writelogFile(this, "setError " + msg + "(Splash)");
+        hideProgressBar();
         try {
-            progressBar.setVisibility(View.INVISIBLE);
-            if (msg.equalsIgnoreCase(getString(R.string.error_internet))) {
+         if (msg.equalsIgnoreCase(getString(R.string.error_internet))) {
                 textViewDownload.setText(msg);
             } else {
                 presenter.sendEmail(this, "Error Splash, Email Automatico.");
@@ -157,6 +157,12 @@ public class SplashActivity extends AppCompatActivity implements SplashActivityV
     @Override
     public void tokenSuccess() {
         presenter.validateDateShop(this, getIntentExtra());
+    }
+
+    @Override
+    public void hideProgressBar() {
+        if (progressBar != null)
+            progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override

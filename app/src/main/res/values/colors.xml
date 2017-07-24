@@ -24,4 +24,8 @@
 
 
     <color name="colorTextViewSub">#3e7e8d</color>
+
+    <color name="colorCardViewBackground">#66FFFFFF</color>
+
+    <color name="colorTransparet">#33000000</color>
 </resources>
